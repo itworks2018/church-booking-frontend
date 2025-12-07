@@ -1,0 +1,180 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: #F8FAFC;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* CONTAINER */
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 25px;
+  background: #FFFFFF;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* TOPBAR */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.topbar h1 {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: #1E3A8A;
+}
+
+button#logout-btn {
+  background: #EF4444;
+}
+
+button#logout-btn:hover {
+  background: #DC2626;
+}
+
+/* FORMS */
+form {
+  margin-top: 15px;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 500;
+  color: #1E3A8A;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #F9FAFB;
+}
+
+textarea {
+  min-height: 90px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 18px;
+  background: #1E3A8A;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #172554;
+}
+
+/* AUTH TABS */
+.auth-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.auth-tabs button {
+  flex: 1;
+  padding: 10px;
+  background: #E5E7EB;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.auth-tabs button.active {
+  background: #1E3A8A;
+  color: #FFFFFF;
+}
+
+/* MESSAGES */
+.message {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+.message.success {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.message.error {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+/* BOOKINGS LIST */
+.booking-day {
+  margin-top: 20px;
+  padding: 15px;
+  background: #F9FAFB;
+  border-radius: 12px;
+}
+
+.booking-item {
+  background: #FFFFFF;
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border-left: 6px solid #D1D5DB;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.status-pending {
+  border-left-color: #FBBF24;
+}
+
+.status-approved {
+  border-left-color: #22C55E;
+}
+
+.status-rejected {
+  border-left-color: #EF4444;
+}
+
+.status-canceled {
+  border-left-color: #6B7280;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 18px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  button {
+    font-size: 0.95rem;
+  }
+
+  h1, h2 {
+    font-size: 1.3rem;
+  }
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - Church Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <h1>User Dashboard</h1>
+      <button id="logout-btn">Logout</button>
+    </header>
+
+    <section class="section">
+      <h2>Create Booking</h2>
+      <div id="user-message" class="message"></div>
+
+      <form id="booking-form">
+        <label>Venue</label>
+        <select id="venue-select" required></select>
+
+        <label>Event Name</label>
+        <input type="text" id="event-name" required>
+
+        <label>Event Purpose</label>
+        <textarea id="event-purpose"></textarea>
+
+        <label>Start Date & Time</label>
+        <input type="datetime-local" id="start-datetime" required>
+
+        <label>End Date & Time</label>
+        <input type="datetime-local" id="end-datetime" required>
+
+        <button type="submit">Submit Booking</button>
+      </form>
+    </section>
+
+    <section class="section">
+      <h2>My Bookings</h2>
+      <div id="bookings-list"></div>
+    </section>
+  </div>
+
+  <script type="module" src="js/user.js"></script>
+</body>
+</html>
