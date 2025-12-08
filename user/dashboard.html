@@ -5,29 +5,196 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Dashboard – Church Booking</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    // ✅ Tailwind Dark Mode Config
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 dark:bg-gray-950 min-h-screen flex flex-col">
 
   <!-- ✅ NAVBAR -->
-  <nav class="bg-white shadow-md">
+  <nav class="bg-white dark:bg-gray-900 shadow-md">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="/index.html" class="text-xl font-bold text-blue-700">CHURCH BOOKING</a>
 
-      <div class="space-x-4">
-        <a href="/user/dashboard.html" class="text-blue-600 hover:underline">Dashboard</a>
-        <a href="/user/profile.html" class="text-blue-600 hover:underline">Profile</a>
-        <a href="/login.html" class="text-red-600 hover:underline">Log Out</a>
+      <!-- ✅ Mobile Sidebar Toggle -->
+      <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">
+        ☰
+      </button>
+
+      <a href="/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
+        CHURCH BOOKING
+      </a>
+
+      <!-- ✅ NAV RIGHT SIDE -->
+      <div class="flex items-center space-x-4">
+
+        <!-- ✅ Dark Mode Toggle -->
+        <button id="themeToggle"
+                class="text-gray-700 dark:text-gray-200 border px-2 py-1 rounded text-sm">
+          🌙
+        </button>
+
+        <!-- ✅ Profile Dropdown -->
+        <div class="relative">
+          <button id="profileMenuBtn"
+                  class="flex items-center space-x-2 text-gray-700 dark:text-gray-200">
+            <img src="/assets/images/profile.jpg" class="w-8 h-8 rounded-full border" />
+            <span class="hidden md:inline">Jeff</span>
+          </button>
+
+          <!-- Dropdown -->
+          <div id="profileDropdown"
+               class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded hidden">
+            <a href="/user/profile.html"
+               class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+              Profile
+            </a>
+            <a href="/login.html"
+               class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+              Log Out
+            </a>
+          </div>
+        </div>
+
       </div>
     </div>
   </nav>
 
-  <!-- ✅ MAIN LAYOUT (Sidebar + Content) -->
-  <div class="flex flex-1">
+  <div class="flex flex-1 relative">
 
-    <!-- ✅ DARK SIDEBAR -->
-    <aside class="w-64 bg-gray-900 text-white flex flex-col items-center py-6 shadow-lg">
-      <img src="/assets/images/profile.jpg" alt="Profile"
+    <!-- ✅ DARK OVERLAY (Mobile Only) -->
+    <div id="sidebarOverlay"
+         class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
+
+    <!-- ✅ SIDEBAR -->
+    <aside id="sidebar"
+           class="w-64 bg-gray-900 text-white flex flex-col items-center py-6 shadow-lg
+                  fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0
+                  transition-transform duration-300 z-30">
+
+      <img src="/assets/images/profile.jpg"
            class="w-24 h-24 rounded-full mb-4 border-4 border-white" />
 
       <h2 class="text-lg font-semibold">Welcome, Jeff</h2>
+
+      <nav class="mt-6 w-full px-6 space-y-3">
+
+        <!-- ✅ Active Link Highlighting -->
+        <a href="/user/dashboard.html"
+           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
+           data-page="dashboard">
+          Dashboard
+        </a>
+
+        <a href="/user/profile.html"
+           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
+           data-page="profile">
+          Profile
+        </a>
+
+        <a href="/user/resources.html"
+           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
+           data-page="resources">
+          Resources
+        </a>
+
+        <a href="/user/book.html"
+           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
+           data-page="book">
+          Book Church Venue
+        </a>
+
+        <a href="/login.html"
+           class="block text-sm py-2 px-3 rounded text-red-400 hover:bg-gray-800 hover:text-red-300 transition mt-6">
+          Log Out
+        </a>
+      </nav>
+    </aside>
+
+    <!-- ✅ MAIN CONTENT -->
+    <main class="flex-1 p-8 md:ml-0">
+      <h1 class="text-2xl font-bold text-blue-700 dark:text-blue-400 mb-6">Events</h1>
+
+      <!-- Upcoming Events -->
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold mb-4 dark:text-gray-200">Upcoming Events</h2>
+        <div class="space-y-4">
+          <div class="bg-white dark:bg-gray-900 shadow rounded p-4">
+            <h3 class="font-semibold text-gray-800 dark:text-gray-200">Sunday Worship Service</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">March 5, 2024 | 7:00 PM</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Regular Events -->
+      <section>
+        <h2 class="text-xl font-semibold mb-4 dark:text-gray-200">Regular Events</h2>
+        <div class="space-y-4">
+          <div class="bg-white dark:bg-gray-900 shadow rounded p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">March 14, 2024</p>
+            <h3 class="font-semibold text-gray-800 dark:text-gray-200">Discipleship Group</h3>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <!-- ✅ FOOTER -->
+  <footer class="bg-white dark:bg-gray-900 shadow-inner py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+    &copy; 2025 Church Booking. All rights reserved.
+  </footer>
+
+  <!-- ✅ SCRIPT: Dark Mode + Sidebar Toggle + Dropdown + Active Links -->
+  <script>
+    // ✅ DARK MODE
+    const themeToggle = document.getElementById("themeToggle");
+    const savedTheme = localStorage.getItem("theme") || "light";
+
+    if (savedTheme === "dark") document.documentElement.classList.add("dark");
+
+    themeToggle.addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+      localStorage.setItem("theme",
+        document.documentElement.classList.contains("dark") ? "dark" : "light"
+      );
+    });
+
+    // ✅ MOBILE SIDEBAR
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.toggle("-translate-x-full");
+      sidebarOverlay.classList.toggle("hidden");
+    });
+
+    sidebarOverlay.addEventListener("click", () => {
+      sidebar.classList.add("-translate-x-full");
+      sidebarOverlay.classList.add("hidden");
+    });
+
+    // ✅ PROFILE DROPDOWN
+    const profileBtn = document.getElementById("profileMenuBtn");
+    const profileDropdown = document.getElementById("profileDropdown");
+
+    profileBtn.addEventListener("click", () => {
+      profileDropdown.classList.toggle("hidden");
+    });
+
+    // ✅ ACTIVE LINK HIGHLIGHTING
+    const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
+    document.querySelectorAll(".sidebar-link").forEach(link => {
+      if (link.dataset.page === currentPage) {
+        link.classList.add("bg-gray-800", "text-blue-400");
+      }
+    });
+  </script>
+
+</body>
+</html>
