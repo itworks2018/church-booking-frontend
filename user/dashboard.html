@@ -8,17 +8,28 @@
 </head>
 
 <body class="bg-gray-100 min-h-screen flex">
+ <!-- ✅ NAVBAR -->
+  <nav class="bg-white/70 backdrop-blur-md shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold text-blue-700">CHURCH BOOKING</a>
 
-  <!-- ✅ SIDEBAR -->
-  <aside class="w-64 bg-white shadow-md flex flex-col items-center py-6">
-    <img src="/assets/images/profile.jpg" alt="Profile" class="w-24 h-24 rounded-full mb-4" />
-    <h2 class="text-lg font-semibold text-blue-700">Welcome, Jeff</h2>
+      <div class="space-x-4">
+        <a href="login.html" class="text-blue-600 hover:underline">Log In</a>
+        <a href="signup.html" class="text-blue-600 hover:underline">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ✅ DARK SIDEBAR -->
+  <aside class="w-64 bg-gray-900 text-white flex flex-col items-center py-6 shadow-lg">
+    <img src="/assets/images/profile.jpg" alt="Profile" class="w-24 h-24 rounded-full mb-4 border-4 border-white" />
+    <h2 class="text-lg font-semibold">Welcome, Jeff</h2>
 
     <nav class="mt-6 w-full px-6 space-y-3">
-      <a href="profile.html" class="block text-sm text-gray-700 hover:text-blue-600">Profile</a>
-      <a href="resources.html" class="block text-sm text-gray-700 hover:text-blue-600">Resources</a>
-      <a href="book.html" class="block text-sm text-gray-700 hover:text-blue-600">Book Church Venue</a>
-      <a href="logout.html" class="block text-sm text-red-600 hover:underline mt-6">Log Out</a>
+      <a href="profile.html" class="block text-sm hover:text-blue-400">Profile</a>
+      <a href="resources.html" class="block text-sm hover:text-blue-400">Resources</a>
+      <a href="book.html" class="block text-sm hover:text-blue-400">Book Church Venue</a>
+      <a href="logout.html" class="block text-sm text-red-400 hover:underline mt-6">Log Out</a>
     </nav>
   </aside>
 
@@ -65,5 +76,10 @@
     </section>
   </main>
 
+ <!-- ✅ FOOTER -->
+  <footer class="bg-white/70 backdrop-blur-md py-4 text-center text-sm text-gray-800">
+    &copy; 2025 Church Booking. All rights reserved.
+  </footer>
+  
 </body>
 </html>
