@@ -6,42 +6,56 @@
   <title>Sign Up – Church Booking</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100">
 
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-    <h2 class="text-2xl font-bold text-center mb-6 text-green-700">Create Account</h2>
+  <!-- ✅ NAVBAR -->
+  <nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold text-blue-700">CHURCH BOOKING</a>
 
-    <form id="signup-form" class="space-y-4">
-  <input type="text" id="signup-name" placeholder="Full Name" class="w-full px-4 py-2 border rounded" required />
+      <div class="space-x-4">
+        <a href="login.html" class="text-blue-600 hover:underline">Log In</a>
+        <a href="signup.html" class="text-blue-600 hover:underline">Sign Up</a>
+      </div>
+    </div>
+  </nav>
 
-  <input type="email" id="signup-email" placeholder="Email" class="w-full px-4 py-2 border rounded" required />
+  <!-- ✅ SIGNUP FORM -->
+  <div class="flex items-center justify-center min-h-screen -mt-20">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+      <h2 class="text-2xl font-bold text-center mb-6 text-green-700">Create Account</h2>
 
-  <input type="text" id="signup-contact" placeholder="Contact Number" class="w-full px-4 py-2 border rounded" required />
+      <form id="signup-form" class="space-y-4">
+        <input type="text" id="signup-name" placeholder="Full Name" class="w-full px-4 py-2 border rounded" required />
 
-  <!-- ✅ Updated Church Role Dropdown -->
-  <select id="signup-role" class="w-full px-4 py-2 border rounded" required>
-    <option value="">Select Church Role</option>
-    <option value="COS">COS</option>
-    <option value="DGroup Leader">DGroup Leader</option>
-    <option value="Ministry Head">Ministry Head</option>
-    <option value="DGroup Member">DGroup Member</option>
-    <option value="Ministry Assistants">Ministry Assistants</option>
-  </select>
+        <input type="email" id="signup-email" placeholder="Email" class="w-full px-4 py-2 border rounded" required />
 
-  <input type="password" id="signup-password" placeholder="Password" class="w-full px-4 py-2 border rounded" required />
+        <input type="text" id="signup-contact" placeholder="Contact Number" class="w-full px-4 py-2 border rounded" required />
 
-  <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
-    Sign Up
-  </button>
-</form>
+        <!-- ✅ Updated Church Role Dropdown -->
+        <select id="signup-role" class="w-full px-4 py-2 border rounded" required>
+          <option value="">Select Church Role</option>
+          <option value="COS">COS</option>
+          <option value="DGroup Leader">DGroup Leader</option>
+          <option value="Ministry Head">Ministry Head</option>
+          <option value="DGroup Member">DGroup Member</option>
+          <option value="Ministry Assistants">Ministry Assistants</option>
+        </select>
 
-    <p class="text-center text-sm mt-4">
-      Already have an account?
-      <a href="login.html" class="text-blue-600 hover:underline">Log In</a>
-    </p>
+        <input type="password" id="signup-password" placeholder="Password" class="w-full px-4 py-2 border rounded" required />
+
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+          Sign Up
+        </button>
+      </form>
+
+      <p class="text-center text-sm mt-4">
+        Already have an account?
+        <a href="login.html" class="text-blue-600 hover:underline">Log In</a>
+      </p>
+    </div>
   </div>
 
 </body>
