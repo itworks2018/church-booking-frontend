@@ -1,124 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Dashboard – Church Booking</title>
-
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
 
-  <!-- Top bar -->
-  <header class="bg-white dark:bg-gray-900 shadow-md px-4 py-3 flex justify-between items-center">
-    <div class="flex items-center space-x-2">
-      <button id="sidebar-toggle" class="md:hidden text-gray-700 dark:text-gray-200 mr-2">☰</button>
-      <h1 class="text-lg font-semibold text-blue-700 dark:text-blue-400">User Dashboard</h1>
-    </div>
-    <div class="flex items-center space-x-3">
-      <button id="theme-toggle" class="text-xs border px-2 py-1 rounded text-gray-600 dark:text-gray-300">
-        Dark
-      </button>
-      <button id="logout-btn" class="text-sm text-red-600 dark:text-red-400 hover:underline">
-        Logout
-      </button>
-    </div>
-  </header>
+<body class="bg-gray-100 min-h-screen flex">
 
-  <div class="flex">
+  <!-- ✅ SIDEBAR -->
+  <aside class="w-64 bg-white shadow-md flex flex-col items-center py-6">
+    <img src="/assets/images/profile.jpg" alt="Profile" class="w-24 h-24 rounded-full mb-4" />
+    <h2 class="text-lg font-semibold text-blue-700">Welcome, Jeff</h2>
 
-    <!-- Sidebar -->
-    <aside id="sidebar"
-           class="w-64 bg-white dark:bg-gray-900 h-screen fixed md:static top-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-200 shadow-lg md:shadow-none z-40">
-      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-        <p class="font-bold text-blue-700 dark:text-blue-400">Church Booking</p>
-      </div>
-      <nav class="p-4 space-y-2">
-        <a href="/user/dashboard.html" class="block px-3 py-2 rounded bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm">
-          Dashboard
-        </a>
-        <a href="/user/book.html" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">
-          Book a Venue
-        </a>
-        <a href="/user/profile.html" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">
-          My Profile
-        </a>
-      </nav>
-    </aside>
+    <nav class="mt-6 w-full px-6 space-y-3">
+      <a href="profile.html" class="block text-sm text-gray-700 hover:text-blue-600">Profile</a>
+      <a href="resources.html" class="block text-sm text-gray-700 hover:text-blue-600">Resources</a>
+      <a href="book.html" class="block text-sm text-gray-700 hover:text-blue-600">Book Church Venue</a>
+      <a href="logout.html" class="block text-sm text-red-600 hover:underline mt-6">Log Out</a>
+    </nav>
+  </aside>
 
-    <!-- Overlay for mobile -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-40 hidden md:hidden"></div>
+  <!-- ✅ MAIN DASHBOARD -->
+  <main class="flex-1 p-8">
+    <h1 class="text-2xl font-bold text-blue-700 mb-6">Events</h1>
 
-    <!-- Main content -->
-    <main class="flex-1 md:ml-0 ml-0 md:pl-0 pl-0 md:ml-64 p-4 md:p-6">
-      <h2 class="text-2xl font-bold mb-4">Welcome, <span id="user-name">User</span></h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-900 shadow rounded p-4">
-          <h3 class="font-semibold text-sm mb-1">My Bookings</h3>
-          <p class="text-xs text-gray-600 dark:text-gray-400">View and manage your reservations.</p>
+    <!-- Upcoming Events -->
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">Upcoming Events</h2>
+      <div class="space-y-4">
+        <div class="bg-white shadow rounded p-4">
+          <h3 class="font-semibold text-gray-800">Sunday Worship Service</h3>
+          <p class="text-sm text-gray-600">March 5, 2024 | 7:00 PM</p>
         </div>
-        <div class="bg-white dark:bg-gray-900 shadow rounded p-4">
-          <h3 class="font-semibold text-sm mb-1">Next Event</h3>
-          <p class="text-xs text-gray-600 dark:text-gray-400" id="next-event-text">No upcoming booking.</p>
+        <div class="bg-white shadow rounded p-4">
+          <h3 class="font-semibold text-gray-800">Youth Fellowship</h3>
+          <p class="text-sm text-gray-600">March 12, 2024 | 6:30 PM</p>
         </div>
-        <div class="bg-white dark:bg-gray-900 shadow rounded p-4">
-          <h3 class="font-semibold text-sm mb-1">Profile</h3>
-          <p class="text-xs text-gray-600 dark:text-gray-400">Keep your information up to date.</p>
+        <div class="bg-white shadow rounded p-4">
+          <h3 class="font-semibold text-gray-800">Leadership Training</h3>
+          <p class="text-sm text-gray-600">March 19, 2024 | 7:00 PM</p>
         </div>
       </div>
+    </section>
 
-      <section>
-        <h3 class="text-lg font-semibold mb-2">Recent Bookings</h3>
-        <div id="bookings-list" class="bg-white dark:bg-gray-900 shadow rounded p-4 text-sm">
-          <p class="text-gray-600 dark:text-gray-400">Loading bookings...</p>
+    <!-- Regular Events -->
+    <section>
+      <h2 class="text-xl font-semibold mb-4">Regular Events</h2>
+      <div class="space-y-4">
+        <div class="bg-white shadow rounded p-4">
+          <p class="text-sm text-gray-600">March 14, 2024</p>
+          <h3 class="font-semibold text-gray-800">Discipleship Group</h3>
         </div>
-      </section>
-    </main>
-  </div>
+        <div class="bg-white shadow rounded p-4">
+          <p class="text-sm text-gray-600">March 17, 2024</p>
+          <h3 class="font-semibold text-gray-800">Prayer Meeting</h3>
+        </div>
+        <div class="bg-white shadow rounded p-4">
+          <p class="text-sm text-gray-600">March 24, 2024</p>
+          <h3 class="font-semibold text-gray-800">Ministry Planning</h3>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  <script>
-    // Sidebar toggle
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-
-    if (sidebarToggle) {
-      sidebarToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('-translate-x-full');
-        sidebarOverlay.classList.toggle('hidden');
-      });
-    }
-
-    if (sidebarOverlay) {
-      sidebarOverlay.addEventListener('click', () => {
-        sidebar.classList.add('-translate-x-full');
-        sidebarOverlay.classList.add('hidden');
-      });
-    }
-
-    // Dark mode toggle
-    const themeButtons = document.querySelectorAll('#theme-toggle');
-
-    function setTheme(theme) {
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-      }
-    }
-
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-
-    themeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-        setTheme(current === 'dark' ? 'light' : 'dark');
-      });
-    });
-  </script>
 </body>
 </html>
