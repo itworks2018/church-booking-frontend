@@ -1,0 +1,46 @@
+<h2 class="text-2xl font-bold mb-4 dark:text-white">Create Event</h2>
+
+<form class="space-y-4">
+
+  <div>
+    <label class="block dark:text-gray-300">Event Name</label>
+    <input type="text" class="w-full p-3 rounded bg-gray-100 dark:bg-gray-800 dark:text-white" />
+  </div>
+
+  <div>
+    <label class="block dark:text-gray-300">Purpose</label>
+    <textarea class="w-full p-3 rounded bg-gray-100 dark:bg-gray-800 dark:text-white"></textarea>
+  </div>
+
+  <div>
+    <label class="block dark:text-gray-300">Number of Attendees</label>
+    <input type="number" class="w-full p-3 rounded bg-gray-100 dark:bg-gray-800 dark:text-white" />
+  </div>
+
+  <div>
+    <label class="block dark:text-gray-300">Venue</label>
+    <select class="w-full p-3 rounded bg-gray-100 dark:bg-gray-800 dark:text-white">
+      <option>Main Hall</option>
+      <option>Phase A Area 1</option>
+      <option>Phase 2 Area B</option>
+      <option>NxtGen Room</option>
+    </select>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block dark:text-gray-300">Start Date & Time</label>
+      <input type="datetime-local" class="w-full p-3 rounded bg-gray-100 dark:bg-gray-800 dark:text-white" />
+    </div>
+
+    <div>
+      <label class="block dark:text-gray-300">End Date & Time</label>
+      <input type="datetime-local" class="w-full p-3 rounded bg-gray-100 dark:bg-gray-800 dark:text-white" />
+    </div>
+  </div>
+
+  <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+    Submit Event
+  </button>
+
+</form>
