@@ -1,33 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Book a Venue</title>
+<div class="bg-white dark:bg-gray-900 shadow rounded p-6">
+  <h2 class="text-xl font-bold mb-4 dark:text-gray-200">Book a Venue</h2>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+  <form class="space-y-4">
 
-<body class="bg-gray-100 p-6">
+    <!-- ✅ Event Name -->
+    <input type="text"
+           placeholder="Event Name"
+           class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+           required />
 
-  <div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
-    <h2 class="text-2xl font-bold mb-4 text-blue-700">Book a Venue</h2>
+    <!-- ✅ Purpose of Event -->
+    <input type="text"
+           placeholder="Purpose of Event"
+           class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+           required />
 
-    <form id="booking-form" class="space-y-4">
-      <input type="text" placeholder="Event Name" class="w-full px-4 py-2 border rounded" required />
-      <input type="date" class="w-full px-4 py-2 border rounded" required />
-      <input type="time" class="w-full px-4 py-2 border rounded" required />
-      <select class="w-full px-4 py-2 border rounded" required>
-        <option>Main Hall</option>
-        <option>Room 203</option>
-        <option>Youth Center</option>
-      </select>
+    <!-- ✅ Number of Attendees -->
+    <input type="number"
+           placeholder="Number of Attendees"
+           class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+           min="1"
+           required />
 
-      <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-        Submit Booking
-      </button>
-    </form>
-  </div>
+    <!-- ✅ Venue -->
+    <select class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200" required>
+      <option value="">Select Venue</option>
+      <option>Main Hall</option>
+      <option>Phase A Area 1</option>
+      <option>Phase 2 Area B</option>
+      <option>NxtGen Room</option>
+    </select>
 
-</body>
-</html>
+    <!-- ✅ Calendar Type -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Start Date & Time -->
+      <div>
+        <label class="block text-sm font-semibold mb-1 dark:text-gray-300">Start Date & Time</label>
+        <input type="date"
+               class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+               required />
+        <select class="w-full mt-2 px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200" required>
+          <option value="">Select Time</option>
+          <option>8:00 AM</option>
+          <option>9:00 AM</option>
+          <option>10:00 AM</option>
+          <option>11:00 AM</option>
+          <option>12:00 PM</option>
+          <option>1:00 PM</option>
+          <option>2:00 PM</option>
+          <option>3:00 PM</option>
+          <option>4:00 PM</option>
+          <option>5:00 PM</option>
+          <option>6:00 PM</option>
+          <option>7:00 PM</option>
+          <option>8:00 PM</option>
+          <option>9:00 PM</option>
+        </select>
+      </div>
+
+      <!-- End Date & Time -->
+      <div>
+        <label class="block text-sm font-semibold mb-1 dark:text-gray-300">End Date & Time</label>
+        <input type="date"
+               class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+               required />
+        <select class="w-full mt-2 px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200" required>
+          <option value="">Select Time</option>
+          <option>8:00 AM</option>
+          <option>9:00 AM</option>
+          <option>10:00 AM</option>
+          <option>11:00 AM</option>
+          <option>12:00 PM</option>
+          <option>1:00 PM</option>
+          <option>2:00 PM</option>
+          <option>3:00 PM</option>
+          <option>4:00 PM</option>
+          <option>5:00 PM</option>
+          <option>6:00 PM</option>
+          <option>7:00 PM</option>
+          <option>8:00 PM</option>
+          <option>9:00 PM</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- ✅ Additional Description Needed (Textarea) -->
+    <textarea
+      placeholder="Describe additional needs (Tech, Host, Tables, Other requirements)"
+      class="w-full px-4 py-2 border rounded h-28 dark:bg-gray-800 dark:text-gray-200"></textarea>
+
+    <!-- ✅ Submit Button -->
+    <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded w-full">
+      Submit Booking
+    </button>
+
+  </form>
+</div>
