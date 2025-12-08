@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Venue</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+
+  <div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-bold mb-4 text-blue-700">Book a Venue</h2>
+
+    <form id="booking-form" class="space-y-4">
+      <input type="text" placeholder="Event Name" class="w-full px-4 py-2 border rounded" required />
+      <input type="date" class="w-full px-4 py-2 border rounded" required />
+      <input type="time" class="w-full px-4 py-2 border rounded" required />
+      <select class="w-full px-4 py-2 border rounded" required>
+        <option>Main Hall</option>
+        <option>Room 203</option>
+        <option>Youth Center</option>
+      </select>
+
+      <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        Submit Booking
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>

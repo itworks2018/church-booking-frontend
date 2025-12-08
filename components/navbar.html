@@ -1,0 +1,35 @@
+<!-- components/navbar.html -->
+<nav class="bg-white dark:bg-gray-900 shadow-md">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <a href="/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
+      Church Booking
+    </a>
+
+    <div class="flex items-center space-x-4">
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center space-x-4">
+        <a href="/login.html" class="text-sm text-gray-700 dark:text-gray-200 hover:underline">Log In</a>
+        <a href="/signup.html" class="text-sm text-gray-700 dark:text-gray-200 hover:underline">Sign Up</a>
+        <button id="theme-toggle" class="text-sm text-gray-500 dark:text-gray-300 border px-2 py-1 rounded">
+          Dark
+        </button>
+      </div>
+
+      <!-- Mobile menu button -->
+      <button id="mobile-menu-toggle" class="md:hidden text-gray-700 dark:text-gray-200">
+        ☰
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 dark:border-gray-700">
+    <div class="px-4 py-2 space-y-2 bg-white dark:bg-gray-900">
+      <a href="/login.html" class="block text-sm text-gray-700 dark:text-gray-200">Log In</a>
+      <a href="/signup.html" class="block text-sm text-gray-700 dark:text-gray-200">Sign Up</a>
+      <button id="theme-toggle-mobile" class="text-sm text-gray-500 dark:text-gray-300 border px-2 py-1 rounded">
+        Dark
+      </button>
+    </div>
+  </div>
+</nav>
