@@ -21,16 +21,15 @@
       style="background-image: url('/assets/images/bg2.jpg');">
 
   <!-- ✅ NAVBAR -->
-  <nav class="bg-white/70 backdrop-blur-md shadow-md">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="index.html" class="text-xl font-bold text-blue-700">CHURCH BOOKING</a>
+ <div id="navbar"></div>
 
-      <div class="space-x-4">
-        <a href="login.html" class="text-blue-600 hover:underline">Log In</a>
-        <a href="signup.html" class="text-blue-600 hover:underline">Sign Up</a>
-      </div>
-    </div>
-  </nav>
+  <script>
+    fetch("components/navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+      });
+  </script>
 
   <!-- ✅ LOGIN FORM (Glass Effect) -->
   <div class="flex-grow flex items-center justify-center py-12">
@@ -58,9 +57,12 @@
   </div>
 
   <!-- ✅ FOOTER -->
-  <footer class="bg-white/70 backdrop-blur-md py-4 text-center text-sm text-gray-800">
-    &copy; 2025 Church Booking. All rights reserved.
-  </footer>
+<div id="footer"></div>
 
+<script>
+  fetch("components/footer.html")
+    .then(res => res.text())
+    .then(html => document.getElementById("footer").innerHTML = html);
+</script>
 </body>
 </html>
