@@ -27,7 +27,7 @@
 <div id="hero"></div>
 
 <script>
-  fetch("/frontend/components/hero.html")
+  fetch("components/hero.html")
     .then(res => res.text())
     .then(html => document.getElementById("hero").innerHTML = html);
 </script>
@@ -47,7 +47,7 @@
 <div id="ministries"></div>
 
 <script>
-  fetch("/frontend/components/ministries.html")
+  fetch("components/ministries.html")
     .then(res => res.text())
     .then(html => document.getElementById("ministries").innerHTML = html);
 </script>
@@ -56,7 +56,7 @@
 <div id="events"></div>
 
 <script>
-  fetch("/frontend/components/events.html")
+  fetch("components/events.html")
     .then(res => res.text())
     .then(html => document.getElementById("events").innerHTML = html);
 </script>
@@ -65,7 +65,7 @@
 <div id="footer"></div>
 
 <script>
-  fetch("/frontend/components/footer.html")
+  fetch("components/footer.html")
     .then(res => res.text())
     .then(html => document.getElementById("footer").innerHTML = html);
 </script>
