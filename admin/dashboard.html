@@ -12,7 +12,7 @@
   <!-- ✅ Load Navbar -->
   <div id="navbar"></div>
   <script>
-    fetch("/frontend/components/navbar.html")
+    fetch("components/navbar.html")
       .then(res => res.text())
       .then(html => document.getElementById("navbar").innerHTML = html);
   </script>
@@ -56,13 +56,13 @@
 
   <script>
     function loadPage(page) {
-      fetch(`/frontend/admin/pages/${page}`)
+      fetch(`admin/profiles/${page}`)
         .then(res => res.text())
         .then(html => document.getElementById("contentArea").innerHTML = html);
     }
 
     function logout() {
-      window.location.href = "/frontend/admin/admin-login.html";
+      window.location.href = "index.html";
     }
 
     // Load default page
