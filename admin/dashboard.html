@@ -12,7 +12,7 @@
   <!-- ✅ Load Navbar -->
   <div id="navbar"></div>
   <script>
-    fetch("components/navbar.html")
+    fetch("/components/navbar.html")
       .then(res => res.text())
       .then(html => document.getElementById("navbar").innerHTML = html);
   </script>
@@ -56,7 +56,7 @@
 
   <script>
     function loadPage(page) {
-      fetch(`admin/profiles/${page}`)
+      fetch(`profiles.html${page}`)
         .then(res => res.text())
         .then(html => document.getElementById("contentArea").innerHTML = html);
     }
