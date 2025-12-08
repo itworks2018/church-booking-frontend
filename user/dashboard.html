@@ -7,10 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
-    // ✅ Tailwind Dark Mode Config
-    tailwind.config = {
-      darkMode: 'class'
-    }
+    tailwind.config = { darkMode: "class" }
   </script>
 </head>
 
@@ -20,25 +17,17 @@
   <nav class="bg-white dark:bg-gray-900 shadow-md">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 
-      <!-- ✅ Mobile Sidebar Toggle -->
-      <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">
-        ☰
-      </button>
+      <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">☰</button>
 
-      <a href="/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
-        CHURCH BOOKING
-      </a>
+      <a href="#" class="text-xl font-bold text-blue-700 dark:text-blue-400">CHURCH BOOKING</a>
 
-      <!-- ✅ NAV RIGHT SIDE -->
       <div class="flex items-center space-x-4">
 
-        <!-- ✅ Dark Mode Toggle -->
         <button id="themeToggle"
                 class="text-gray-700 dark:text-gray-200 border px-2 py-1 rounded text-sm">
           🌙
         </button>
 
-        <!-- ✅ Profile Dropdown -->
         <div class="relative">
           <button id="profileMenuBtn"
                   class="flex items-center space-x-2 text-gray-700 dark:text-gray-200">
@@ -46,10 +35,9 @@
             <span class="hidden md:inline">Jeff</span>
           </button>
 
-          <!-- Dropdown -->
           <div id="profileDropdown"
                class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded hidden">
-            <a href="/user/profile.html"
+            <a href="#" data-load="profile.html"
                class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
               Profile
             </a>
@@ -66,7 +54,6 @@
 
   <div class="flex flex-1 relative">
 
-    <!-- ✅ DARK OVERLAY (Mobile Only) -->
     <div id="sidebarOverlay"
          class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
 
@@ -83,26 +70,25 @@
 
       <nav class="mt-6 w-full px-6 space-y-3">
 
-        <!-- ✅ Active Link Highlighting -->
-        <a href="/user/dashboard.html"
+        <a href="#" data-load="dashboard-home.html"
            class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
            data-page="dashboard">
           Dashboard
         </a>
 
-        <a href="/user/profile.html"
+        <a href="#" data-load="profile.html"
            class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
            data-page="profile">
           Profile
         </a>
 
-        <a href="/user/resources.html"
+        <a href="#" data-load="resources.html"
            class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
            data-page="resources">
           Resources
         </a>
 
-        <a href="/user/book.html"
+        <a href="#" data-load="book.html"
            class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
            data-page="book">
           Book Church Venue
@@ -115,31 +101,11 @@
       </nav>
     </aside>
 
-    <!-- ✅ MAIN CONTENT -->
+    <!-- ✅ MAIN CONTENT AREA -->
     <main class="flex-1 p-8 md:ml-0">
-      <h1 class="text-2xl font-bold text-blue-700 dark:text-blue-400 mb-6">Events</h1>
-
-      <!-- Upcoming Events -->
-      <section class="mb-8">
-        <h2 class="text-xl font-semibold mb-4 dark:text-gray-200">Upcoming Events</h2>
-        <div class="space-y-4">
-          <div class="bg-white dark:bg-gray-900 shadow rounded p-4">
-            <h3 class="font-semibold text-gray-800 dark:text-gray-200">Sunday Worship Service</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">March 5, 2024 | 7:00 PM</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Regular Events -->
-      <section>
-        <h2 class="text-xl font-semibold mb-4 dark:text-gray-200">Regular Events</h2>
-        <div class="space-y-4">
-          <div class="bg-white dark:bg-gray-900 shadow rounded p-4">
-            <p class="text-sm text-gray-600 dark:text-gray-400">March 14, 2024</p>
-            <h3 class="font-semibold text-gray-800 dark:text-gray-200">Discipleship Group</h3>
-          </div>
-        </div>
-      </section>
+      <div id="content">
+        <!-- Default dashboard content loads here -->
+      </div>
     </main>
 
   </div>
@@ -149,12 +115,11 @@
     &copy; 2025 Church Booking. All rights reserved.
   </footer>
 
-  <!-- ✅ SCRIPT: Dark Mode + Sidebar Toggle + Dropdown + Active Links -->
+  <!-- ✅ SCRIPT -->
   <script>
     // ✅ DARK MODE
     const themeToggle = document.getElementById("themeToggle");
     const savedTheme = localStorage.getItem("theme") || "light";
-
     if (savedTheme === "dark") document.documentElement.classList.add("dark");
 
     themeToggle.addEventListener("click", () => {
@@ -187,13 +152,26 @@
       profileDropdown.classList.toggle("hidden");
     });
 
-    // ✅ ACTIVE LINK HIGHLIGHTING
-    const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
-    document.querySelectorAll(".sidebar-link").forEach(link => {
-      if (link.dataset.page === currentPage) {
-        link.classList.add("bg-gray-800", "text-blue-400");
-      }
+    // ✅ LOAD CONTENT INTO DASHBOARD BODY
+    function loadPage(page) {
+      fetch(page)
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("content").innerHTML = html;
+        });
+    }
+
+    // ✅ Sidebar link click handler
+    document.querySelectorAll("[data-load]").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const page = link.getAttribute("data-load");
+        loadPage(page);
+      });
     });
+
+    // ✅ Load default dashboard home
+    loadPage("dashboard-home.html");
   </script>
 
 </body>
