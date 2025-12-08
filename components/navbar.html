@@ -1,35 +1,64 @@
-<!-- components/navbar.html -->
+<!-- ✅ REUSABLE NAVBAR -->
 <nav class="bg-white dark:bg-gray-900 shadow-md">
   <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+
+    <!-- Logo -->
     <a href="/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
-      Church Booking
+      CCF Sandoval
     </a>
 
-    <div class="flex items-center space-x-4">
-      <!-- Desktop links -->
-      <div class="hidden md:flex items-center space-x-4">
-        <a href="/login.html" class="text-sm text-gray-700 dark:text-gray-200 hover:underline">Log In</a>
-        <a href="/signup.html" class="text-sm text-gray-700 dark:text-gray-200 hover:underline">Sign Up</a>
-        <button id="theme-toggle" class="text-sm text-gray-500 dark:text-gray-300 border px-2 py-1 rounded">
-          Dark
-        </button>
-      </div>
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center space-x-6">
 
-      <!-- Mobile menu button -->
-      <button id="mobile-menu-toggle" class="md:hidden text-gray-700 dark:text-gray-200">
-        ☰
-      </button>
+      <a href="/index.html" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a>
+      <a href="/about.html" class="hover:text-blue-600 dark:hover:text-blue-400">About</a>
+      <a href="/ministries.html" class="hover:text-blue-600 dark:hover:text-blue-400">Ministries</a>
+      <a href="/events.html" class="hover:text-blue-600 dark:hover:text-blue-400">Events</a>
+
+      <!-- ✅ Buttons -->
+      <a href="/login.html"
+         class="px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition">
+        Log In
+      </a>
+
+      <a href="/signup.html"
+         class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+        Sign Up
+      </a>
     </div>
+
+    <!-- Mobile Menu Button -->
+    <button id="mobileMenuBtn" class="md:hidden text-2xl text-gray-700 dark:text-gray-200">
+      ☰
+    </button>
   </div>
 
-  <!-- Mobile menu -->
-  <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 dark:border-gray-700">
-    <div class="px-4 py-2 space-y-2 bg-white dark:bg-gray-900">
-      <a href="/login.html" class="block text-sm text-gray-700 dark:text-gray-200">Log In</a>
-      <a href="/signup.html" class="block text-sm text-gray-700 dark:text-gray-200">Sign Up</a>
-      <button id="theme-toggle-mobile" class="text-sm text-gray-500 dark:text-gray-300 border px-2 py-1 rounded">
-        Dark
-      </button>
-    </div>
+  <!-- ✅ Mobile Dropdown -->
+  <div id="mobileMenu"
+       class="hidden md:hidden flex flex-col space-y-3 px-4 pb-4 bg-white dark:bg-gray-900">
+
+    <a href="/index.html" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a>
+    <a href="/about.html" class="hover:text-blue-600 dark:hover:text-blue-400">About</a>
+    <a href="/ministries.html" class="hover:text-blue-600 dark:hover:text-blue-400">Ministries</a>
+    <a href="/events.html" class="hover:text-blue-600 dark:hover:text-blue-400">Events</a>
+
+    <a href="/login.html"
+       class="px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition">
+      Log In
+    </a>
+
+    <a href="/signup.html"
+       class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+      Sign Up
+    </a>
   </div>
 </nav>
+
+<script>
+  const mobileBtn = document.getElementById("mobileMenuBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  mobileBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+</script>
