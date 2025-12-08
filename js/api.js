@@ -1,4 +1,4 @@
-const API_BASE = 'https://church-booking-backend.onrender.com'
+const API_BASE = 'https://church-booking-backend.onrender.com/api'
 
 let accessToken = localStorage.getItem('access_token') || null
 let userRole = localStorage.getItem('user_role') || null
