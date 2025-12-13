@@ -33,50 +33,51 @@
 
   <div class="flex">
 
-    <!-- ✅ Sidebar -->
-    <aside class="w-64 bg-white min-h-screen shadow-lg p-6 space-y-6 border-r">
+    <!-- ✅ Sidebar (Dark Only) -->
+    <aside class="w-64 bg-gray-900 text-gray-200 min-h-screen shadow-lg p-6 space-y-6">
 
-      <h2 class="text-lg font-bold text-gray-800">CCF Sandoval Events</h2>
+      <h2 class="text-lg font-bold text-white">CCF Sandoval Events</h2>
 
       <nav class="space-y-3">
 
         <button onclick="loadPage('dashboard-home.html')"
-                class="w-full text-left p-2 rounded hover:bg-gray-200 text-gray-800">
+                class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">
           Dashboard
         </button>
 
         <button onclick="loadPage('manage-events.html')"
-                class="w-full text-left p-2 rounded hover:bg-gray-200 text-gray-800">
+                class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">
           Manage Events
         </button>
 
         <button onclick="loadPage('profile.html')"
-                class="w-full text-left p-2 rounded hover:bg-gray-200 text-gray-800">
+                class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">
           Profile
         </button>
 
         <button onclick="loadPage('resources.html')"
-                class="w-full text-left p-2 rounded hover:bg-gray-200 text-gray-800">
+                class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">
           Resources
         </button>
 
-        <!-- ✅ NEW: Create Venue Reservation -->
-        <button onclick="loadPage('bookings.html')"
-                class="w-full text-left p-2 rounded hover:bg-gray-200 text-gray-800">
+        <button onclick="loadPage('booking.html')"
+                class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">
           Create Venue Reservation
         </button>
 
         <button disabled
-                class="w-full text-left p-2 rounded bg-gray-300 text-gray-500 cursor-not-allowed">
+                class="w-full text-left p-2 rounded bg-gray-700 text-gray-500 cursor-not-allowed">
           More features soon
         </button>
 
       </nav>
+
     </aside>
 
-    <!-- ✅ Content Area -->
+    <!-- ✅ Content Area (Always White) -->
     <main class="flex-1 p-6">
-      <div id="contentArea" class="bg-white p-6 rounded shadow-lg border">
+      <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800">
+        <!-- Loaded content appears here -->
       </div>
     </main>
 
@@ -98,11 +99,11 @@
     });
 
     function logout() {
-      window.location.href = "login.html";
+      window.location.href = "admin-login.html";
     }
 
     // ✅ Load default page
-    loadPage("dashboard-home.html");
+    loadPage("dashboard.html");
   </script>
 
 </body>
