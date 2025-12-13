@@ -85,7 +85,7 @@
 
   <script>
     function loadPage(page) {
-      fetch(`/frontend/admin/pages/${page}`)
+      fetch(`pages/${page}`)
         .then(res => res.text())
         .then(html => document.getElementById("contentArea").innerHTML = html);
     }
@@ -95,11 +95,11 @@
     });
 
     function logout() {
-      window.location.href = "/frontend/admin/admin-login.html";
+      window.location.href = "login.html";
     }
 
     // Load default page
-    loadPage("dashboard-home.html");
+    loadPage("dashboard.html");
   </script>
 
 </body>
