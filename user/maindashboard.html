@@ -170,6 +170,22 @@
     // ✅ Load default dashboard home
     loadPage("pages/dashboard.html");
   </script>
+<script>
+  const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
+
+  const token = localStorage.getItem("token");
+  const email = localStorage.getItem("email");
+
+  // ✅ If not logged in → go to user login
+  if (!token) {
+    window.location.href = "/frontend/login.html";
+  }
+
+  // ✅ If admin tries to access user dashboard → send to admin dashboard
+  if (email === ADMIN_EMAIL) {
+    window.location.href = "/frontend/admin/admin-dashboard.html";
+  }
+</script>
 
 </body>
 </html>
