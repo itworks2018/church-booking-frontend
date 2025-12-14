@@ -1,0 +1,1 @@
+This code creates a styled HTML section titled "User Profiles" featuring a responsive table. The table includes headers for Name, Email, Contact, and Church Role, with an initially empty body designed for dynamic population of user data. The styling ensures clear spacing, adaptable text sizes, and supports dark mode for enhanced readability across different viewing conditions.

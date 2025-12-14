@@ -1,0 +1,1 @@
+This code defines a styled HTML section displaying a "User Profiles" heading followed by a table. The table is structured with headers for Name, Email, Contact, and Church Role, and includes a body section intended for dynamically inserted user data rows. The styling supports both light and dark modes for improved readability.

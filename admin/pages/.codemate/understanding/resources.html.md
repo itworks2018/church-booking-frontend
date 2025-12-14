@@ -1,0 +1,1 @@
+This code snippet defines a section titled "Resources" using an <h2> heading styled with large, bold text and margin spacing. Below the heading, there is a paragraph indicating that the content is "Coming soon...". Both elements include styling classes that adapt their appearance for dark mode, ensuring appropriate text colors for light and dark themes.

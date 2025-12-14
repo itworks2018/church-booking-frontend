@@ -1,0 +1,1 @@
+This code defines a user interface section for managing events. It includes a header titled "Manage Events" and a table structured to display event details. The table has columns for Event Name, User, Venue, Date, Status, and Actions. The table body is intended to be populated dynamically with event data. The layout uses utility classes for styling and spacing.

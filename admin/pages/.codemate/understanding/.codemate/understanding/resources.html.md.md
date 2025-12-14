@@ -1,0 +1,1 @@
+This code defines a "Resources" section consisting of a prominently styled heading and a placeholder paragraph. It uses responsive styling classes to ensure proper spacing, font size, and weight, while also adapting text colors for both light and dark mode themes. The paragraph currently serves as a placeholder indicating that content will be added in the future.
