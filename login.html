@@ -21,7 +21,7 @@
       style="background-image: url('/assets/images/bg2.jpg');">
 
   <!-- ✅ NAVBAR -->
- <div id="navbar"></div>
+  <div id="navbar"></div>
 
   <script>
     fetch("components/navbar.html")
@@ -36,11 +36,12 @@
     <div class="glass-box shadow-xl rounded-lg p-8 w-full max-w-md text-white">
       <h2 class="text-2xl font-bold text-center mb-6">Log In</h2>
 
-      <form id="login-form" class="space-y-4">
-        <input type="email" id="login-email" placeholder="Email"
+      <!-- ✅ UPDATED FORM IDs -->
+      <form id="loginForm" class="space-y-4">
+        <input type="email" id="email" placeholder="Email"
                class="w-full px-4 py-2 rounded bg-white/40 text-black placeholder-gray-700" required />
 
-        <input type="password" id="login-password" placeholder="Password"
+        <input type="password" id="password" placeholder="Password"
                class="w-full px-4 py-2 rounded bg-white/40 text-black placeholder-gray-700" required />
 
         <button type="submit"
@@ -57,12 +58,58 @@
   </div>
 
   <!-- ✅ FOOTER -->
-<div id="footer"></div>
+  <div id="footer"></div>
 
-<script>
-  fetch("components/footer.html")
-    .then(res => res.text())
-    .then(html => document.getElementById("footer").innerHTML = html);
-</script>
+  <script>
+    fetch("components/footer.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("footer").innerHTML = html);
+  </script>
+
+  <!-- ✅ ✅ FINAL USER LOGIN LOGIC (No duplicates, fully working) -->
+  <script>
+    const USER_API_BASE_URL = "https://church-booking-backend.onrender.com";
+    const USER_ADMIN_EMAIL = "ccfsandovaladmin@gmail.com"; // your admin email
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        const res = await fetch(`${USER_API_BASE_URL}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || "Login failed");
+          return;
+        }
+
+        // ✅ Prevent admin from logging in on user login page
+        if (email === USER_ADMIN_EMAIL) {
+          alert("Admins must use the ADMIN login page.");
+          return;
+        }
+
+        // ✅ Save JWT + email
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("email", data.user.email);
+
+        // ✅ Redirect to USER dashboard
+        window.location.href = "/frontend/user/maindashboard.html";
+
+      } catch (err) {
+        console.error(err);
+        alert("Something went wrong. Please try again.");
+      }
+    });
+  </script>
+
 </body>
 </html>
