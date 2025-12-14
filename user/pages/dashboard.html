@@ -63,3 +63,40 @@
   </div>
 
 </div>
+
+<!-- ✅ ACCESS CONTROL SCRIPT -->
+<script>
+  const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
+  const token = localStorage.getItem("token");
+  const email = localStorage.getItem("email");
+
+  if (!token) {
+    window.location.href = "/login.html";
+  }
+
+  if (email === ADMIN_EMAIL) {
+    window.location.href = "admin/admin-dashboard.html";
+  }
+</script>
+
+<!-- ✅ FETCH USER BOOKINGS SCRIPT (ADD THIS) -->
+<script>
+const API_BASE_URL = "https://church-booking-backend.onrender.com";
+
+async function loadMyBookings() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_BASE_URL}/api/bookings/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const bookings = await res.json();
+  console.log("User bookings:", bookings);
+
+  // ✅ TODO: Display bookings on dashboard (I can build this for you)
+}
+
+loadMyBookings();
+</script>
