@@ -13,53 +13,50 @@
 
 <body class="bg-gray-100 dark:bg-gray-950 min-h-screen flex flex-col">
 
-  <!-- ✅ NAVBAR -->
-  <nav class="bg-white dark:bg-gray-900 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+  <!-- ✅ NAVBAR (White like Admin Dashboard) -->
+  <nav class="bg-white shadow px-6 py-4 flex justify-between items-center border-b dark:bg-gray-900">
+    <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">☰</button>
 
-      <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">☰</button>
+    <a href="#" class="text-xl font-bold text-blue-700 dark:text-blue-400">CHURCH BOOKING</a>
 
-      <a href="#" class="text-xl font-bold text-blue-700 dark:text-blue-400">CHURCH BOOKING</a>
+    <div class="flex items-center space-x-4">
 
-      <div class="flex items-center space-x-4">
+      <!-- Dark Mode Toggle -->
+      <button id="themeToggle"
+              class="text-gray-700 dark:text-gray-200 border px-2 py-1 rounded text-sm">
+        🌙
+      </button>
 
-        <button id="themeToggle"
-                class="text-gray-700 dark:text-gray-200 border px-2 py-1 rounded text-sm">
-          🌙
+      <!-- Profile Dropdown -->
+      <div class="relative">
+        <button id="profileMenuBtn"
+                class="flex items-center space-x-2 text-gray-700 dark:text-gray-200">
+          <img src="/assets/images/profile.jpg" class="w-8 h-8 rounded-full border" />
+          <span class="hidden md:inline">Jeff</span>
         </button>
 
-        <div class="relative">
-          <button id="profileMenuBtn"
-                  class="flex items-center space-x-2 text-gray-700 dark:text-gray-200">
-            <img src="/assets/images/profile.jpg" class="w-8 h-8 rounded-full border" />
-            <span class="hidden md:inline">Jeff</span>
-          </button>
-
-          <div id="profileDropdown"
-               class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded hidden">
-            <a href="#" data-load="profile.html"
-               class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
-              Profile
-            </a>
-            <a href="/login.html"
-               class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700">
-              Log Out
-            </a>
-          </div>
+        <!-- ✅ Only Log Out (Profile removed) -->
+        <div id="profileDropdown"
+             class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded hidden border">
+          <a href="/login.html"
+             class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+            Log Out
+          </a>
         </div>
-
       </div>
+
     </div>
   </nav>
 
   <div class="flex flex-1 relative">
 
+    <!-- Mobile Overlay -->
     <div id="sidebarOverlay"
          class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
 
-    <!-- ✅ SIDEBAR -->
+    <!-- ✅ SIDEBAR (Dark Only — Matches Admin Dashboard) -->
     <aside id="sidebar"
-           class="w-64 bg-gray-900 text-white flex flex-col items-center py-6 shadow-lg
+           class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg
                   fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0
                   transition-transform duration-300 z-30">
 
@@ -70,7 +67,7 @@
 
       <nav class="mt-6 w-full px-6 space-y-3">
 
-        <a href="#" data-load="dashboard-home.html"
+        <a href="#" data-load="dashboard.html"
            class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
            data-page="dashboard">
           Dashboard
@@ -91,7 +88,7 @@
         <a href="#" data-load="bookings.html"
            class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
            data-page="book">
-          Book Church Venue
+          Create Venue Reservation
         </a>
 
         <a href="/login.html"
@@ -101,9 +98,9 @@
       </nav>
     </aside>
 
-    <!-- ✅ MAIN CONTENT AREA -->
+    <!-- ✅ MAIN CONTENT AREA (White like Admin Dashboard) -->
     <main class="flex-1 p-8 md:ml-0">
-      <div id="content">
+      <div id="content" class="bg-white p-6 rounded shadow-lg border dark:bg-gray-900 dark:text-gray-200">
         <!-- Default dashboard content loads here -->
       </div>
     </main>
@@ -144,7 +141,7 @@
       sidebarOverlay.classList.add("hidden");
     });
 
-    // ✅ PROFILE DROPDOWN
+    // ✅ PROFILE DROPDOWN (Only Log Out)
     const profileBtn = document.getElementById("profileMenuBtn");
     const profileDropdown = document.getElementById("profileDropdown");
 
@@ -171,7 +168,7 @@
     });
 
     // ✅ Load default dashboard home
-    loadPage("dashboard-home.html");
+    loadPage("dashboard.html");
   </script>
 
 </body>
