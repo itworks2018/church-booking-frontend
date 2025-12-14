@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Dashboard – Church Booking</title>
+  <title>User Dashboard – CCF Sandoval Events</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
@@ -13,12 +13,18 @@
 
 <body class="bg-gray-100 dark:bg-gray-950 min-h-screen flex flex-col">
 
-  <!-- ✅ NAVBAR (White like Admin Dashboard) -->
+  <!-- ✅ NAVBAR (Your exact format, brand updated) -->
   <nav class="bg-white shadow px-6 py-4 flex justify-between items-center border-b dark:bg-gray-900">
+    
+    <!-- Mobile Sidebar Toggle -->
     <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">☰</button>
 
-    <a href="index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">CCF Sandoval Events</a>
+    <!-- ✅ Your Brand -->
+    <a href="/frontend/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
+      CCF Sandoval Events
+    </a>
 
+    <!-- ✅ Right Side (unchanged as requested) -->
     <div class="flex items-center space-x-4">
 
       <!-- Dark Mode Toggle -->
@@ -35,7 +41,7 @@
           <span class="hidden md:inline">Jeff</span>
         </button>
 
-        <!-- ✅ Only Log Out (Profile removed) -->
+        <!-- ✅ Only Log Out -->
         <div id="profileDropdown"
              class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded hidden border">
           <a href="/login.html"
@@ -54,7 +60,7 @@
     <div id="sidebarOverlay"
          class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
 
-    <!-- ✅ SIDEBAR (Dark Only — Matches Admin Dashboard) -->
+    <!-- ✅ SIDEBAR (Dark Only) -->
     <aside id="sidebar"
            class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg
                   fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0
@@ -68,26 +74,22 @@
       <nav class="mt-6 w-full px-6 space-y-3">
 
         <a href="#" data-load="dashboard.html"
-           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
-           data-page="dashboard">
+           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">
           Dashboard
         </a>
 
         <a href="#" data-load="profile.html"
-           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
-           data-page="profile">
+           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">
           Profile
         </a>
 
         <a href="#" data-load="resources.html"
-           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
-           data-page="resources">
+           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">
           Resources
         </a>
 
         <a href="#" data-load="bookings.html"
-           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition"
-           data-page="book">
+           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">
           Create Venue Reservation
         </a>
 
@@ -98,7 +100,7 @@
       </nav>
     </aside>
 
-    <!-- ✅ MAIN CONTENT AREA (White like Admin Dashboard) -->
+    <!-- ✅ MAIN CONTENT AREA -->
     <main class="flex-1 p-8 md:ml-0">
       <div id="content" class="bg-white p-6 rounded shadow-lg border dark:bg-gray-900 dark:text-gray-200">
         <!-- Default dashboard content loads here -->
@@ -109,7 +111,7 @@
 
   <!-- ✅ FOOTER -->
   <footer class="bg-white dark:bg-gray-900 shadow-inner py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-    &copy; 2025 Church Booking. All rights reserved.
+    &copy; 2025 CCF Sandoval Events. All rights reserved.
   </footer>
 
   <!-- ✅ SCRIPT -->
@@ -141,7 +143,7 @@
       sidebarOverlay.classList.add("hidden");
     });
 
-    // ✅ PROFILE DROPDOWN (Only Log Out)
+    // ✅ PROFILE DROPDOWN
     const profileBtn = document.getElementById("profileMenuBtn");
     const profileDropdown = document.getElementById("profileDropdown");
 
@@ -149,7 +151,7 @@
       profileDropdown.classList.toggle("hidden");
     });
 
-    // ✅ LOAD CONTENT INTO DASHBOARD BODY
+    // ✅ LOAD CONTENT
     function loadPage(page) {
       fetch(page)
         .then(res => res.text())
