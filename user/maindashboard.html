@@ -20,7 +20,7 @@
     <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">☰</button>
 
     <!-- ✅ Brand -->
-    <a href="/frontend/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
+    <a href="/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
       CCF Sandoval Events
     </a>
 
@@ -178,12 +178,12 @@
 
   // ✅ If not logged in → go to user login
   if (!token) {
-    window.location.href = "/frontend/login.html";
+    window.location.href = "/login.html";
   }
 
   // ✅ If admin tries to access user dashboard → send to admin dashboard
   if (email === ADMIN_EMAIL) {
-    window.location.href = "/frontend/admin/admin-dashboard.html";
+    window.location.href = "admin/admin-dashboard.html";
   }
 </script>
 
