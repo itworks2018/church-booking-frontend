@@ -96,19 +96,3 @@ loginForm.addEventListener('submit', async (e) => {
   }
 })
 
-<script>
-  const loginBox = document.getElementById('login-box');
-  const signupBox = document.getElementById('signup-box');
-  const showLoginBtn = document.getElementById('show-login');
-  const showSignupBtn = document.getElementById('show-signup');
-
-  showLoginBtn.addEventListener('click', () => {
-    loginBox.classList.remove('hidden');
-    signupBox.classList.add('hidden');
-  });
-
-  showSignupBtn.addEventListener('click', () => {
-    signupBox.classList.remove('hidden');
-    loginBox.classList.add('hidden');
-  });
-</script>
