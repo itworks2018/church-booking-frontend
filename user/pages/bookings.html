@@ -1,122 +1,205 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create Booking</title>
+]<div class="bg-white dark:bg-gray-900 shadow rounded p-6">
+  <h2 class="text-xl font-bold mb-4 dark:text-gray-200">Book a Venue</h2>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+  <form id="bookingForm" class="space-y-4">
 
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen p-6">
+    <!-- ✅ Event Name -->
+    <label for="event_name" class="sr-only">Event Name</label>
+    <input type="text"
+           id="event_name"
+           name="event_name"
+           placeholder="Event Name"
+           class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+           required />
 
-  <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200">Create a Booking</h2>
+    <!-- ✅ Purpose of Event -->
+    <label for="purpose" class="sr-only">Purpose of Event</label>
+    <input type="text"
+           id="purpose"
+           name="purpose"
+           placeholder="Purpose of Event"
+           class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+           required />
 
-    <form id="bookingForm" method="POST" class="space-y-4">
+    <!-- ✅ Number of Attendees -->
+    <label for="attendees" class="sr-only">Number of Attendees</label>
+    <input type="number"
+           id="attendees"
+           name="attendees"
+           placeholder="Number of Attendees"
+           class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+           min="1"
+           required />
 
-      <!-- ✅ Event Name -->
-      <label for="event_name" class="text-gray-700 dark:text-gray-300">Event Name</label>
-      <input type="text" id="event_name" name="event_name"
-             class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-gray-200"
-             placeholder="Enter event name" required />
+    <!-- ✅ Venue -->
+    <label for="venue" class="sr-only">Venue</label>
+    <select id="venue"
+            name="venue"
+            class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+            required>
+      <option value="">Select Venue</option>
+      <option value="Main Hall">Main Hall</option>
+      <option value="Phase A Area 1">Phase A Area 1</option>
+      <option value="Phase 2 Area B">Phase 2 Area B</option>
+      <option value="NxtGen Room">NxtGen Room</option>
+    </select>
 
-      <!-- ✅ Venue -->
-      <label for="venue_id" class="text-gray-700 dark:text-gray-300">Venue</label>
-      <select id="venue_id" name="venue_id"
-              class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-gray-200"
-              required>
-        <option value="">Select Venue</option>
-        <option value="1">Main Hall</option>
-        <option value="2">Youth Room</option>
-        <option value="3">Prayer Room</option>
-        <option value="4">Multipurpose Room</option>
-      </select>
+    <!-- ✅ Calendar Type -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-      <!-- ✅ Start Date/Time -->
-      <label for="start_datetime" class="text-gray-700 dark:text-gray-300">Start Date & Time</label>
-      <input type="datetime-local" id="start_datetime" name="start_datetime"
-             class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-gray-200"
-             required />
+      <!-- Start Date & Time -->
+      <div>
+        <label for="start_date" class="block text-sm font-semibold mb-1 dark:text-gray-300">
+          Start Date & Time
+        </label>
 
-      <!-- ✅ End Date/Time -->
-      <label for="end_datetime" class="text-gray-700 dark:text-gray-300">End Date & Time</label>
-      <input type="datetime-local" id="end_datetime" name="end_datetime"
-             class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-gray-200"
-             required />
+        <input type="date"
+               id="start_date"
+               name="start_date"
+               class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+               required />
 
-      <!-- ✅ Description -->
-      <label for="description" class="text-gray-700 dark:text-gray-300">Description</label>
-      <textarea id="description" name="description"
-                class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-gray-200"
-                placeholder="Describe your event (optional)" rows="4"></textarea>
+        <select id="start_time"
+                name="start_time"
+                class="w-full mt-2 px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+                required>
+          <option value="">Select Time</option>
+          <option value="8:00 AM">8:00 AM</option>
+          <option value="9:00 AM">9:00 AM</option>
+          <option value="10:00 AM">10:00 AM</option>
+          <option value="11:00 AM">11:00 AM</option>
+          <option value="12:00 PM">12:00 PM</option>
+          <option value="1:00 PM">1:00 PM</option>
+          <option value="2:00 PM">2:00 PM</option>
+          <option value="3:00 PM">3:00 PM</option>
+          <option value="4:00 PM">4:00 PM</option>
+          <option value="5:00 PM">5:00 PM</option>
+          <option value="6:00 PM">6:00 PM</option>
+          <option value="7:00 PM">7:00 PM</option>
+          <option value="8:00 PM">8:00 PM</option>
+          <option value="9:00 PM">9:00 PM</option>
+        </select>
+      </div>
 
-      <!-- ✅ Submit Button -->
-      <button type="submit"
-              class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
-        Submit Booking
-      </button>
+      <!-- End Date & Time -->
+      <div>
+        <label for="end_date" class="block text-sm font-semibold mb-1 dark:text-gray-300">
+          End Date & Time
+        </label>
 
-    </form>
-  </div>
+        <input type="date"
+               id="end_date"
+               name="end_date"
+               class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+               required />
 
-  <!-- ✅ BOOKING LOGIC -->
-  <script>
-    const API_BASE_URL = "https://church-booking-backend.onrender.com";
+        <select id="end_time"
+                name="end_time"
+                class="w-full mt-2 px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200"
+                required>
+          <option value="">Select Time</option>
+          <option value="8:00 AM">8:00 AM</option>
+          <option value="9:00 AM">9:00 AM</option>
+          <option value="10:00 AM">10:00 AM</option>
+          <option value="11:00 AM">11:00 AM</option>
+          <option value="12:00 PM">12:00 PM</option>
+          <option value="1:00 PM">1:00 PM</option>
+          <option value="2:00 PM">2:00 PM</option>
+          <option value="3:00 PM">3:00 PM</option>
+          <option value="4:00 PM">4:00 PM</option>
+          <option value="5:00 PM">5:00 PM</option>
+          <option value="6:00 PM">6:00 PM</option>
+          <option value="7:00 PM">7:00 PM</option>
+          <option value="8:00 PM">8:00 PM</option>
+          <option value="9:00 PM">9:00 PM</option>
+        </select>
+      </div>
 
-    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+    </div>
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("You must be logged in to create a booking.");
+    <!-- ✅ Additional Description Needed (Textarea) -->
+    <label for="additional_needs" class="sr-only">Additional Needs</label>
+    <textarea id="additional_needs"
+              name="additional_needs"
+              placeholder="Describe additional needs (Tech, Host, Tables, Other requirements)"
+              class="w-full px-4 py-2 border rounded h-28 dark:bg-gray-800 dark:text-gray-200"></textarea>
+
+    <!-- ✅ Submit Button -->
+    <button type="submit"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded w-full">
+      Submit Booking
+    </button>
+
+  </form>
+</div>
+
+<script>
+  const API_BASE_URL = "https://church-booking-backend.onrender.com";
+
+  document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to create a booking.");
+      return;
+    }
+
+    // ✅ Collect form values
+    const event_name = document.getElementById("event_name").value.trim();
+    const purpose = document.getElementById("purpose").value.trim();
+    const attendees = document.getElementById("attendees").value;
+    const venue = document.getElementById("venue").value;
+
+    const start_date = document.getElementById("start_date").value;
+    const start_time = document.getElementById("start_time").value;
+
+    const end_date = document.getElementById("end_date").value;
+    const end_time = document.getElementById("end_time").value;
+
+    const additional_needs = document.getElementById("additional_needs").value.trim();
+
+    // ✅ Combine date + time into ISO datetime
+    const start_datetime = new Date(`${start_date} ${start_time}`);
+    const end_datetime = new Date(`${end_date} ${end_time}`);
+
+    // ✅ Validate date/time logic
+    if (end_datetime <= start_datetime) {
+      alert("End date/time must be after start date/time.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/bookings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          event_name,
+          purpose,
+          attendees,
+          venue,
+          start_datetime,
+          end_datetime,
+          additional_needs
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Booking failed");
         return;
       }
 
-      const event_name = document.getElementById("event_name").value.trim();
-      const venue_id = document.getElementById("venue_id").value;
-      const start_datetime = document.getElementById("start_datetime").value;
-      const end_datetime = document.getElementById("end_datetime").value;
-      const description = document.getElementById("description").value.trim();
+      alert("Booking created successfully!");
+      window.location.href = "user-dashboard.html";
 
-      // ✅ Client-side validation for date/time logic
-      if (new Date(end_datetime) <= new Date(start_datetime)) {
-        alert("End date/time must be after start date/time.");
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/bookings`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            event_name,
-            venue_id,
-            start_datetime,
-            end_datetime,
-            description
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          alert(data.error || "Booking failed");
-          return;
-        }
-
-        alert("Booking created successfully!");
-        window.location.href = "user-dashboard.html";
-
-      } catch (err) {
-        console.error(err);
-        alert("Something went wrong. Please try again.");
-      }
-    });
-  </script>
-
-</body>
-</html>
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    }
+  });
+</script>
