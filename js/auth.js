@@ -79,20 +79,23 @@ loginForm.addEventListener('submit', async (e) => {
       body: JSON.stringify({ email, password })
     })
 
-    setToken(res.access_token)
+    // Save token
+    setToken(res.token)
 
-    const profile = await apiRequest('/profiles/me')
-    setRole(profile.role)
+    // Save user details to localStorage
+    localStorage.setItem("email", res.user.email)
+    localStorage.setItem("full_name", res.user.full_name)
+    localStorage.setItem("role", res.user.role)
 
     showMessage('Login successful! Redirecting...')
 
     setTimeout(() => {
-      window.location.href = profile.role === 'admin'
+      window.location.href = res.user.role === 'admin'
         ? 'admin.html'
         : 'user.html'
     }, 800)
+
   } catch (err) {
     showMessage(err.message, true)
   }
 })
-
