@@ -99,7 +99,7 @@
     &copy; 2025 CCF Sandoval Events. All rights reserved.
   </footer>
 
-  <!-- EXISTING SCRIPT BLOCKS (unchanged) -->
+  <!-- MAIN DASHBOARD SCRIPT (CLEANED) -->
   <script>
     const themeToggle = document.getElementById("themeToggle");
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -149,42 +149,40 @@
       });
     });
 
-  
     loadPage("pages/dashboard.html");
   </script>
 
-  <!-- ⭐ FIXED: DYNAMIC NAME LOADING -->
+  <!-- PROFILE NAME LOADING -->
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
+    document.addEventListener("DOMContentLoaded", () => {
+      const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
 
-    const token = localStorage.getItem("token");
-    const email = localStorage.getItem("email");
-    const fullName = localStorage.getItem("full_name");
+      const token = localStorage.getItem("token");
+      const email = localStorage.getItem("email");
+      const fullName = localStorage.getItem("full_name");
 
-    if (!token) {
-      window.location.href = "/login.html";
-      return;
-    }
+      if (!token) {
+        window.location.href = "/login.html";
+        return;
+      }
 
-    if (email === ADMIN_EMAIL) {
-      window.location.href = "admin/admin-dashboard.html";
-      return;
-    }
+      if (email === ADMIN_EMAIL) {
+        window.location.href = "admin/admin-dashboard.html";
+        return;
+      }
 
-    // Inject name into navbar + sidebar
-    if (fullName) {
-      const navName = document.getElementById("navProfileName");
-      const sidebarWelcome = document.getElementById("sidebarWelcome");
+      if (fullName) {
+        const navName = document.getElementById("navProfileName");
+        const sidebarWelcome = document.getElementById("sidebarWelcome");
 
-      if (navName) navName.textContent = fullName;
-      if (sidebarWelcome) sidebarWelcome.textContent = `Welcome, ${fullName}`;
-    }
-  });
+        if (navName) navName.textContent = fullName;
+        if (sidebarWelcome) sidebarWelcome.textContent = `Welcome, ${fullName}`;
+      }
+    });
+  </script>
 
-</script>
-<script src="/js/booking.js"></script>
-
+  <!-- BOOKING LOGIC MOVED TO EXTERNAL FILE -->
+  <script src="/js/booking.js"></script>
 
 </body>
 </html>
