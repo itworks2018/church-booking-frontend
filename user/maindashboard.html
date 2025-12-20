@@ -13,27 +13,22 @@
 
 <body class="bg-gray-100 dark:bg-gray-950 min-h-screen flex flex-col">
 
-  <!-- ✅ NAVBAR -->
+  <!-- NAVBAR -->
   <nav class="bg-white shadow px-6 py-4 flex justify-between items-center border-b dark:bg-gray-900">
     
-    <!-- Mobile Sidebar Toggle -->
     <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">☰</button>
 
-    <!-- Brand -->
     <a href="/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
       CCF Sandoval Events
     </a>
 
-    <!-- Right Side Controls -->
     <div class="flex items-center space-x-4">
 
-      <!-- Dark Mode Toggle -->
       <button id="themeToggle"
               class="text-gray-700 dark:text-gray-200 border px-2 py-1 rounded text-sm">
         🌙
       </button>
 
-      <!-- Profile Dropdown -->
       <div class="relative">
         <button id="profileMenuBtn"
                 class="flex items-center space-x-2 text-gray-700 dark:text-gray-200">
@@ -55,11 +50,9 @@
 
   <div class="flex flex-1 relative">
 
-    <!-- Mobile Overlay -->
     <div id="sidebarOverlay"
          class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
 
-    <!-- SIDEBAR -->
     <aside id="sidebar"
            class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg
                   fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0
@@ -95,23 +88,19 @@
       </nav>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 p-8 md:ml-0">
       <div id="content" class="bg-white p-6 rounded shadow-lg border dark:bg-gray-900 dark:text-gray-200">
-        <!-- Default dashboard content loads here -->
       </div>
     </main>
 
   </div>
 
-  <!-- FOOTER -->
   <footer class="bg-white dark:bg-gray-900 shadow-inner py-4 text-center text-sm text-gray-500 dark:text-gray-400">
     &copy; 2025 CCF Sandoval Events. All rights reserved.
   </footer>
 
-  <!-- SCRIPT -->
+  <!-- EXISTING SCRIPT BLOCKS (unchanged) -->
   <script>
-    // DARK MODE
     const themeToggle = document.getElementById("themeToggle");
     const savedTheme = localStorage.getItem("theme") || "light";
     if (savedTheme === "dark") document.documentElement.classList.add("dark");
@@ -123,7 +112,6 @@
       );
     });
 
-    // MOBILE SIDEBAR
     const sidebar = document.getElementById("sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
@@ -138,7 +126,6 @@
       sidebarOverlay.classList.add("hidden");
     });
 
-    // PROFILE DROPDOWN
     const profileBtn = document.getElementById("profileMenuBtn");
     const profileDropdown = document.getElementById("profileDropdown");
 
@@ -146,7 +133,6 @@
       profileDropdown.classList.toggle("hidden");
     });
 
-    // LOAD CONTENT
     function loadPage(page) {
       fetch(page)
         .then(res => res.text())
@@ -166,29 +152,34 @@
     loadPage("pages/dashboard.html");
   </script>
 
-  <!-- ACCESS CONTROL + USER NAME INJECTION -->
+  <!-- ⭐ FIXED: DYNAMIC NAME LOADING -->
   <script>
+  document.addEventListener("DOMContentLoaded", () => {
     const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
 
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
     const fullName = localStorage.getItem("full_name");
 
-    // Redirect if not logged in
     if (!token) {
       window.location.href = "/login.html";
+      return;
     }
 
-    // Redirect admin
     if (email === ADMIN_EMAIL) {
       window.location.href = "admin/admin-dashboard.html";
+      return;
     }
 
-    // Inject user name into navbar + sidebar
+    // Inject name into navbar + sidebar
     if (fullName) {
-      document.getElementById("navProfileName").textContent = fullName;
-      document.getElementById("sidebarWelcome").textContent = `Welcome, ${fullName}`;
+      const navName = document.getElementById("navProfileName");
+      const sidebarWelcome = document.getElementById("sidebarWelcome");
+
+      if (navName) navName.textContent = fullName;
+      if (sidebarWelcome) sidebarWelcome.textContent = `Welcome, ${fullName}`;
     }
+  });
   </script>
 
 </body>
