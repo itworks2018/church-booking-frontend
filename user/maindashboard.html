@@ -13,18 +13,18 @@
 
 <body class="bg-gray-100 dark:bg-gray-950 min-h-screen flex flex-col">
 
-  <!-- ✅ NAVBAR (Your exact format) -->
+  <!-- ✅ NAVBAR -->
   <nav class="bg-white shadow px-6 py-4 flex justify-between items-center border-b dark:bg-gray-900">
     
     <!-- Mobile Sidebar Toggle -->
     <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">☰</button>
 
-    <!-- ✅ Brand -->
+    <!-- Brand -->
     <a href="/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
       CCF Sandoval Events
     </a>
 
-    <!-- ✅ Right Side Controls -->
+    <!-- Right Side Controls -->
     <div class="flex items-center space-x-4">
 
       <!-- Dark Mode Toggle -->
@@ -38,10 +38,9 @@
         <button id="profileMenuBtn"
                 class="flex items-center space-x-2 text-gray-700 dark:text-gray-200">
           <img src="/assets/images/profile.jpg" class="w-8 h-8 rounded-full border" />
-          <span class="hidden md:inline">Jeff</span>
+          <span id="navProfileName" class="hidden md:inline">User</span>
         </button>
 
-        <!-- ✅ Only Log Out -->
         <div id="profileDropdown"
              class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded hidden border">
           <a href="/login.html"
@@ -60,7 +59,7 @@
     <div id="sidebarOverlay"
          class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
 
-    <!-- ✅ SIDEBAR (Dark Only) -->
+    <!-- SIDEBAR -->
     <aside id="sidebar"
            class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg
                   fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0
@@ -69,7 +68,7 @@
       <img src="/assets/images/profile.jpg"
            class="w-24 h-24 rounded-full mb-4 border-4 border-white" />
 
-      <h2 class="text-lg font-semibold">Welcome, Jeff</h2>
+      <h2 id="sidebarWelcome" class="text-lg font-semibold">Welcome</h2>
 
       <nav class="mt-6 w-full px-6 space-y-3">
 
@@ -93,12 +92,10 @@
           Create Venue Reservation
         </a>
 
-        <!-- ✅ Log Out removed from sidebar -->
-
       </nav>
     </aside>
 
-    <!-- ✅ MAIN CONTENT AREA -->
+    <!-- MAIN CONTENT -->
     <main class="flex-1 p-8 md:ml-0">
       <div id="content" class="bg-white p-6 rounded shadow-lg border dark:bg-gray-900 dark:text-gray-200">
         <!-- Default dashboard content loads here -->
@@ -107,14 +104,14 @@
 
   </div>
 
-  <!-- ✅ FOOTER -->
+  <!-- FOOTER -->
   <footer class="bg-white dark:bg-gray-900 shadow-inner py-4 text-center text-sm text-gray-500 dark:text-gray-400">
     &copy; 2025 CCF Sandoval Events. All rights reserved.
   </footer>
 
-  <!-- ✅ SCRIPT -->
+  <!-- SCRIPT -->
   <script>
-    // ✅ DARK MODE
+    // DARK MODE
     const themeToggle = document.getElementById("themeToggle");
     const savedTheme = localStorage.getItem("theme") || "light";
     if (savedTheme === "dark") document.documentElement.classList.add("dark");
@@ -126,7 +123,7 @@
       );
     });
 
-    // ✅ MOBILE SIDEBAR
+    // MOBILE SIDEBAR
     const sidebar = document.getElementById("sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
@@ -141,7 +138,7 @@
       sidebarOverlay.classList.add("hidden");
     });
 
-    // ✅ PROFILE DROPDOWN
+    // PROFILE DROPDOWN
     const profileBtn = document.getElementById("profileMenuBtn");
     const profileDropdown = document.getElementById("profileDropdown");
 
@@ -149,7 +146,7 @@
       profileDropdown.classList.toggle("hidden");
     });
 
-    // ✅ LOAD CONTENT
+    // LOAD CONTENT
     function loadPage(page) {
       fetch(page)
         .then(res => res.text())
@@ -158,7 +155,6 @@
         });
     }
 
-    // ✅ Sidebar link click handler
     document.querySelectorAll("[data-load]").forEach(link => {
       link.addEventListener("click", e => {
         e.preventDefault();
@@ -167,25 +163,33 @@
       });
     });
 
-    // ✅ Load default dashboard home
     loadPage("pages/dashboard.html");
   </script>
-<script>
-  const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
 
-  const token = localStorage.getItem("token");
-  const email = localStorage.getItem("email");
+  <!-- ACCESS CONTROL + USER NAME INJECTION -->
+  <script>
+    const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
 
-  // ✅ If not logged in → go to user login
-  if (!token) {
-    window.location.href = "/login.html";
-  }
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    const fullName = localStorage.getItem("full_name");
 
-  // ✅ If admin tries to access user dashboard → send to admin dashboard
-  if (email === ADMIN_EMAIL) {
-    window.location.href = "admin/admin-dashboard.html";
-  }
-</script>
+    // Redirect if not logged in
+    if (!token) {
+      window.location.href = "/login.html";
+    }
+
+    // Redirect admin
+    if (email === ADMIN_EMAIL) {
+      window.location.href = "admin/admin-dashboard.html";
+    }
+
+    // Inject user name into navbar + sidebar
+    if (fullName) {
+      document.getElementById("navProfileName").textContent = fullName;
+      document.getElementById("sidebarWelcome").textContent = `Welcome, ${fullName}`;
+    }
+  </script>
 
 </body>
 </html>
