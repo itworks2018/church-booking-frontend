@@ -165,32 +165,32 @@
 
   <!-- PROFILE NAME LOADING -->
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
+  document.addEventListener("DOMContentLoaded", () => {
+    const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
 
-      const token = localStorage.getItem("token");
-      const email = localStorage.getItem("email");
-      const fullName = localStorage.getItem("full_name");
+    const token = localStorage.getItem("access_token");   // ⭐ FIXED
+    const email = localStorage.getItem("email");
+    const fullName = localStorage.getItem("full_name");
 
-      if (!token) {
-        window.location.href = "/login.html";
-        return;
-      }
+    if (!token) {
+      window.location.href = "/login.html";
+      return;
+    }
 
-      if (email === ADMIN_EMAIL) {
-        window.location.href = "admin/admin-dashboard.html";
-        return;
-      }
+    if (email === ADMIN_EMAIL) {
+      window.location.href = "admin/admin-dashboard.html";
+      return;
+    }
 
-      if (fullName) {
-        const navName = document.getElementById("navProfileName");
-        const sidebarWelcome = document.getElementById("sidebarWelcome");
+    if (fullName) {
+      const navName = document.getElementById("navProfileName");
+      const sidebarWelcome = document.getElementById("sidebarWelcome");
 
-        if (navName) navName.textContent = fullName;
-        if (sidebarWelcome) sidebarWelcome.textContent = `Welcome, ${fullName}`;
-      }
-    });
-  </script>
+      if (navName) navName.textContent = fullName;
+      if (sidebarWelcome) sidebarWelcome.textContent = `Welcome, ${fullName}`;
+    }
+  });
+</script>
 
   <!-- BOOKING LOGIC -->
   <script src="/js/bookings.js"></script>

@@ -22,7 +22,7 @@ async function handleBookingSubmit(e) {
   btn.disabled = true;
   btn.textContent = "Submitting...";
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access_token");   // ⭐ FIXED
   if (!token) {
     alert("You must be logged in to create a booking.");
     btn.disabled = false;
@@ -64,7 +64,7 @@ async function handleBookingSubmit(e) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": `Bearer ${token}`   // ⭐ FIXED
       },
       body: JSON.stringify({
         event_name,
@@ -107,15 +107,15 @@ document.addEventListener("click", () => {
   form.addEventListener("submit", handleBookingSubmit);
 });
 
-//Booking Table Fetcher
+// Booking Table Fetcher
 async function loadUserBookings() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access_token");   // ⭐ FIXED
   if (!token) return;
 
   try {
     const res = await fetch(`${API_BASE_URL}/api/bookings/my`, {
       headers: {
-        "Authorization": `Bearer ${token}`
+        "Authorization": `Bearer ${token}`   // ⭐ FIXED
       }
     });
 
