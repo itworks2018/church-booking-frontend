@@ -149,7 +149,20 @@
       });
     });
 
+function loadPage(page) {
+  fetch(page)
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("content").innerHTML = html;
+
+      // ⭐ If dashboard page is loaded, fetch bookings
+      if (page.includes("dashboard.html")) {
+        setTimeout(() => loadUserBookings(), 100);
+      }
+    });
+}
     loadPage("pages/dashboard.html");
+    
   </script>
 
   <!-- PROFILE NAME LOADING -->

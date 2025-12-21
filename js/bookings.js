@@ -106,3 +106,40 @@ document.addEventListener("click", () => {
   form.dataset.bound = true;
   form.addEventListener("submit", handleBookingSubmit);
 });
+
+//Booking Table Fetcher
+async function loadUserBookings() {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/bookings/my`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+
+    const tbody = document.getElementById("myBookingsBody");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+
+    data.forEach(b => {
+      const row = `
+        <tr>
+          <td class="border px-3 py-2">${b.event_name}</td>
+          <td class="border px-3 py-2">${b.venue}</td>
+          <td class="border px-3 py-2">${new Date(b.start_datetime).toLocaleString()}</td>
+          <td class="border px-3 py-2">${new Date(b.end_datetime).toLocaleString()}</td>
+          <td class="border px-3 py-2 capitalize">${b.status}</td>
+        </tr>
+      `;
+      tbody.insertAdjacentHTML("beforeend", row);
+    });
+
+  } catch (err) {
+    console.error("Error loading bookings:", err);
+  }
+}
