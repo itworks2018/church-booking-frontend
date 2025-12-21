@@ -55,6 +55,7 @@ saveBtn.addEventListener("click", async () => {
   });
 
   const data = await res.json();
+  console.log("Profile response:", data);
 
   if (!res.ok) {
     alert(data.error || "Update failed");
