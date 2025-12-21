@@ -101,6 +101,7 @@
 
   <!-- MAIN DASHBOARD SCRIPT (CLEANED) -->
   <script>
+    /* THEME TOGGLE */
     const themeToggle = document.getElementById("themeToggle");
     const savedTheme = localStorage.getItem("theme") || "light";
     if (savedTheme === "dark") document.documentElement.classList.add("dark");
@@ -112,6 +113,7 @@
       );
     });
 
+    /* SIDEBAR */
     const sidebar = document.getElementById("sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
@@ -126,6 +128,7 @@
       sidebarOverlay.classList.add("hidden");
     });
 
+    /* PROFILE DROPDOWN */
     const profileBtn = document.getElementById("profileMenuBtn");
     const profileDropdown = document.getElementById("profileDropdown");
 
@@ -133,14 +136,21 @@
       profileDropdown.classList.toggle("hidden");
     });
 
+    /* ⭐ FINAL + ONLY loadPage FUNCTION */
     function loadPage(page) {
       fetch(page)
         .then(res => res.text())
         .then(html => {
           document.getElementById("content").innerHTML = html;
+
+          // ⭐ Trigger booking fetch when dashboard loads
+          if (page.includes("dashboard.html")) {
+            setTimeout(() => loadUserBookings(), 100);
+          }
         });
     }
 
+    /* Sidebar navigation */
     document.querySelectorAll("[data-load]").forEach(link => {
       link.addEventListener("click", e => {
         e.preventDefault();
@@ -149,20 +159,8 @@
       });
     });
 
-function loadPage(page) {
-  fetch(page)
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("content").innerHTML = html;
-
-      // ⭐ If dashboard page is loaded, fetch bookings
-      if (page.includes("dashboard.html")) {
-        setTimeout(() => loadUserBookings(), 100);
-      }
-    });
-}
+    /* Load dashboard by default */
     loadPage("pages/dashboard.html");
-
   </script>
 
   <!-- PROFILE NAME LOADING -->
@@ -194,7 +192,7 @@ function loadPage(page) {
     });
   </script>
 
-  <!-- BOOKING LOGIC MOVED TO EXTERNAL FILE -->
+  <!-- BOOKING LOGIC -->
   <script src="/js/bookings.js"></script>
 
 </body>
