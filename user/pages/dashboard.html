@@ -1,20 +1,30 @@
-<!--BOOKING TABLE-->
+<!-- ===========================
+     USER DASHBOARD PAGE
+=========================== -->
+
+<!-- BOOKING TABLE -->
 <h2 class="text-xl font-semibold mb-4">My Booking Requests</h2>
 
-<table class="w-full border-collapse border text-sm" id="myBookingsTable">
-  <thead class="bg-gray-100 dark:bg-gray-800">
-    <tr>
-      <th class="border px-3 py-2">Event</th>
-      <th class="border px-3 py-2">Venue</th>
-      <th class="border px-3 py-2">Start</th>
-      <th class="border px-3 py-2">End</th>
-      <th class="border px-3 py-2">Status</th>
-    </tr>
-  </thead>
-  <tbody id="myBookingsBody"></tbody>
-</table>
+<div class="overflow-x-auto rounded-lg shadow mb-10">
+  <table class="min-w-full text-sm" id="myBookingsTable">
+    <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+      <tr>
+        <th class="px-4 py-3 text-left font-semibold">Event</th>
+        <th class="px-4 py-3 text-left font-semibold">Venue</th>
+        <th class="px-4 py-3 text-left font-semibold">Start</th>
+        <th class="px-4 py-3 text-left font-semibold">End</th>
+        <th class="px-4 py-3 text-left font-semibold">Status</th>
+      </tr>
+    </thead>
+    <tbody id="myBookingsBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+      <!-- Rows inserted dynamically -->
+    </tbody>
+  </table>
+</div>
 
-<!-- ✅ SLIDER / HERO CAROUSEL -->
+<!-- ===========================
+     HERO SLIDER
+=========================== -->
 <div class="relative w-full h-64 md:h-80 rounded-lg overflow-hidden shadow mb-10">
   <div class="absolute inset-0 flex transition-all duration-700" id="slider">
     <img src="/assets/images/slide1.jpg" class="w-full object-cover" />
@@ -49,8 +59,10 @@
   setInterval(nextSlide, 5000);
 </script>
 
-<!-- ✅ MINISTRY CARDS -->
-<h2 class="text-2xl font-bold text-gray-800 mb-6">Our Ministries</h2>
+<!-- ===========================
+     MINISTRY CARDS
+=========================== -->
+<h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Our Ministries</h2>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -80,7 +92,9 @@
 
 </div>
 
-<!-- ✅ ACCESS CONTROL SCRIPT -->
+<!-- ===========================
+     ACCESS CONTROL
+=========================== -->
 <script>
   const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
   const token = localStorage.getItem("token");
@@ -93,26 +107,4 @@
   if (email === ADMIN_EMAIL) {
     window.location.href = "admin/admin-dashboard.html";
   }
-</script>
-
-<!-- ✅ FETCH USER BOOKINGS SCRIPT (ADD THIS) -->
-<script>
-const API_BASE_URL = "https://church-booking-backend.onrender.com";
-
-async function loadMyBookings() {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(`${API_BASE_URL}/api/bookings/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const bookings = await res.json();
-  console.log("User bookings:", bookings);
-
-  // ✅ TODO: Display bookings on dashboard (I can build this for you)
-}
-
-loadMyBookings();
 </script>
