@@ -10,7 +10,7 @@ const saveBtn = document.getElementById("saveProfileBtn");
 
 // Load profile data
 async function loadProfile() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access_token");
   if (!token) return;
 
   const res = await fetch(`${API_BASE_URL}/api/profile/my`, {
@@ -18,9 +18,10 @@ async function loadProfile() {
   });
 
   const data = await res.json();
+  console.log("Loaded profile:", data);
 
-  fullNameInput.value = data.full_name;
-  emailInput.value = data.email;
+  fullNameInput.value = data.full_name || "";
+  emailInput.value = data.email || "";
   contactInput.value = data.contact_number || "";
   roleInput.value = data.role || "";
 }
@@ -37,7 +38,7 @@ editBtn.addEventListener("click", () => {
 
 // Save changes
 saveBtn.addEventListener("click", async () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access_token");
 
   const body = {
     email: emailInput.value.trim(),
@@ -55,7 +56,7 @@ saveBtn.addEventListener("click", async () => {
   });
 
   const data = await res.json();
-  console.log("Profile response:", data);
+  console.log("Profile update response:", data);
 
   if (!res.ok) {
     alert(data.error || "Update failed");

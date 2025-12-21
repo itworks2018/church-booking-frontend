@@ -47,48 +47,48 @@
 
   <!-- ✅ ADMIN LOGIN LOGIC -->
   <script>
-    const ADMIN_API_BASE_URL = "https://church-booking-backend.onrender.com";
-    const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com"; // your admin email
+  const ADMIN_API_BASE_URL = "https://church-booking-backend.onrender.com";
+  const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com"; // your admin email
 
-    document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+  document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      const email = document.getElementById("adminEmail").value.trim();
-      const password = document.getElementById("adminPassword").value.trim();
+    const email = document.getElementById("adminEmail").value.trim();
+    const password = document.getElementById("adminPassword").value.trim();
 
-      try {
-        const res = await fetch(`${ADMIN_API_BASE_URL}/api/auth/admin/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
+    try {
+      const res = await fetch(`${ADMIN_API_BASE_URL}/api/auth/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if (!res.ok) {
-          alert(data.error || "Login failed");
-          return;
-        }
-
-        // ✅ Only allow admin email
-        if (email !== ADMIN_EMAIL) {
-          alert("You are not authorized to access the admin dashboard.");
-          return;
-        }
-
-        // ✅ Save JWT + email
-        localStorage.setItem("token", data.access_token);
-        localStorage.setItem("email", data.user.email);
-
-        // ✅ Redirect to ADMIN dashboard
-        window.location.href = "/frontend/admin/admin-dashboard.html";
-
-      } catch (err) {
-        console.error(err);
-        alert("Something went wrong. Please try again.");
+      if (!res.ok) {
+        alert(data.error || "Login failed");
+        return;
       }
-    });
-  </script>
+
+      // Ensure only the correct admin email can log in
+      if (email !== ADMIN_EMAIL) {
+        alert("You are not authorized to access the admin dashboard.");
+        return;
+      }
+
+      // ⭐ Save token using the unified key
+      localStorage.setItem("access_token", data.token);   // <-- FIXED
+      localStorage.setItem("email", data.user.email);
+
+      // Redirect to admin dashboard
+      window.location.href = "/frontend/admin/admin-dashboard.html";
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    }
+  });
+</script>
 
 </body>
 </html>
