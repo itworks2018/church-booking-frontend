@@ -1,9 +1,11 @@
+console.log("Profile JS loaded");
+
 const API_BASE_URL = "https://church-booking-backend.onrender.com";
 
-const fullNameInput = document.getElementById("profile_full_name");
-const emailInput = document.getElementById("profile_email");
-const contactInput = document.getElementById("profile_contact");
-const roleInput = document.getElementById("profile_role");
+let fullNameInput;
+let emailInput;
+let contactInput;
+let roleInput;
 
 const editBtn = document.getElementById("editProfileBtn");
 const saveBtn = document.getElementById("saveProfileBtn");
@@ -22,13 +24,13 @@ async function loadProfile() {
     return;
   }
 
-  // ⭐ Backend returns the profile object directly
+  // Backend returns the profile object directly
   const profile = await res.json();
 
-  document.getElementById("profile_full_name").value = profile.full_name || "";
-  document.getElementById("profile_email").value = profile.email || "";
-  document.getElementById("profile_contact").value = profile.contact_number || "";
-  document.getElementById("profile_role").value = profile.role || "";
+  fullNameInput.value = profile.full_name || "";
+  emailInput.value = profile.email || "";
+  contactInput.value = profile.contact_number || "";
+  roleInput.value = profile.role || "";
 }
 
 // Enable editing
@@ -82,5 +84,12 @@ saveBtn.addEventListener("click", async () => {
   editBtn.classList.remove("hidden");
 });
 
-// Load profile on page load
-loadProfile();
+// ⭐ Delay until HTML is loaded dynamically
+setTimeout(() => {
+  fullNameInput = document.getElementById("profile_full_name");
+  emailInput = document.getElementById("profile_email");
+  contactInput = document.getElementById("profile_contact");
+  roleInput = document.getElementById("profile_role");
+
+  loadProfile();
+}, 50);
