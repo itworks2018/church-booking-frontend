@@ -143,6 +143,20 @@
         .then(html => {
           document.getElementById("content").innerHTML = html;
 
+          /* ⭐ AUTO‑LOAD MATCHING JS FILE FOR DYNAMIC PAGES */
+          const scriptName = page.split("/").pop().replace(".html", ".js");
+          const scriptPath = `/js/${scriptName}`;
+
+          // Remove old dynamic script if exists
+          const oldScript = document.getElementById("dynamicPageScript");
+          if (oldScript) oldScript.remove();
+
+          // Load new script
+          const script = document.createElement("script");
+          script.src = scriptPath;
+          script.id = "dynamicPageScript";
+          document.body.appendChild(script);
+
           // ⭐ Trigger booking fetch when dashboard loads
           if (page.includes("dashboard.html")) {
             setTimeout(() => loadUserBookings(), 100);
@@ -161,39 +175,12 @@
 
     /* Load dashboard by default */
     loadPage("pages/dashboard.html");
-  </script>
-
-  <!-- PROFILE NAME LOADING -->
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
-
-    const token = localStorage.getItem("access_token");   // ⭐ FIXED
-    const email = localStorage.getItem("email");
-    const fullName = localStorage.getItem("full_name");
-
-    if (!token) {
-      window.location.href = "/login.html";
-      return;
-    }
-
-    if (email === ADMIN_EMAIL) {
-      window.location.href = "admin/admin-dashboard.html";
-      return;
-    }
-
-    if (fullName) {
-      const navName = document.getElementById("navProfileName");
-      const sidebarWelcome = document.getElementById("sidebarWelcome");
-
-      if (navName) navName.textContent = fullName;
-      if (sidebarWelcome) sidebarWelcome.textContent = `Welcome, ${fullName}`;
-    }
-  });
 </script>
 
   <!-- BOOKING LOGIC -->
   <script src="/js/bookings.js"></script>
+  <!-- PROFILE LOADING -->
+  <script src="/js/profile.js"></script>
 
 </body>
 </html>
