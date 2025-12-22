@@ -47,8 +47,10 @@ signupForm.addEventListener('submit', async (e) => {
       body: JSON.stringify({ email, password })
     })
 
-    setToken(loginRes.access_token)
+    // ⭐ Save token correctly
+    setToken(loginRes.token)
 
+    // Create profile
     await apiRequest('/profiles', {
       method: 'POST',
       body: JSON.stringify({ name })
@@ -58,8 +60,9 @@ signupForm.addEventListener('submit', async (e) => {
     showMessage('Account created! Redirecting...')
 
     setTimeout(() => {
-      window.location.href = 'user.html'
+      window.location.href = 'user/maindashboard.html'
     }, 800)
+
   } catch (err) {
     showMessage(err.message, true)
   }
@@ -79,8 +82,8 @@ loginForm.addEventListener('submit', async (e) => {
       body: JSON.stringify({ email, password })
     })
 
-    // Save token
-    setToken(res.token)
+    // ⭐ Save token using the correct key
+    setToken(res.token)   // setToken() stores it as access_token
 
     // Save user details to localStorage
     localStorage.setItem("email", res.user.email)
@@ -91,9 +94,8 @@ loginForm.addEventListener('submit', async (e) => {
 
     setTimeout(() => {
       window.location.href = res.user.role === 'admin'
-      ? 'admin/admin-dashboard.html'
-      : 'user/maindashboard.html'
-
+        ? 'admin/admin-dashboard.html'
+        : 'user/maindashboard.html'
     }, 800)
 
   } catch (err) {
