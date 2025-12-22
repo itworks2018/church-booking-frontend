@@ -91,8 +91,9 @@ loginForm.addEventListener('submit', async (e) => {
 
     setTimeout(() => {
       window.location.href = res.user.role === 'admin'
-        ? 'admin.html'
-        : 'user.html'
+      ? 'admin/admin-dashboard.html'
+      : 'user/maindashboard.html'
+
     }, 800)
 
   } catch (err) {
