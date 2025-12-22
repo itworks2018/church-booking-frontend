@@ -20,10 +20,14 @@ async function loadProfile() {
   const data = await res.json();
   console.log("Loaded profile:", data);
 
-  fullNameInput.value = data.full_name || "";
-  emailInput.value = data.email || "";
-  contactInput.value = data.contact_number || "";
-  roleInput.value = data.role || "";
+  // ⭐ FIX: data.profile.* instead of data.*
+  const profile = data.profile;
+
+  // ⭐ FIX: match HTML IDs
+  document.getElementById("profile_full_name").value = profile.full_name || "";
+  document.getElementById("profile_email").value = profile.email || "";
+  document.getElementById("profile_contact").value = profile.contact_number || "";
+  document.getElementById("profile_role").value = profile.role || "";
 }
 
 // Enable editing
