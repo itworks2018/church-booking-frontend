@@ -99,8 +99,8 @@
     &copy; 2025 CCF Sandoval Events. All rights reserved.
   </footer>
 
-  <!-- MAIN DASHBOARD SCRIPT (CLEANED) -->
-  <script>
+ <!-- MAIN DASHBOARD SCRIPT (CLEANED) -->
+<script>
     /* THEME TOGGLE */
     const themeToggle = document.getElementById("themeToggle");
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -156,6 +156,13 @@
           script.src = scriptPath;
           script.id = "dynamicPageScript";
           document.body.appendChild(script);
+
+          /* ⭐ NEW: Run initPage() AFTER the HTML + script are loaded */
+          setTimeout(() => {
+            if (typeof initPage === "function") {
+              initPage();
+            }
+          }, 50);
 
           // ⭐ Trigger booking fetch when dashboard loads
           if (page.includes("dashboard.html")) {
