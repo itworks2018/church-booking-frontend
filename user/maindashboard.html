@@ -147,15 +147,15 @@
           const scriptName = page.split("/").pop().replace(".html", ".js");
           const scriptPath = `/js/${scriptName}`;
 
-          // Remove old dynamic script if exists
-          const oldScript = document.getElementById("dynamicPageScript");
-          if (oldScript) oldScript.remove();
+        // Remove previous dynamic script if exists
+            const oldScript = document.querySelector(`script[data-page-script]`);
+              if (oldScript) oldScript.remove();
 
-          // Load new script
-          const script = document.createElement("script");
-          script.src = scriptPath;
-          script.id = "dynamicPageScript";
-          document.body.appendChild(script);
+            // Load new script
+              const script = document.createElement("script");
+              script.src = scriptPath;
+              script.setAttribute("data-page-script", scriptName); // unique per page
+              document.body.appendChild(script);
 
           /* ⭐ NEW: Run initPage() AFTER the HTML + script are loaded */
           setTimeout(() => {
