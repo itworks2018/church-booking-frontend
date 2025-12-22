@@ -17,13 +17,14 @@ async function loadProfile() {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const data = await res.json();
-  console.log("Loaded profile:", data);
+  if (!res.ok) {
+    console.error("Profile load failed", res.status);
+    return;
+  }
 
-  // ⭐ FIX: data.profile.* instead of data.*
-  const profile = data.profile;
+  // ⭐ Backend returns the profile object directly
+  const profile = await res.json();
 
-  // ⭐ FIX: match HTML IDs
   document.getElementById("profile_full_name").value = profile.full_name || "";
   document.getElementById("profile_email").value = profile.email || "";
   document.getElementById("profile_contact").value = profile.contact_number || "";
