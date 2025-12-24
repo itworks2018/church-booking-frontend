@@ -1,4 +1,3 @@
-const API_BASE_URL = "https://church-booking-backend.onrender.com";
 
 let fullNameInput;
 let emailInput;
