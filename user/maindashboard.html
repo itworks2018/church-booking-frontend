@@ -101,31 +101,6 @@
 
 <!-- MAIN DASHBOARD SCRIPT (FINAL FIXED VERSION) -->
 <script>
-    /* ⭐ Load user info for navbar + sidebar */
-    async function loadUserInfo() {
-      const token = localStorage.getItem("access_token");
-      if (!token) return;
-
-      try {
-        const res = await fetch("https://church-booking-backend.onrender.com/api/profile/my", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        if (!res.ok) return;
-
-        const user = await res.json();
-
-        // Save to localStorage
-        localStorage.setItem("full_name", user.full_name);
-
-        // Update UI
-        document.getElementById("navProfileName").textContent = user.full_name;
-        document.getElementById("sidebarWelcome").textContent = `Welcome, ${user.full_name}`;
-      } catch (err) {
-        console.error("Failed to load user info:", err);
-      }
-    }
-
     /* THEME TOGGLE */
     const themeToggle = document.getElementById("themeToggle");
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -174,19 +149,18 @@
           // ⭐ Remove ALL previously injected page scripts
           document.querySelectorAll("script[data-page-script]").forEach(s => s.remove());
 
-          // ⭐ Only load script if it actually exists (skip dashboard.js)
-          if (scriptName !== "dashboard.js") {
-            const script = document.createElement("script");
-            script.src = scriptPath;
-            script.setAttribute("data-page-script", scriptName);
-            document.body.appendChild(script);
+          // ⭐ Load new script
+          const script = document.createElement("script");
+          script.src = scriptPath;
+          script.setAttribute("data-page-script", scriptName);
+          document.body.appendChild(script);
 
-            script.onload = () => {
-              if (typeof initPage === "function") {
-                initPage();
-              }
-            };
-          }
+          // ⭐ Run initPage() ONLY after script is fully loaded
+          script.onload = () => {
+            if (typeof initPage === "function") {
+              initPage();
+            }
+          };
 
           // ⭐ Trigger booking fetch when dashboard loads
           if (page.includes("dashboard.html")) {
@@ -206,9 +180,6 @@
 
     /* Load dashboard by default */
     loadPage("pages/dashboard.html");
-
-    /* ⭐ Load user info immediately after login */
-    loadUserInfo();
 </script>
 
 <!-- BOOKING LOGIC -->
