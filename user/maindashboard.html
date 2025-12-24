@@ -173,27 +173,34 @@
 
     /* ⭐ Stable loadPage() */
     function loadPage(page) {
-      fetch(page)
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById("content").innerHTML = html;
+  fetch(page)
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("content").innerHTML = html;
 
-          const scriptName = page.split("/").pop().replace(".html", ".js");
-          const scriptPath = `/js/${scriptName}`;
+      const scriptName = page.split("/").pop().replace(".html", ".js");
+      const scriptPath = `/js/${scriptName}`;
 
-          const oldScript = document.getElementById("dynamicPageScript");
-          if (oldScript) oldScript.remove();
+      const oldScript = document.getElementById("dynamicPageScript");
+      if (oldScript) oldScript.remove();
 
-          const script = document.createElement("script");
-          script.src = scriptPath;
-          script.id = "dynamicPageScript";
-          document.body.appendChild(script);
+      const script = document.createElement("script");
+      script.src = scriptPath;
+      script.id = "dynamicPageScript";
 
-          if (page.includes("dashboard.html")) {
-            setTimeout(() => loadUserBookings(), 100);
-          }
-        });
-    }
+      script.onload = () => {
+        if (typeof initPage === "function") {
+          initPage();
+        }
+      };
+
+      document.body.appendChild(script);
+
+      if (page.includes("dashboard.html")) {
+        setTimeout(() => loadUserBookings(), 100);
+      }
+    });
+}
 
     /* Sidebar navigation */
     document.querySelectorAll("[data-load]").forEach(link => {
