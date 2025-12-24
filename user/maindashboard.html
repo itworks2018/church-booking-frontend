@@ -99,7 +99,7 @@
     &copy; 2025 CCF Sandoval Events. All rights reserved.
   </footer>
 
- <!-- MAIN DASHBOARD SCRIPT (CLEANED) -->
+<!-- MAIN DASHBOARD SCRIPT (FINAL FIXED VERSION) -->
 <script>
     /* THEME TOGGLE */
     const themeToggle = document.getElementById("themeToggle");
@@ -136,33 +136,31 @@
       profileDropdown.classList.toggle("hidden");
     });
 
-    /* ⭐ FINAL + ONLY loadPage FUNCTION */
+    /* ⭐ FINAL loadPage FUNCTION (FULLY FIXED) */
     function loadPage(page) {
       fetch(page)
         .then(res => res.text())
         .then(html => {
           document.getElementById("content").innerHTML = html;
 
-          /* ⭐ AUTO‑LOAD MATCHING JS FILE FOR DYNAMIC PAGES */
           const scriptName = page.split("/").pop().replace(".html", ".js");
           const scriptPath = `/js/${scriptName}`;
 
-        // Remove previous dynamic script if exists
-            const oldScript = document.querySelector(`script[data-page-script]`);
-              if (oldScript) oldScript.remove();
+          // ⭐ Remove ALL previously injected page scripts
+          document.querySelectorAll("script[data-page-script]").forEach(s => s.remove());
 
-            // Load new script
-              const script = document.createElement("script");
-              script.src = scriptPath;
-              script.setAttribute("data-page-script", scriptName); // unique per page
-              document.body.appendChild(script);
+          // ⭐ Load new script
+          const script = document.createElement("script");
+          script.src = scriptPath;
+          script.setAttribute("data-page-script", scriptName);
+          document.body.appendChild(script);
 
-          /* ⭐ NEW: Run initPage() AFTER the HTML + script are loaded */
-          setTimeout(() => {
+          // ⭐ Run initPage() ONLY after script is fully loaded
+          script.onload = () => {
             if (typeof initPage === "function") {
               initPage();
             }
-          }, 50);
+          };
 
           // ⭐ Trigger booking fetch when dashboard loads
           if (page.includes("dashboard.html")) {
@@ -184,8 +182,8 @@
     loadPage("pages/dashboard.html");
 </script>
 
-  <!-- BOOKING LOGIC -->
-  <script src="/js/bookings.js"></script>
+<!-- BOOKING LOGIC -->
+<script src="/js/bookings.js"></script>
 
 </body>
 </html>
