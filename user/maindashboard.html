@@ -107,25 +107,34 @@
 
     /* ⭐ Load user info (full name) */
     async function loadUserInfo() {
-      const token = getToken();
-      if (!token) return;
+  const token = getToken();
+  if (!token) {
+    console.log("No token found");
+    return;
+  }
 
-      try {
-        const res = await fetch("https://church-booking-backend.onrender.com/api/profile/my", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+  try {
+    const res = await fetch("https://church-booking-backend.onrender.com/api/profile/my", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-        if (!res.ok) return;
+    const data = await res.json();
+    console.log("PROFILE RESPONSE:", data);
 
-        const user = await res.json();
-
-        // Update UI
-        document.getElementById("navProfileName").textContent = user.full_name;
-        document.getElementById("sidebarWelcome").textContent = `Welcome, ${user.full_name}`;
-      } catch (err) {
-        console.error("Failed to load user info:", err);
-      }
+    if (!res.ok) {
+      console.log("Profile request failed:", res.status);
+      return;
     }
+
+    // Update UI
+    document.getElementById("navProfileName").textContent = data.full_name;
+    document.getElementById("sidebarWelcome").textContent = `Welcome, ${data.full_name}`;
+
+  } catch (err) {
+    console.error("Failed to load user info:", err);
+  }
+}
+
 
     /* THEME TOGGLE */
     const themeToggle = document.getElementById("themeToggle");
