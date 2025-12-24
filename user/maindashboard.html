@@ -99,7 +99,6 @@
     &copy; 2025 CCF Sandoval Events. All rights reserved.
   </footer>
 
- <!-- MAIN DASHBOARD SCRIPT (CLEANED) -->
 <script>
     /* THEME TOGGLE */
     const themeToggle = document.getElementById("themeToggle");
@@ -136,35 +135,24 @@
       profileDropdown.classList.toggle("hidden");
     });
 
-    /* ⭐ FINAL + ONLY loadPage FUNCTION */
+    /* ORIGINAL loadPage FUNCTION (your working version) */
     function loadPage(page) {
       fetch(page)
         .then(res => res.text())
         .then(html => {
           document.getElementById("content").innerHTML = html;
 
-          /* ⭐ AUTO‑LOAD MATCHING JS FILE FOR DYNAMIC PAGES */
           const scriptName = page.split("/").pop().replace(".html", ".js");
           const scriptPath = `/js/${scriptName}`;
 
-        // Remove previous dynamic script if exists
-            const oldScript = document.querySelector(`script[data-page-script]`);
-              if (oldScript) oldScript.remove();
+          const oldScript = document.getElementById("dynamicPageScript");
+          if (oldScript) oldScript.remove();
 
-            // Load new script
-              const script = document.createElement("script");
-              script.src = scriptPath;
-              script.setAttribute("data-page-script", scriptName); // unique per page
-              document.body.appendChild(script);
+          const script = document.createElement("script");
+          script.src = scriptPath;
+          script.id = "dynamicPageScript";
+          document.body.appendChild(script);
 
-          /* ⭐ NEW: Run initPage() AFTER the HTML + script are loaded */
-          setTimeout(() => {
-            if (typeof initPage === "function") {
-              initPage();
-            }
-          }, 50);
-
-          // ⭐ Trigger booking fetch when dashboard loads
           if (page.includes("dashboard.html")) {
             setTimeout(() => loadUserBookings(), 100);
           }
@@ -184,8 +172,7 @@
     loadPage("pages/dashboard.html");
 </script>
 
-  <!-- BOOKING LOGIC -->
-  <script src="/js/bookings.js"></script>
+<script src="/js/bookings.js"></script>
 
 </body>
 </html>
