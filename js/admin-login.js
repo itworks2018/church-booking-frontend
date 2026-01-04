@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("user_role", "admin");
 
       // Redirect to admin dashboard
-      window.location.href = "./main-dashboard.html";
+      window.location.href = "/main-dashboard.html";
 
     } catch (err) {
       console.error(err);
