@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // ✅ Make sure backend always returns { user: { role: "admin" } }
+      // ✅ Backend guarantees role: "admin"
       if (!data.user || data.user.role !== "admin") {
         alert("You are not authorized to access the admin dashboard.");
         return;
