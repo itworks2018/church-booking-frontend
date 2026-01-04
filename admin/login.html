@@ -40,55 +40,13 @@
 
       <p class="text-center text-sm mt-4 text-white">
         Not an admin?
-        <a href="/frontend/login.html" class="underline">Go to User Login</a>
+        <a href="/login.html" class="underline">Go to User Login</a>
       </p>
     </div>
   </div>
 
   <!-- ✅ ADMIN LOGIN LOGIC -->
-  <script>
-  const ADMIN_API_BASE_URL = "https://church-booking-backend.onrender.com";
-  const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com"; // your admin email
-
-  document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("adminEmail").value.trim();
-    const password = document.getElementById("adminPassword").value.trim();
-
-    try {
-      const res = await fetch(`${ADMIN_API_BASE_URL}/api/auth/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.error || "Login failed");
-        return;
-      }
-
-      // Ensure only the correct admin email can log in
-      if (email !== ADMIN_EMAIL) {
-        alert("You are not authorized to access the admin dashboard.");
-        return;
-      }
-
-      // ⭐ Save token using the unified key
-      localStorage.setItem("access_token", data.token);   // <-- FIXED
-      localStorage.setItem("email", data.user.email);
-
-      // Redirect to admin dashboard
-      window.location.href = "/frontend/admin/admin-dashboard.html";
-
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong. Please try again.");
-    }
-  });
-</script>
+ <script src="/js/admin-login.js"></script>
 
 </body>
 </html>
