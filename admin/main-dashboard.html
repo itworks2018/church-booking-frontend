@@ -99,7 +99,7 @@
     });
 
     function logout() {
-      window.location.href = "admin-login.html";
+      window.location.href = "admin/login.html";
     }
 
     // ✅ Load default page
@@ -107,20 +107,20 @@
   </script>
 
 <script>
-  const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
+  document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("access_token"); // ✅ matches login.js
+    const role = localStorage.getItem("user_role");     // ✅ saved in login.js
 
-  const token = localStorage.getItem("token");
-  const email = localStorage.getItem("email");
+    // If not logged in → go to admin login
+    if (!token) {
+      window.location.href = "/admin/login.html";
+    }
 
-  // ✅ If not logged in → go to admin login
-  if (!token) {
-    window.location.href = "admin/login.html";
-  }
-
-  // ✅ If a normal user tries to access admin dashboard → send to user login
-  if (email !== ADMIN_EMAIL) {
-    window.location.href = "login.html";
-  }
+    // If not an admin → send to user login
+    if (role !== "admin") {
+      window.location.href = "/user/login.html";
+    }
+  });
 </script>
 
 </body>
