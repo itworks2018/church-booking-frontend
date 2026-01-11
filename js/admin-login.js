@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("user_role", data.user.role);
 
       // ✅ Correct redirect path for Vercel
-      window.location.href = "/admin/main-dashboard.html";
+      window.location.href = "admin/main-dashboard.html";
 
     } catch (err) {
       console.error("Admin login error:", err);

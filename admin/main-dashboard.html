@@ -103,7 +103,7 @@
     }
 
     // ✅ Load default page
-    loadPage("dashboard.html");
+    loadPage("main-dashboard.html");
   </script>
 
 <script>
@@ -114,12 +114,12 @@
 
   // ✅ If not logged in → go to admin login
   if (!token) {
-    window.location.href = "/frontend/admin/admin-login.html";
+    window.location.href = "admin/login.html";
   }
 
   // ✅ If a normal user tries to access admin dashboard → send to user login
   if (email !== ADMIN_EMAIL) {
-    window.location.href = "/frontend/admin/admin-login.html";
+    window.location.href = "login.html";
   }
 </script>
 
