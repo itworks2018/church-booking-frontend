@@ -48,21 +48,27 @@
               </main>
             </div>
             <script>
-              // Sidebar toggle for mobile
-              const sidebar = document.getElementById("sidebar");
-              const sidebarOverlay = document.getElementById("sidebarOverlay");
+              // Sidebar toggle for mobile (unified)
               document.addEventListener("DOMContentLoaded", () => {
-                const sidebarToggleBtn = document.createElement('button');
-                sidebarToggleBtn.innerHTML = '☰';
-                sidebarToggleBtn.className = 'md:hidden text-gray-700 text-2xl mr-4';
-                sidebarToggleBtn.onclick = () => {
-                  sidebar.classList.toggle("-translate-x-full");
-                  sidebarOverlay.classList.toggle("hidden");
-                };
-                document.querySelector('nav').prepend(sidebarToggleBtn);
-                sidebarOverlay.addEventListener("click", () => {
-                  sidebar.classList.add("-translate-x-full");
-                  sidebarOverlay.classList.add("hidden");
+                const sidebar = document.getElementById("sidebar");
+                const sidebarOverlay = document.getElementById("sidebarOverlay");
+                let sidebarToggleBtn = document.getElementById("sidebarToggle");
+                if (!sidebarToggleBtn) {
+                  sidebarToggleBtn = document.createElement('button');
+                  sidebarToggleBtn.id = "sidebarToggle";
+                  sidebarToggleBtn.innerHTML = '☰';
+                  sidebarToggleBtn.className = 'sidebar-toggle md:hidden';
+                  sidebarToggleBtn.type = 'button';
+                  sidebarToggleBtn.setAttribute('aria-label', 'Open sidebar');
+                  document.querySelector('nav').prepend(sidebarToggleBtn);
+                }
+                sidebarToggleBtn.addEventListener('click', function() {
+                  sidebar.classList.toggle('sidebar--open');
+                  sidebarOverlay.classList.toggle('hidden');
+                });
+                sidebarOverlay.addEventListener('click', function() {
+                  sidebar.classList.remove('sidebar--open');
+                  sidebarOverlay.classList.add('hidden');
                 });
               });
             </script>
