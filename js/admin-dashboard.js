@@ -11,39 +11,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    // 🔹 Booking Reservations (blue)
 
+    // Use new combined metrics endpoint for users and bookings
     const authHeaders = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
 
-    const bookingsRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/summary`, authHeaders);
-    const bookingsData = await bookingsRes.json();
-    console.log("Bookings data:", bookingsData);
-    document.getElementById("countBookings").textContent = bookingsData.totalBookings;
+    const metricsRes = await fetch(`${ADMIN_API_BASE_URL}/api/metrics/counts`, authHeaders);
+    const metricsData = await metricsRes.json();
+    console.log("Metrics data:", metricsData);
+    document.getElementById("countBookings").textContent = metricsData.bookings_count;
+    document.getElementById("countMembers").textContent = metricsData.users_count;
 
-    // 🔹 Pending Approval (yellow)
-
+    // Still fetch pending and upcoming bookings for other cards
     const pendingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/pending`, authHeaders);
     const pendingData = await pendingRes.json();
-    console.log("Pending data:", pendingData);
     document.getElementById("countPending").textContent = pendingData.pendingCount;
-
-    // 🔹 Upcoming Events (green)
 
     const upcomingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/upcoming`, authHeaders);
     const upcomingData = await upcomingRes.json();
-    console.log("Upcoming data:", upcomingData);
     document.getElementById("countUpcoming").textContent = upcomingData.upcomingCount;
-
-    // 🔹 Total Members (purple)
-
-    const usersRes = await fetch(`${ADMIN_API_BASE_URL}/api/users/summary`, authHeaders);
-    const usersData = await usersRes.json();
-    console.log("Users data:", usersData);
-    document.getElementById("countMembers").textContent = usersData.totalUsers;
 
   } catch (err) {
     console.error("Dashboard fetch error:", err);
