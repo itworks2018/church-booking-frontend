@@ -48,52 +48,49 @@
     </div>
   </nav>
 
+
   <div class="flex flex-1 relative">
-
-    <div id="sidebarOverlay"
-         class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
-
-    <aside id="sidebar"
-           class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg
-                  fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0
-                  transition-transform duration-300 z-30">
-
-      <img src="/assets/images/Profile.png"
-           class="w-24 h-24 rounded-full mb-4 border-4 border-white" />
-
+    <!-- Sidebar overlay for mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 min-h-screen">
+      <img src="/assets/images/Profile.png" class="w-24 h-24 rounded-full mb-4 border-4 border-white" />
       <h2 id="sidebarWelcome" class="text-lg font-semibold">Welcome</h2>
-
       <nav class="mt-6 w-full px-6 space-y-3">
-
-        <a href="#" data-load="pages/dashboard.html"
-           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">
-          Dashboard
-        </a>
-
-        <a href="#" data-load="pages/profile.html"
-           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">
-          Profile
-        </a>
-
-        <a href="#" data-load="pages/resources.html"
-           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">
-          Resources
-        </a>
-
-        <a href="#" data-load="pages/bookings.html"
-           class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">
-          Create Venue Reservation
-        </a>
-
+        <a href="#" data-load="pages/dashboard.html" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Dashboard</a>
+        <a href="#" data-load="pages/profile.html" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Profile</a>
+        <a href="#" data-load="pages/resources.html" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Resources</a>
+        <a href="#" data-load="pages/bookings.html" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Create Venue Reservation</a>
       </nav>
     </aside>
-
+    <!-- Content Area -->
     <main class="flex-1 p-8 md:ml-0">
-      <div id="content" class="bg-white p-6 rounded shadow-lg border dark:bg-gray-900 dark:text-gray-200">
+      <div id="content" class="bg-white p-6 rounded shadow-lg border dark:bg-gray-900 dark:text-gray-200 overflow-x-auto">
       </div>
     </main>
-
   </div>
+  <script>
+    // Sidebar toggle for mobile (wrapped to avoid redeclaration)
+    (function() {
+      const sidebar = document.getElementById("sidebar");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
+      document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggleBtn = document.getElementById('sidebarToggle');
+        if (sidebarToggleBtn) {
+          sidebarToggleBtn.onclick = () => {
+            sidebar.classList.toggle("-translate-x-full");
+            sidebarOverlay.classList.toggle("hidden");
+          };
+        }
+        if (sidebarOverlay) {
+          sidebarOverlay.addEventListener("click", () => {
+            sidebar.classList.add("-translate-x-full");
+            sidebarOverlay.classList.add("hidden");
+          });
+        }
+      });
+    })();
+  </script>
 
 
   </div>
