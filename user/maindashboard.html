@@ -133,28 +133,32 @@
       );
     });
 
+
     /* SIDEBAR */
     const sidebar = document.getElementById("sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
 
-    sidebarToggle.addEventListener("click", () => {
-      sidebar.classList.toggle("-translate-x-full");
-      sidebarOverlay.classList.toggle("hidden");
-    });
-
-    sidebarOverlay.addEventListener("click", () => {
-      sidebar.classList.add("-translate-x-full");
-      sidebarOverlay.classList.add("hidden");
-    });
+    if (sidebarToggle && sidebar && sidebarOverlay) {
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-full");
+        sidebarOverlay.classList.toggle("hidden");
+      });
+      sidebarOverlay.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        sidebarOverlay.classList.add("hidden");
+      });
+    }
 
     /* PROFILE DROPDOWN */
     const profileBtn = document.getElementById("profileMenuBtn");
     const profileDropdown = document.getElementById("profileDropdown");
 
-    profileBtn.addEventListener("click", () => {
-      profileDropdown.classList.toggle("hidden");
-    });
+    if (profileBtn && profileDropdown) {
+      profileBtn.addEventListener("click", () => {
+        profileDropdown.classList.toggle("hidden");
+      });
+    }
 
     /* ⭐ Stable loadPage() */
     function loadPage(page) {
