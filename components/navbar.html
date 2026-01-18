@@ -8,7 +8,7 @@
     </a>
 
     <!-- Desktop Menu -->
-    <div class="hidden md:flex items-center space-x-6">
+    <div id="desktopMenu" class="hidden md:flex items-center space-x-6">
 
       <!-- ✅ Buttons -->
       <a href="/login.html"
@@ -23,7 +23,10 @@
     </div>
 
     <!-- Mobile Menu Button -->
-    <button id="mobileMenuBtn" class="md:hidden text-2xl text-gray-700 dark:text-gray-200">
+    <button id="mobileMenuBtn"
+            aria-controls="mobileMenu"
+            aria-expanded="false"
+            class="md:hidden text-2xl text-gray-700 dark:text-gray-200">
       ☰
     </button>
   </div>
@@ -45,10 +48,65 @@
 </nav>
 
 <script>
-  const mobileBtn = document.getElementById("mobileMenuBtn");
-  const mobileMenu = document.getElementById("mobileMenu");
+  // Defensive initialization: ensure elements exist before attaching handlers
+  (function () {
+    const mobileBtn = document.getElementById("mobileMenuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
 
-  mobileBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
-  });
+    if (!mobileBtn || !mobileMenu) {
+      // If elements are not present yet, wait a short time and try again.
+      // This helps when the component is inserted dynamically.
+      let attempts = 0;
+      const maxAttempts = 10;
+      const retry = setInterval(() => {
+        attempts++;
+        const btn = document.getElementById("mobileMenuBtn");
+        const menu = document.getElementById("mobileMenu");
+        if (btn && menu) {
+          clearInterval(retry);
+          initMobileToggle(btn, menu);
+        } else if (attempts >= maxAttempts) {
+          clearInterval(retry);
+          console.warn("Navbar: mobile toggle elements not found after retries.");
+        }
+      }, 100);
+      return;
+    }
+
+    initMobileToggle(mobileBtn, mobileMenu);
+
+    function initMobileToggle(btn, menu) {
+      // Ensure initial state matches viewport
+      const setInitialNavState = () => {
+        if (window.innerWidth >= 768) {
+          menu.classList.remove("hidden");
+          btn.setAttribute("aria-expanded", "false");
+        } else {
+          menu.classList.add("hidden");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      };
+
+      setInitialNavState();
+
+      // Toggle handler (works on touch and click)
+      btn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+        const expanded = !menu.classList.contains("hidden");
+        btn.setAttribute("aria-expanded", String(expanded));
+      });
+
+      // Keep state consistent on resize/orientation change
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(setInitialNavState, 120);
+      });
+
+      // Make button easier to tap on small screens
+      btn.style.zIndex = "50";
+      btn.style.width = btn.style.width || "44px";
+      btn.style.height = btn.style.height || "44px";
+    }
+  })();
 </script>
