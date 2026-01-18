@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("countPending").textContent = pendingData.pendingCount;
 
     // 🔹 Upcoming Events (green)
-    const upcomingRes = await fetch(`${ADMIN_API_BASE_URL}/api/events/upcoming`);
+    const upcomingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/upcoming`);
     const upcomingData = await upcomingRes.json();
     console.log("Upcoming data:", upcomingData);
     document.getElementById("countUpcoming").textContent = upcomingData.upcomingCount;
