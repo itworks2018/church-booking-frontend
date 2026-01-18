@@ -8,70 +8,65 @@
 </head>
 
 <body class="bg-gray-100">
-
   <!-- ✅ Top Navbar -->
   <nav class="bg-white shadow px-6 py-4 flex justify-between items-center border-b">
     <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
-
     <div class="flex items-center space-x-4">
       <span class="text-gray-700">Welcome, <span id="adminName">Admin</span></span>
-
       <!-- Profile Dropdown -->
       <div class="relative">
         <button id="profileBtn" class="w-10 h-10 rounded-full bg-gray-300"></button>
-
         <div id="profileMenu"
              class="hidden absolute right-0 mt-2 w-40 bg-white shadow-lg rounded p-2 border">
           <button onclick="logout()"
                   class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 text-gray-700">
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+    <button id="sidebarToggle" class="md:hidden text-gray-700 text-2xl ml-4" type="button" aria-label="Open sidebar">☰</button>
+  </nav>
 
-            <div class="flex flex-1 relative">
-              <!-- Sidebar overlay for mobile -->
-              <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
-              <!-- Sidebar -->
-              <aside id="sidebar" class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 min-h-screen">
-                <h2 class="text-lg font-bold text-white">CCF Sandoval Events</h2>
-                <nav class="mt-6 w-full px-6 space-y-3">
-                  <button onclick="loadPage('dashboard.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Dashboard</button>
-                  <button onclick="loadPage('manage-events.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Manage Events</button>
-                  <button onclick="loadPage('profiles.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Profile</button>
-                  <button onclick="loadPage('resources.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Resources</button>
-                  <button onclick="loadPage('bookings.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Create Venue Reservation</button>
-                  <button disabled class="w-full text-left p-2 rounded bg-gray-700 text-gray-500 cursor-not-allowed">More features soon</button>
-                </nav>
-              </aside>
-              <!-- Content Area -->
-              <main class="flex-1 p-6 md:ml-0">
-                <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800 overflow-x-auto">
-                  <!-- Loaded content appears here -->
-                </div>
-              </main>
-            </div>
-            <script>
-              // Sidebar toggle for mobile (unified)
-              document.addEventListener("DOMContentLoaded", () => {
-                const sidebar = document.getElementById("sidebar");
-                const sidebarOverlay = document.getElementById("sidebarOverlay");
-                let sidebarToggleBtn = document.getElementById("sidebarToggle");
-                if (!sidebarToggleBtn) {
-                  sidebarToggleBtn = document.createElement('button');
-                  sidebarToggleBtn.id = "sidebarToggle";
-                  sidebarToggleBtn.innerHTML = '☰';
-                  sidebarToggleBtn.className = 'sidebar-toggle md:hidden';
-                  sidebarToggleBtn.type = 'button';
-                  sidebarToggleBtn.setAttribute('aria-label', 'Open sidebar');
-                  document.querySelector('nav').prepend(sidebarToggleBtn);
-                }
-                sidebarToggleBtn.addEventListener('click', function() {
-                  sidebar.classList.toggle('sidebar--open');
-                  sidebarOverlay.classList.toggle('hidden');
-                });
-                sidebarOverlay.addEventListener('click', function() {
-                  sidebar.classList.remove('sidebar--open');
-                  sidebarOverlay.classList.add('hidden');
-                });
-              });
-            </script>
+  <!-- Sidebar overlay for mobile -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
+  <!-- Sidebar -->
+  <aside id="sidebar" class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 min-h-screen">
+    <h2 class="text-lg font-bold text-white">CCF Sandoval Events</h2>
+    <nav class="mt-6 w-full px-6 space-y-3">
+      <button onclick="loadPage('dashboard.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Dashboard</button>
+      <button onclick="loadPage('manage-events.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Manage Events</button>
+      <button onclick="loadPage('profiles.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Profile</button>
+      <button onclick="loadPage('resources.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Resources</button>
+      <button onclick="loadPage('bookings.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Create Venue Reservation</button>
+      <button disabled class="w-full text-left p-2 rounded bg-gray-700 text-gray-500 cursor-not-allowed">More features soon</button>
+    </nav>
+  </aside>
+
+  <main class="flex-1 p-6 md:ml-0">
+    <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800 overflow-x-auto">
+      <!-- Loaded content appears here -->
+    </div>
+  </main>
+
+  <script>
+    // Sidebar toggle for mobile
+    document.addEventListener("DOMContentLoaded", () => {
+      const sidebar = document.getElementById("sidebar");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
+      const sidebarToggleBtn = document.getElementById("sidebarToggle");
+      if (sidebarToggleBtn && sidebar && sidebarOverlay) {
+        sidebarToggleBtn.addEventListener("click", function() {
+          sidebar.classList.toggle("-translate-x-full");
+          sidebarOverlay.classList.toggle("hidden");
+        });
+        sidebarOverlay.addEventListener("click", function() {
+          sidebar.classList.add("-translate-x-full");
+          sidebarOverlay.classList.add("hidden");
+        });
+      }
+    });
+  </script>
     <main class="flex-1 p-6">
       <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800">
         <!-- Loaded content appears here -->

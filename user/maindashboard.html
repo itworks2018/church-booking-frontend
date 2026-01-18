@@ -16,7 +16,7 @@
   <!-- NAVBAR -->
   <nav class="bg-white shadow px-6 py-4 flex justify-between items-center border-b dark:bg-gray-900">
     
-    <button id="sidebarToggle" class="sidebar-toggle md:hidden dark:text-gray-200" type="button" aria-label="Open sidebar">☰</button>
+    <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-200 text-2xl">☰</button>
 
     <a href="/index.html" class="text-xl font-bold text-blue-700 dark:text-blue-400">
       CCF Sandoval Events
@@ -56,10 +56,9 @@
     <aside id="sidebar" class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 min-h-screen">
       <img src="/assets/images/Profile.png" class="w-24 h-24 rounded-full mb-4 border-4 border-white" />
       <h2 id="sidebarWelcome" class="text-lg font-semibold">Welcome</h2>
-      var sidebar = document.getElementById("sidebar");
+      <nav class="mt-6 w-full px-6 space-y-3">
         <a href="#" data-load="pages/dashboard.html" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Dashboard</a>
         <a href="#" data-load="pages/profile.html" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Profile</a>
-        var sidebarToggleBtn = document.getElementById("sidebarToggle");
         <a href="#" data-load="pages/bookings.html" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Create Venue Reservation</a>
       </nav>
     </aside>
@@ -72,17 +71,17 @@
   <script>
     // Sidebar toggle for mobile (wrapped to avoid redeclaration)
     (function() {
-      document.addEventListener("DOMContentLoaded", function() {
-        var sidebar = document.getElementById("sidebar");
-        var sidebarOverlay = document.getElementById("sidebarOverlay");
-        var sidebarToggleBtn = document.getElementById("sidebarToggle");
+      document.addEventListener("DOMContentLoaded", () => {
+        const sidebar = document.getElementById("sidebar");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        const sidebarToggleBtn = document.getElementById('sidebarToggle');
         if (sidebarToggleBtn && sidebar && sidebarOverlay) {
-          sidebarToggleBtn.addEventListener("click", function() {
-            sidebar.classList.toggle("sidebar--open");
+          sidebarToggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle("-translate-x-full");
             sidebarOverlay.classList.toggle("hidden");
           });
           sidebarOverlay.addEventListener("click", function() {
-            sidebar.classList.remove("sidebar--open");
+            sidebar.classList.add("-translate-x-full");
             sidebarOverlay.classList.add("hidden");
           });
         }
