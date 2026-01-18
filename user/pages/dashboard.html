@@ -59,16 +59,3 @@
 <!-- ===========================
      ACCESS CONTROL
 =========================== -->
-<script>
-  const ADMIN_EMAIL = "ccfsandovaladmin@gmail.com";
-  const token = localStorage.getItem("access_token");   // ⭐ FIXED
-  const email = localStorage.getItem("email");
-
-  if (!token) {
-    window.location.href = "/login.html";
-  }
-
-  if (email === ADMIN_EMAIL) {
-    window.location.href = "admin/admin-dashboard.html";
-  }
-</script>
