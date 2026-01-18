@@ -47,6 +47,20 @@
   </div>
 </nav>
 
+<!-- Sidebar Toggle Button (mobile only) -->
+<button id="sidebarToggle" class="sidebar-toggle md:hidden text-gray-700 dark:text-gray-200" type="button" aria-label="Open sidebar">☰</button>
+
+<!-- Sidebar and Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
+<aside id="sidebar" class="w-64 bg-gray-900 text-gray-200 flex flex-col py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 min-h-screen">
+  <h2 class="text-lg font-semibold mb-4 px-6">Menu</h2>
+  <nav class="mt-2 w-full px-6 space-y-3">
+    <a href="#" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Dashboard</a>
+    <a href="#" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Profile</a>
+    <a href="#" class="sidebar-link block text-sm py-2 px-3 rounded hover:bg-gray-800 transition">Create Venue Reservation</a>
+  </nav>
+</aside>
+
 <script>
   // Defensive initialization: ensure elements exist before attaching handlers
   (function () {
@@ -108,5 +122,23 @@
       btn.style.width = btn.style.width || "44px";
       btn.style.height = btn.style.height || "44px";
     }
+  })();
+
+  (function() {
+    document.addEventListener("DOMContentLoaded", function() {
+      var sidebar = document.getElementById("sidebar");
+      var sidebarOverlay = document.getElementById("sidebarOverlay");
+      var sidebarToggleBtn = document.getElementById("sidebarToggle");
+      if (sidebarToggleBtn && sidebar && sidebarOverlay) {
+        sidebarToggleBtn.addEventListener("click", function() {
+          sidebar.classList.toggle("sidebar--open");
+          sidebarOverlay.classList.toggle("hidden");
+        });
+        sidebarOverlay.addEventListener("click", function() {
+          sidebar.classList.remove("sidebar--open");
+          sidebarOverlay.classList.add("hidden");
+        });
+      }
+    });
   })();
 </script>
