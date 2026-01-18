@@ -178,3 +178,40 @@ button:hover {
     font-size: 1.3rem;
   }
 }
+
+/* NAV: default hidden on small screens, visible on desktop */
+.nav {
+  display: flex;            /* desktop default; will be overridden on small screens */
+  gap: 12px;
+  align-items: center;
+}
+
+/* mobile: hide nav by default */
+@media (max-width: 768px) {
+  .nav {
+    display: none;          /* hidden on mobile until toggled */
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  /* when open, show block */
+  .nav.open {
+    display: flex;
+  }
+
+  /* ensure toggle button is visible and tappable */
+  #navToggle {
+    z-index: 50;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Prevent overlays from blocking the toggle (if you have overlays) */
+.overlay {
+  pointer-events: none; /* only enable when overlay is active via JS */
+}
