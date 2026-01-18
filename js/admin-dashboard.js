@@ -12,25 +12,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // 🔹 Booking Reservations (blue)
-    const bookingsRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/summary`);
+
+    const authHeaders = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const bookingsRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/summary`, authHeaders);
     const bookingsData = await bookingsRes.json();
     console.log("Bookings data:", bookingsData);
     document.getElementById("countBookings").textContent = bookingsData.totalBookings;
 
     // 🔹 Pending Approval (yellow)
-    const pendingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/pending`);
+
+    const pendingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/pending`, authHeaders);
     const pendingData = await pendingRes.json();
     console.log("Pending data:", pendingData);
     document.getElementById("countPending").textContent = pendingData.pendingCount;
 
     // 🔹 Upcoming Events (green)
-    const upcomingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/upcoming`);
+
+    const upcomingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/upcoming`, authHeaders);
     const upcomingData = await upcomingRes.json();
     console.log("Upcoming data:", upcomingData);
     document.getElementById("countUpcoming").textContent = upcomingData.upcomingCount;
 
     // 🔹 Total Members (purple)
-    const usersRes = await fetch(`${ADMIN_API_BASE_URL}/api/users/summary`);
+
+    const usersRes = await fetch(`${ADMIN_API_BASE_URL}/api/users/summary`, authHeaders);
     const usersData = await usersRes.json();
     console.log("Users data:", usersData);
     document.getElementById("countMembers").textContent = usersData.totalUsers;
