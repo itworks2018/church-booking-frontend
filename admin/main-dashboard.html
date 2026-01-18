@@ -50,17 +50,9 @@
           Manage Events
         </button>
 
-      // ✅ Load default page and re-initialize calendar after loading
-      function initCalendarIfPresent() {
-        if (document.getElementById("calendar")) {
-          if (window.FullCalendar && window.initCalendar) {
-            window.initCalendar();
-          }
-        }
-      }
 
-      loadPage("dashboard.html");
-      setTimeout(initCalendarIfPresent, 100); // Give DOM time to render
+        <button onclick="loadPage('profiles.html')"
+                class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">
           Profile
         </button>
 
@@ -80,50 +72,6 @@
         </button>
 
       </nav>
-    <!-- FullCalendar JS and calendar.js loaded globally -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js"></script>
-    <script>
-      window.initCalendar = function() {
-        const calendarEl = document.getElementById('calendar');
-        if (!calendarEl) return;
-        const token = localStorage.getItem('access_token');
-        const venueId = window.selectedVenueId || 1;
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-          },
-          events: async function(fetchInfo, successCallback, failureCallback) {
-            try {
-              const res = await fetch(`/api/calendar/venue/${venueId}/bookings`, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-              const bookings = await res.json();
-              const events = bookings.map(b => ({
-                title: b.status === 'approved' ? 'Approved' : 'Pending',
-                start: b.start_datetime,
-                end: b.end_datetime,
-                color: b.status === 'approved' ? '#22c55e' : '#facc15',
-              }));
-              successCallback(events);
-            } catch (err) {
-              failureCallback(err);
-            }
-          },
-          selectable: true,
-          select: function(info) {
-            alert('Selected: ' + info.startStr + ' to ' + info.endStr);
-          },
-          eventClick: function(info) {
-            alert('Booking: ' + info.event.title + '\n' + info.event.start);
-          }
-        });
-        calendar.render();
-      }
-    </script>
-
     </aside>
 
     <!-- ✅ Content Area (Always White) -->
