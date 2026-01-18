@@ -2,6 +2,11 @@
      USER DASHBOARD PAGE
 =========================== -->
 
+
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+<link href="/assets/css/fullcalendar.min.css" rel="stylesheet" />
+
 <!-- BOOKING TABLE -->
 <h2 class="text-xl font-semibold mb-4">My Booking Requests</h2>
 
@@ -21,6 +26,16 @@
     </tbody>
   </table>
 </div>
+
+<!-- Calendar Section -->
+<div class="my-10">
+  <h3 class="text-xl font-bold mb-4 dark:text-white">Venue Calendar</h3>
+  <div id="calendar"></div>
+</div>
+
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js"></script>
+<script src="/js/calendar.js"></script>
 
 <!-- ===========================
      HERO SLIDER
