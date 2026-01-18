@@ -43,72 +43,7 @@
             Log Out
           </a>
 
-        <script>
-          function initCalendarIfPresent() {
-            if (document.getElementById("calendar")) {
-              if (window.FullCalendar && window.initCalendar) {
-                window.initCalendar();
-              }
-            }
-          }
-          function loadPage(page) {
-            fetch(page)
-              .then(res => res.text())
-              .then(html => {
-                document.getElementById("content").innerHTML = html;
-                setTimeout(initCalendarIfPresent, 100);
-              })
-              .catch(() => {
-                document.getElementById("content").innerHTML =
-                  "<p class='text-red-600 font-semibold'>Page not found.</p>";
-              });
-          }
-          // ...existing code...
-          loadPage("pages/dashboard.html");
-        </script>
-        <!-- FullCalendar JS and calendar.js loaded globally -->
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js"></script>
-        <script>
-          window.initCalendar = function() {
-            const calendarEl = document.getElementById('calendar');
-            if (!calendarEl) return;
-            const token = localStorage.getItem('access_token');
-            const venueId = window.selectedVenueId || 1;
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-              initialView: 'dayGridMonth',
-              headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-              },
-              events: async function(fetchInfo, successCallback, failureCallback) {
-                try {
-                  const res = await fetch(`/api/calendar/venue/${venueId}/bookings`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                  });
-                  const bookings = await res.json();
-                  const events = bookings.map(b => ({
-                    title: b.status === 'approved' ? 'Approved' : 'Pending',
-                    start: b.start_datetime,
-                    end: b.end_datetime,
-                    color: b.status === 'approved' ? '#22c55e' : '#facc15',
-                  }));
-                  successCallback(events);
-                } catch (err) {
-                  failureCallback(err);
-                }
-              },
-              selectable: true,
-              select: function(info) {
-                alert('Selected: ' + info.startStr + ' to ' + info.endStr);
-              },
-              eventClick: function(info) {
-                alert('Booking: ' + info.event.title + '\n' + info.event.start);
-              }
-            });
-            calendar.render();
-          }
-        </script>
+        <!-- ...existing code... -->
            class="w-24 h-24 rounded-full mb-4 border-4 border-white" />
 
       <h2 id="sidebarWelcome" class="text-lg font-semibold">Welcome</h2>
