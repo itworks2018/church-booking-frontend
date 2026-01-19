@@ -1,40 +1,125 @@
-const ADMIN_API_BASE_URL = "https://church-booking-backend.onrender.com";
+// /js/admin-dashboard.js
+(function () {
+  // Prevent double initialization when the script is loaded multiple times
+  if (window.__ADMIN_DASHBOARD_INITIALIZED__) return;
+  window.__ADMIN_DASHBOARD_INITIALIZED__ = true;
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const token = localStorage.getItem("access_token");
-  const role = localStorage.getItem("user_role");
-
-  // Guard: only allow admins
-  if (!token || role !== "admin") {
-    window.location.href = "/admin/login.html";
-    return;
+  // Guarded global config (only set if not already defined)
+  if (typeof window.ADMIN_API_BASE_URL === 'undefined') {
+    window.ADMIN_API_BASE_URL = "https://church-booking-backend.onrender.com";
   }
 
-  try {
+  // Main init function (exposed so parent can call after injecting fragment)
+  async function initAdminDashboard() {
+    try {
+      const token = localStorage.getItem("access_token");
+      const role = localStorage.getItem("user_role") || localStorage.getItem("role");
 
-    // Use new combined metrics endpoint for users and bookings
-    const authHeaders = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+      // Guard: only allow admins
+      if (!token || role !== "admin") {
+        window.location.href = "/admin/login.html";
+        return;
+      }
 
-    const metricsRes = await fetch(`${ADMIN_API_BASE_URL}/api/metrics/counts`, authHeaders);
-    const metricsData = await metricsRes.json();
-    console.log("Metrics data:", metricsData);
-    document.getElementById("countBookings").textContent = metricsData.bookings_count;
-    document.getElementById("countMembers").textContent = metricsData.users_count;
+      const authHeaders = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-    // Still fetch pending and upcoming bookings for other cards
-    const pendingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/pending`, authHeaders);
-    const pendingData = await pendingRes.json();
-    document.getElementById("countPending").textContent = pendingData.pendingCount;
+      // Fetch combined metrics
+      const metricsRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/metrics/counts`, authHeaders);
+      if (!metricsRes.ok) throw new Error('Failed to fetch metrics');
+      const metricsData = await metricsRes.json();
+      console.log("Metrics data:", metricsData);
 
-    const upcomingRes = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/upcoming`, authHeaders);
-    const upcomingData = await upcomingRes.json();
-    document.getElementById("countUpcoming").textContent = upcomingData.upcomingCount;
+      const bookingsEl = document.getElementById("countBookings");
+      const membersEl = document.getElementById("countMembers");
+      if (bookingsEl && typeof metricsData.bookings_count !== 'undefined') bookingsEl.textContent = metricsData.bookings_count;
+      if (membersEl && typeof metricsData.users_count !== 'undefined') membersEl.textContent = metricsData.users_count;
 
-  } catch (err) {
-    console.error("Dashboard fetch error:", err);
+      // Pending bookings
+      try {
+        const pendingRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/pending`, authHeaders);
+        if (pendingRes.ok) {
+          const pendingData = await pendingRes.json();
+          const pendingEl = document.getElementById("countPending");
+          if (pendingEl && typeof pendingData.pendingCount !== 'undefined') pendingEl.textContent = pendingData.pendingCount;
+          populatePendingTable(pendingData.items || pendingData); // safe attempt
+        } else {
+          console.warn('Pending bookings fetch failed:', pendingRes.status);
+        }
+      } catch (e) {
+        console.warn('Pending bookings error:', e);
+      }
+
+      // Upcoming bookings
+      try {
+        const upcomingRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming`, authHeaders);
+        if (upcomingRes.ok) {
+          const upcomingData = await upcomingRes.json();
+          const upcomingEl = document.getElementById("countUpcoming");
+          if (upcomingEl && typeof upcomingData.upcomingCount !== 'undefined') upcomingEl.textContent = upcomingData.upcomingCount;
+        } else {
+          console.warn('Upcoming bookings fetch failed:', upcomingRes.status);
+        }
+      } catch (e) {
+        console.warn('Upcoming bookings error:', e);
+      }
+
+    } catch (err) {
+      console.error("Dashboard fetch error:", err);
+    }
   }
-});
+
+  // Helper to populate pending table (non-blocking)
+  function populatePendingTable(items) {
+    try {
+      const tbody = document.getElementById("pendingTable");
+      if (!tbody || !items || !Array.isArray(items)) return;
+      tbody.innerHTML = ''; // clear existing rows
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b';
+        const date = item.date || item.event_date || item.created_at || '';
+        tr.innerHTML = `
+          <td class="p-3">${escapeHtml(item.event_name || item.title || '')}</td>
+          <td class="p-3">${escapeHtml(item.user_email || item.user || '')}</td>
+          <td class="p-3">${escapeHtml(item.venue || '')}</td>
+          <td class="p-3">${escapeHtml(date)}</td>
+          <td class="p-3">${escapeHtml(item.status || '')}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (e) {
+      console.warn('populatePendingTable error:', e);
+    }
+  }
+
+  // Minimal HTML escape helper
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  // Expose init function for the parent page to call after fragment injection
+  window.initAdminDashboard = initAdminDashboard;
+
+  // Optionally auto-run if the dashboard fragment is already present
+  if (document.readyState !== 'loading') {
+    // Delay slightly to allow fragment injection to complete if called immediately after script load
+    setTimeout(() => {
+      if (document.getElementById('contentArea') && document.getElementById('countBookings')) {
+        initAdminDashboard();
+      }
+    }, 50);
+  } else {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        if (document.getElementById('contentArea') && document.getElementById('countBookings')) {
+          initAdminDashboard();
+        }
+      }, 50);
+    });
+  }
+})();
