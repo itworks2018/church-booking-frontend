@@ -30,6 +30,7 @@
 
   <!-- Sidebar overlay for mobile -->
   <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
+
   <!-- Sidebar -->
   <aside id="sidebar" class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 min-h-screen">
     <h2 class="text-lg font-bold text-white">CCF Sandoval Events</h2>
@@ -43,6 +44,7 @@
     </nav>
   </aside>
 
+  <!-- Main content area (single instance) -->
   <main class="flex-1 p-6 md:ml-0">
     <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800 overflow-x-auto">
       <!-- Loaded content appears here -->
@@ -67,18 +69,15 @@
       }
     });
   </script>
-    <main class="flex-1 p-6">
-      <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800">
-        <!-- Loaded content appears here -->
-      </div>
-    </main>
-
-  </div>
 
   <script>
+    // Load a page into #contentArea
     function loadPage(page) {
       fetch(`pages/${page}`)
-        .then(res => res.text())
+        .then(res => {
+          if (!res.ok) throw new Error("Not found");
+          return res.text();
+        })
         .then(html => document.getElementById("contentArea").innerHTML = html)
         .catch(() => {
           document.getElementById("contentArea").innerHTML =
@@ -86,36 +85,47 @@
         });
     }
 
-    document.getElementById("profileBtn").addEventListener("click", () => {
-      document.getElementById("profileMenu").classList.toggle("hidden");
+    // Profile menu toggle and logout
+    document.addEventListener("DOMContentLoaded", () => {
+      const profileBtn = document.getElementById("profileBtn");
+      if (profileBtn) {
+        profileBtn.addEventListener("click", () => {
+          document.getElementById("profileMenu").classList.toggle("hidden");
+        });
+      }
     });
 
     function logout() {
+      // Clear auth info if needed
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("role");
+      localStorage.removeItem("user_role");
       window.location.href = "login.html";
     }
 
-    // ✅ Load default page
-    loadPage("dashboard.html");
+    // Ensure auth and role checks run after DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
+      const token = localStorage.getItem("access_token"); // token key used by login
+      // support both keys for backward compatibility
+      const role = localStorage.getItem("role") || localStorage.getItem("user_role");
+
+      // If not logged in → go to admin login
+      if (!token) {
+        window.location.href = "/admin/login.html";
+        return;
+      }
+
+      // If not an admin → send to user login
+      if (role !== "admin") {
+        window.location.href = "/user/login.html";
+        return;
+      }
+
+      // ✅ Load default page after auth checks
+      loadPage("dashboard.html");
+    });
   </script>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("access_token"); // ✅ matches login.js
-    const role = localStorage.getItem("user_role");     // ✅ saved in login.js
-
-    // If not logged in → go to admin login
-    if (!token) {
-      window.location.href = "/admin/login.html";
-    }
-
-    // If not an admin → send to user login
-    if (role !== "admin") {
-      window.location.href = "/user/login.html";
-    }
-  });
-</script>
-
-<script src="/js/admin-dashboard.js"></script>
-
+  <script src="/js/admin-dashboard.js"></script>
 </body>
 </html>
