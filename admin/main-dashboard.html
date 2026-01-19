@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 min-h-screen flex flex-col">
   <!-- ✅ Top Navbar -->
   <nav class="bg-white shadow px-6 py-4 flex justify-between items-center border-b">
     <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
@@ -28,28 +28,32 @@
     <button id="sidebarToggle" class="md:hidden text-gray-700 text-2xl ml-4" type="button" aria-label="Open sidebar">☰</button>
   </nav>
 
-  <!-- Sidebar overlay for mobile -->
-  <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
+  <!-- Layout wrapper: sidebar + main -->
+  <div class="flex flex-1">
+    <!-- Sidebar overlay for mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
 
-  <!-- Sidebar -->
-  <aside id="sidebar" class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 min-h-screen">
-    <h2 class="text-lg font-bold text-white">CCF Sandoval Events</h2>
-    <nav class="mt-6 w-full px-6 space-y-3">
-      <button onclick="loadPage('dashboard.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Dashboard</button>
-      <button onclick="loadPage('manage-events.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Manage Events</button>
-      <button onclick="loadPage('profiles.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Profile</button>
-      <button onclick="loadPage('resources.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Resources</button>
-      <button onclick="loadPage('bookings.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Create Venue Reservation</button>
-      <button disabled class="w-full text-left p-2 rounded bg-gray-700 text-gray-500 cursor-not-allowed">More features soon</button>
-    </nav>
-  </aside>
+    <!-- Sidebar -->
+    <aside id="sidebar"
+           class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30">
+      <h2 class="text-lg font-bold text-white">CCF Sandoval Events</h2>
+      <nav class="mt-6 w-full px-6 space-y-3">
+        <button onclick="loadPage('dashboard.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Dashboard</button>
+        <button onclick="loadPage('manage-events.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Manage Events</button>
+        <button onclick="loadPage('profiles.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Profile</button>
+        <button onclick="loadPage('resources.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Resources</button>
+        <button onclick="loadPage('bookings.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Create Venue Reservation</button>
+        <button disabled class="w-full text-left p-2 rounded bg-gray-700 text-gray-500 cursor-not-allowed">More features soon</button>
+      </nav>
+    </aside>
 
-  <!-- Main content area (single instance) -->
-  <main class="flex-1 p-6 md:ml-0">
-    <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800 overflow-x-auto">
-      <!-- Loaded content appears here -->
-    </div>
-  </main>
+    <!-- Main content area -->
+    <main class="flex-1 p-6 md:ml-64">
+      <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800 overflow-x-auto">
+        <!-- Loaded content appears here -->
+      </div>
+    </main>
+  </div>
 
   <script>
     // Sidebar toggle for mobile
@@ -68,9 +72,7 @@
         });
       }
     });
-  </script>
 
-  <script>
     // Load a page into #contentArea
     function loadPage(page) {
       fetch(`pages/${page}`)
@@ -80,7 +82,6 @@
         })
         .then(html => {
           document.getElementById("contentArea").innerHTML = html;
-          // Dynamically load admin-dashboard.js if dashboard.html is loaded
           if (page === "dashboard.html") {
             const oldScript = document.getElementById("adminDashboardScript");
             if (oldScript) oldScript.remove();
@@ -107,35 +108,26 @@
     });
 
     function logout() {
-      // Clear auth info if needed
       localStorage.removeItem("access_token");
       localStorage.removeItem("role");
       localStorage.removeItem("user_role");
       window.location.href = "login.html";
     }
 
-    // Ensure auth and role checks run after DOM is ready
+    // Auth check
     document.addEventListener("DOMContentLoaded", () => {
-      const token = localStorage.getItem("access_token"); // token key used by login
-      // support both keys for backward compatibility
+      const token = localStorage.getItem("access_token");
       const role = localStorage.getItem("role") || localStorage.getItem("user_role");
-
-      // If not logged in → go to admin login
       if (!token) {
         window.location.href = "/admin/login.html";
         return;
       }
-
-      // If not an admin → send to user login
       if (role !== "admin") {
         window.location.href = "/user/login.html";
         return;
       }
-
-      // ✅ Load dashboard page after auth checks
       loadPage("dashboard.html");
     });
   </script>
-
 </body>
 </html>
