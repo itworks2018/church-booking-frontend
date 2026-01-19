@@ -23,7 +23,6 @@
   </table>
 </div>
 
-<!-- Calendar + Date/Time Picker -->
 <!-- Calendar Container -->
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 w-full">
   <!-- Header with Month Navigation -->
@@ -37,33 +36,11 @@
   <div class="grid grid-cols-7 gap-2 text-center" id="calendarGrid">
     <!-- Days will be injected here -->
   </div>
-
-  <!-- Booking Form (hidden until a date is selected) -->
-  <div id="bookingForm" class="mt-6 hidden">
-    <h3 class="text-lg font-bold mb-4 dark:text-white">Booking Form</h3>
-    <form class="space-y-4">
-      <label for="eventName" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Event Name</label>
-      <input type="text" id="eventName" name="eventName" class="w-full border px-3 py-2 rounded dark:bg-gray-700 dark:text-white" required />
-
-      <label for="venue" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Venue</label>
-      <input type="text" id="venue" name="venue" class="w-full border px-3 py-2 rounded dark:bg-gray-700 dark:text-white" required />
-
-      <label for="selectedDate" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Date</label>
-      <input type="date" id="selectedDate" name="selectedDate" class="w-full border px-3 py-2 rounded dark:bg-gray-700 dark:text-white" required />
-
-      <label for="selectedTime" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Time</label>
-      <input type="time" id="selectedTime" name="selectedTime" class="w-full border px-3 py-2 rounded dark:bg-gray-700 dark:text-white" required />
-
-      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Book Now</button>
-    </form>
-  </div>
 </div>
 
 <script>
   const monthYearEl = document.getElementById("monthYear");
   const calendarGrid = document.getElementById("calendarGrid");
-  const bookingForm = document.getElementById("bookingForm");
-  const selectedDateInput = document.getElementById("selectedDate");
 
   let currentDate = new Date();
 
@@ -73,6 +50,7 @@
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
+    // Set header text
     monthYearEl.textContent = currentDate.toLocaleString("default", { month: "long" }) + " " + year;
 
     const firstDay = new Date(year, month, 1).getDay();
@@ -95,18 +73,12 @@
 
     // Days of month
     for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
       const btn = document.createElement("button");
       btn.textContent = day;
       btn.className = "p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900 w-full";
-      btn.onclick = () => selectDate(dateStr);
+      btn.onclick = () => alert(`You clicked ${year}-${month+1}-${day}`);
       calendarGrid.appendChild(btn);
     }
-  }
-
-  function selectDate(dateStr) {
-    selectedDateInput.value = dateStr;
-    bookingForm.classList.remove("hidden");
   }
 
   document.getElementById("prevMonth").addEventListener("click", () => {
