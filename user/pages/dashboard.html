@@ -24,8 +24,30 @@
 </div>
 
 <!-- Calendar + Date/Time Picker -->
-<div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-  <h2 class="text-xl font-bold mb-4 dark:text-white">Book a Date & Time</h2>
+<div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+  <h2 class="text-2xl font-bold mb-6 dark:text-white">Venue Booking Calendar</h2>
+
+  <!-- Calendar Grid -->
+  <div class="grid grid-cols-7 gap-2 text-center mb-6">
+    <!-- Weekday Headers -->
+    <div class="font-semibold">Sun</div>
+    <div class="font-semibold">Mon</div>
+    <div class="font-semibold">Tue</div>
+    <div class="font-semibold">Wed</div>
+    <div class="font-semibold">Thu</div>
+    <div class="font-semibold">Fri</div>
+    <div class="font-semibold">Sat</div>
+
+    <!-- Example Days (replace dynamically with JS later) -->
+    <button class="p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900">1</button>
+    <button class="p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900">2</button>
+    <button class="p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900">3</button>
+    <button class="p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900">4</button>
+    <button class="p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900">5</button>
+    <button class="p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900">6</button>
+    <button class="p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900">7</button>
+    <!-- Continue for rest of month -->
+  </div>
 
   <!-- Date Picker -->
   <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
@@ -49,19 +71,24 @@
 
   <!-- Submit Button -->
   <button
+    id="confirmBooking"
     class="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
   >
     Confirm Booking
   </button>
 </div>
 
-<!--Calendar Date and Time-->
 <script>
-document.querySelector("button").addEventListener("click", () => {
-  const date = document.getElementById("date").value;
-  const time = document.getElementById("time").value;
-  alert(`Booking confirmed for ${date} at ${time}`);
-});
+  // Example JS to handle booking confirmation
+  document.getElementById("confirmBooking").addEventListener("click", () => {
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+    if (!date || !time) {
+      alert("Please select both date and time.");
+      return;
+    }
+    alert(`Booking confirmed for ${date} at ${time}`);
+  });
 </script>
 
 <!-- ===========================
