@@ -28,6 +28,15 @@
         .then(res => res.text())
         .then(html => {
           document.getElementById("navbar").innerHTML = html;
+
+          // Remove dashboard-only sidebar elements so they don't appear on the public login page
+          const sidebar = document.getElementById("sidebar");
+          const overlay = document.getElementById("sidebarOverlay");
+          const sidebarToggle = document.getElementById("sidebarToggle");
+
+          if (sidebar) sidebar.remove();
+          if (overlay) overlay.remove();
+          if (sidebarToggle) sidebarToggle.remove();
         })
         .catch(err => console.error("Navbar failed to load:", err));
     });
