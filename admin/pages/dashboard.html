@@ -1,57 +1,56 @@
-
 <!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
-<link href="/assets/css/fullcalendar.min.css" rel="stylesheet" />
 
-<h2 class="text-2xl font-bold mb-6 dark:text-white">Dashboard Overview</h2>
+<div class="w-full h-full flex flex-col">
+  <h2 class="text-2xl font-bold mb-6 dark:text-white">Dashboard Overview</h2>
 
-<!-- ✅ Metrics -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  <!-- ✅ Metrics -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 flex-shrink-0">
+    <div class="p-6 bg-blue-600 text-white rounded shadow">
+      <h3 class="text-lg">Booking Reservations</h3>
+      <p class="text-3xl font-bold" id="countBookings">0</p>
+    </div>
 
-  <div class="p-6 bg-blue-600 text-white rounded shadow">
-    <h3 class="text-lg">Booking Reservations</h3>
-    <p class="text-3xl font-bold" id="countBookings">0</p>
+    <div class="p-6 bg-yellow-500 text-white rounded shadow">
+      <h3 class="text-lg">Pending Approval</h3>
+      <p class="text-3xl font-bold" id="countPending">0</p>
+    </div>
+
+    <div class="p-6 bg-green-600 text-white rounded shadow">
+      <h3 class="text-lg">Upcoming Events</h3>
+      <p class="text-3xl font-bold" id="countUpcoming">0</p>
+    </div>
+
+    <div class="p-6 bg-purple-600 text-white rounded shadow">
+      <h3 class="text-lg">Total Members</h3>
+      <p class="text-3xl font-bold" id="countMembers">0</p>
+    </div>
   </div>
 
-  <div class="p-6 bg-yellow-500 text-white rounded shadow">
-    <h3 class="text-lg">Pending Approval</h3>
-    <p class="text-3xl font-bold" id="countPending">0</p>
+  <!-- ✅ Pending Requests Table -->
+  <h3 class="text-xl font-bold mb-4 dark:text-white">Pending Booking Requests</h3>
+  <div class="flex-1 overflow-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-gray-200 dark:bg-gray-800 dark:text-white">
+          <th class="p-3">Event Name</th>
+          <th class="p-3">User</th>
+          <th class="p-3">Venue</th>
+          <th class="p-3">Date</th>
+          <th class="p-3">Status</th>
+        </tr>
+      </thead>
+      <tbody id="pendingTable">
+        <!-- Dynamic rows -->
+      </tbody>
+    </table>
   </div>
 
-  <div class="p-6 bg-green-600 text-white rounded shadow">
-    <h3 class="text-lg">Upcoming Events</h3>
-    <p class="text-3xl font-bold" id="countUpcoming">0</p>
+  <!-- Calendar Section -->
+  <div class="my-10 flex-shrink-0">
+    <h3 class="text-xl font-bold mb-4 dark:text-white">Venue Calendar</h3>
+    <div id="calendar" class="w-full"></div>
   </div>
-
-  <div class="p-6 bg-purple-600 text-white rounded shadow">
-    <h3 class="text-lg">Total Members</h3>
-    <p class="text-3xl font-bold" id="countMembers">0</p>
-  </div>
-
-</div>
-
-<!-- ✅ Pending Requests Table -->
-<h3 class="text-xl font-bold mb-4 dark:text-white">Pending Booking Requests</h3>
-
-<table class="w-full text-left border-collapse">
-  <thead>
-    <tr class="bg-gray-200 dark:bg-gray-800 dark:text-white">
-      <th class="p-3">Event Name</th>
-      <th class="p-3">User</th>
-      <th class="p-3">Venue</th>
-      <th class="p-3">Date</th>
-      <th class="p-3">Status</th>
-    </tr>
-  </thead>
-  <tbody id="pendingTable">
-    <!-- Dynamic rows -->
-  </tbody>
- </table>
-
-<!-- Calendar Section -->
-<div class="my-10">
-  <h3 class="text-xl font-bold mb-4 dark:text-white">Venue Calendar</h3>
-  <div id="calendar"></div>
 </div>
 
 <!-- FullCalendar JS -->
