@@ -29,7 +29,7 @@
   </nav>
 
   <!-- Layout wrapper: sidebar + main -->
-  <div class="flex flex-1">
+  <div class="flex flex-1 min-h-screen">
     <!-- Sidebar overlay for mobile -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
 
@@ -48,8 +48,8 @@
     </aside>
 
     <!-- Main content area -->
-    <main class="flex-1 p-6 md:ml-64">
-      <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800 overflow-x-auto">
+    <main class="flex-1 md:ml-64 bg-gray-100 p-6">
+      <div id="contentArea" class="w-full h-full bg-white rounded shadow-lg border text-gray-800 overflow-x-auto">
         <!-- Loaded content appears here -->
       </div>
     </main>
