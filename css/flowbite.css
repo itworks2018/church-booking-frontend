@@ -25,4 +25,10 @@
 @import "flowbite/src/themes/mono";
 */
 
+/* PLUGIN
+@plugin "flowbite/plugin";
+*/
 
+/* MODULES
+@source "../node_modules/flowbite";
+*/
