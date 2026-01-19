@@ -24,7 +24,9 @@
 </div>
 
 <!-- Calendar + Date/Time Picker -->
-<div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+<!-- Calendar Container -->
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 w-full">
+  <!-- Header with Month Navigation -->
   <div class="flex justify-between items-center mb-4">
     <button id="prevMonth" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</button>
     <h2 id="monthYear" class="text-xl font-bold dark:text-white"></h2>
@@ -32,20 +34,27 @@
   </div>
 
   <!-- Calendar Grid -->
-  <div id="calendarGrid" class="grid grid-cols-7 gap-2 text-center"></div>
+  <div class="grid grid-cols-7 gap-2 text-center" id="calendarGrid">
+    <!-- Days will be injected here -->
+  </div>
 
-  <!-- Booking Form (hidden initially) -->
+  <!-- Booking Form (hidden until a date is selected) -->
   <div id="bookingForm" class="mt-6 hidden">
     <h3 class="text-lg font-bold mb-4 dark:text-white">Booking Form</h3>
-    <!-- Your existing booking form HTML goes here -->
     <form class="space-y-4">
-      <input type="text" placeholder="Event Name" class="w-full border px-3 py-2 rounded" />
-      <input type="text" placeholder="Venue" class="w-full border px-3 py-2 rounded" />
-      <input type="date" id="selectedDate" class="w-full border px-3 py-2 rounded" />
-      <input type="time" class="w-full border px-3 py-2 rounded" />
-      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-        Confirm Booking
-      </button>
+      <label for="eventName" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Event Name</label>
+      <input type="text" id="eventName" name="eventName" class="w-full border px-3 py-2 rounded dark:bg-gray-700 dark:text-white" required />
+
+      <label for="venue" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Venue</label>
+      <input type="text" id="venue" name="venue" class="w-full border px-3 py-2 rounded dark:bg-gray-700 dark:text-white" required />
+
+      <label for="selectedDate" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Date</label>
+      <input type="date" id="selectedDate" name="selectedDate" class="w-full border px-3 py-2 rounded dark:bg-gray-700 dark:text-white" required />
+
+      <label for="selectedTime" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Time</label>
+      <input type="time" id="selectedTime" name="selectedTime" class="w-full border px-3 py-2 rounded dark:bg-gray-700 dark:text-white" required />
+
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Book Now</button>
     </form>
   </div>
 </div>
@@ -60,6 +69,7 @@
 
   function renderCalendar() {
     calendarGrid.innerHTML = "";
+
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
@@ -68,19 +78,29 @@
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Fill empty slots before first day
+    // Weekday headers
+    const weekdays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    weekdays.forEach(day => {
+      const header = document.createElement("div");
+      header.textContent = day;
+      header.className = "font-semibold";
+      calendarGrid.appendChild(header);
+    });
+
+    // Empty slots before first day
     for (let i = 0; i < firstDay; i++) {
-      calendarGrid.innerHTML += `<div></div>`;
+      const empty = document.createElement("div");
+      calendarGrid.appendChild(empty);
     }
 
-    // Fill days
+    // Days of month
     for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-      calendarGrid.innerHTML += `
-        <button class="p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900 w-full"
-                onclick="selectDate('${dateStr}')">
-          ${day}
-        </button>`;
+      const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+      const btn = document.createElement("button");
+      btn.textContent = day;
+      btn.className = "p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-900 w-full";
+      btn.onclick = () => selectDate(dateStr);
+      calendarGrid.appendChild(btn);
     }
   }
 
