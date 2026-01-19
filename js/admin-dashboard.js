@@ -67,6 +67,35 @@
         console.warn('Upcoming bookings error:', e);
       }
 
+      // Initialize FullCalendar if present
+      if (window.FullCalendar) {
+        var calendarEl = document.getElementById('fullcalendar');
+        if (calendarEl) {
+          // Remove any previous calendar instance
+          if (calendarEl._fullCalendarInstance) {
+            calendarEl._fullCalendarInstance.destroy();
+          }
+          var calendar = new window.FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 600,
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: [
+              // Example events, replace with dynamic loading later
+              {
+                title: 'Sample Event',
+                start: new Date().toISOString().slice(0,10)
+              }
+            ]
+          });
+          calendar.render();
+          calendarEl._fullCalendarInstance = calendar;
+        }
+      }
+
     } catch (err) {
       console.error("Dashboard fetch error:", err);
     }
