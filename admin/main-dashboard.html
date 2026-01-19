@@ -78,7 +78,18 @@
           if (!res.ok) throw new Error("Not found");
           return res.text();
         })
-        .then(html => document.getElementById("contentArea").innerHTML = html)
+        .then(html => {
+          document.getElementById("contentArea").innerHTML = html;
+          // Dynamically load admin-dashboard.js if dashboard.html is loaded
+          if (page === "dashboard.html") {
+            const oldScript = document.getElementById("adminDashboardScript");
+            if (oldScript) oldScript.remove();
+            const script = document.createElement("script");
+            script.src = "/js/admin-dashboard.js";
+            script.id = "adminDashboardScript";
+            document.body.appendChild(script);
+          }
+        })
         .catch(() => {
           document.getElementById("contentArea").innerHTML =
             "<p class='text-red-600 font-semibold'>Page not found.</p>";
