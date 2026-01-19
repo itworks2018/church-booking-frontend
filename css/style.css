@@ -1,4 +1,22 @@
-/* Sidebar Toggle Styles (shared by user/admin dashboards) */
+/* =========================
+   RESET & BASE
+   ========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: #F8FAFC;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* =========================
+   SIDEBAR TOGGLE
+   ========================= */
 .sidebar-toggle {
   z-index: 50;
   width: 44px;
@@ -13,10 +31,25 @@
   cursor: pointer;
 }
 
+/* =========================
+   SIDEBAR & OVERLAY
+   ========================= */
+#sidebar {
+  width: 16rem; /* 256px */
+  flex-shrink: 0;
+  background: #111827;
+  color: #E5E7EB;
+  min-height: 100vh;
+  transition: transform 0.3s ease;
+}
+
 @media (max-width: 768px) {
   #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
     transform: translateX(-100%);
-    transition: transform 0.3s;
+    z-index: 80;
   }
   #sidebar.sidebar--open {
     transform: translateX(0);
@@ -24,42 +57,21 @@
   #sidebarOverlay {
     display: block;
     background: rgba(0,0,0,0.5);
-    z-index: 40;
+    z-index: 70;
   }
   #sidebarOverlay.hidden {
     display: none;
   }
 }
 
-/* Prevent overlays from blocking the toggle (if you have overlays) */
+/* Overlay helper */
 .overlay {
   pointer-events: none; /* only enable when overlay is active via JS */
 }
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-body {
-  font-family: "Inter", sans-serif;
-  background: #F8FAFC;
-  color: #374151;
-  line-height: 1.6;
-}
-
-/* CONTAINER */
-.container {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 25px;
-  background: #FFFFFF;
-  border-radius: 14px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
-
-/* TOPBAR */
+/* =========================
+   TOPBAR
+   ========================= */
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -73,18 +85,22 @@ body {
   color: #1E3A8A;
 }
 
-button#logout-btn {
-  background: #EF4444;
+/* =========================
+   CONTAINER (used elsewhere)
+   ========================= */
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 25px;
+  background: #FFFFFF;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
-button#logout-btn:hover {
-  background: #DC2626;
-}
-
-/* FORMS */
-form {
-  margin-top: 15px;
-}
+/* =========================
+   FORMS
+   ========================= */
+form { margin-top: 15px; }
 
 label {
   display: block;
@@ -103,9 +119,7 @@ input, select, textarea {
   background: #F9FAFB;
 }
 
-textarea {
-  min-height: 90px;
-}
+textarea { min-height: 90px; }
 
 button {
   width: 100%;
@@ -120,11 +134,11 @@ button {
   transition: 0.2s;
 }
 
-button:hover {
-  background: #172554;
-}
+button:hover { background: #172554; }
 
-/* AUTH TABS */
+/* =========================
+   AUTH TABS
+   ========================= */
 .auth-tabs {
   display: flex;
   gap: 10px;
@@ -144,7 +158,9 @@ button:hover {
   color: #FFFFFF;
 }
 
-/* MESSAGES */
+/* =========================
+   MESSAGES
+   ========================= */
 .message {
   margin-top: 12px;
   padding: 12px;
@@ -162,7 +178,9 @@ button:hover {
   color: #991B1B;
 }
 
-/* BOOKINGS LIST */
+/* =========================
+   BOOKINGS LIST
+   ========================= */
 .booking-day {
   margin-top: 20px;
   padding: 15px;
@@ -179,65 +197,28 @@ button:hover {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-.status-pending {
-  border-left-color: #FBBF24;
-}
+.status-pending { border-left-color: #FBBF24; }
+.status-approved { border-left-color: #22C55E; }
+.status-rejected { border-left-color: #EF4444; }
+.status-canceled { border-left-color: #6B7280; }
 
-.status-approved {
-  border-left-color: #22C55E;
-}
-
-.status-rejected {
-  border-left-color: #EF4444;
-}
-
-.status-canceled {
-  border-left-color: #6B7280;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .container {
-    margin: 10px;
-    padding: 18px;
-  }
-
-  .topbar {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  button {
-    font-size: 0.95rem;
-  }
-
-  h1, h2 {
-    font-size: 1.3rem;
-  }
-}
-
-/* NAV: default hidden on small screens, visible on desktop */
+/* =========================
+   NAV
+   ========================= */
 .nav {
-  display: flex;            /* desktop default; will be overridden on small screens */
+  display: flex;
   gap: 12px;
   align-items: center;
 }
 
-/* mobile: hide nav by default */
 @media (max-width: 768px) {
   .nav {
-    display: none;          /* hidden on mobile until toggled */
+    display: none;
     flex-direction: column;
     width: 100%;
     margin-top: 10px;
   }
-
-  /* when open, show block */
-  .nav.open {
-    display: flex;
-  }
-
-  /* ensure toggle button is visible and tappable */
+  .nav.open { display: flex; }
   #navToggle {
     z-index: 50;
     width: 44px;
@@ -248,7 +229,50 @@ button:hover {
   }
 }
 
-/* Prevent overlays from blocking the toggle (if you have overlays) */
-.overlay {
-  pointer-events: none; /* only enable when overlay is active via JS */
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 18px;
+  }
+  .topbar { flex-direction: column; gap: 10px; }
+  button { font-size: 0.95rem; }
+  h1, h2 { font-size: 1.3rem; }
+}
+
+/* =========================
+   ADMIN DASHBOARD LAYOUT FIX
+   ========================= */
+
+/* Wrapper for sidebar + main */
+.dashboard-layout {
+  display: flex;
+  min-height: calc(100vh - 64px); /* full height minus top navbar */
+}
+
+/* Main content fills remaining space */
+main {
+  flex: 1;
+  background: #F3F4F6;
+  padding: 1.5rem;
+}
+
+/* Content area stretches full width/height */
+#contentArea {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+/* On desktop, if sidebar is fixed, push main content right */
+@media (min-width: 768px) {
+  main {
+    margin-left: 16rem; /* same as sidebar width */
+  }
 }
