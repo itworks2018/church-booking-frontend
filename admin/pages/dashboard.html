@@ -1,97 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FullCalendar CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
-</head>
+<!-- Dashboard Overview Content -->
 
-<body class="bg-gray-100 min-h-screen flex flex-col">
-  <!-- ✅ Top Navbar -->
-  <nav class="bg-white shadow px-6 py-4 flex justify-between items-center border-b">
-    <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
-    <div class="flex items-center space-x-4">
-      <span class="text-gray-700">Welcome, <span id="adminName">Admin</span></span>
-      <!-- Profile Dropdown -->
-      <div class="relative">
-        <button id="profileBtn" class="w-10 h-10 rounded-full bg-gray-300"></button>
-        <div id="profileMenu"
-             class="hidden absolute right-0 mt-2 w-40 bg-white shadow-lg rounded p-2 border">
-          <button onclick="logout()"
-                  class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 text-gray-700">
-            Log Out
-          </button>
-        </div>
-      </div>
-    </div>
-    <button id="sidebarToggle" class="md:hidden text-gray-700 text-2xl ml-4" type="button" aria-label="Open sidebar">☰</button>
-  </nav>
+<h2 class="text-2xl font-bold mb-6 dark:text-white">Dashboard Overview</h2>
 
-  <!-- Layout wrapper: sidebar + main -->
-  <div class="flex flex-1 min-h-screen">
-    <!-- Sidebar overlay for mobile -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
+<!-- Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  <div class="p-6 bg-blue-600 text-white rounded shadow">
+    <h3 class="text-lg">Booking Reservations</h3>
+    <p class="text-3xl font-bold" id="countBookings">0</p>
+  </div>
+  <div class="p-6 bg-yellow-500 text-white rounded shadow">
+    <h3 class="text-lg">Pending Approval</h3>
+    <p class="text-3xl font-bold" id="countPending">0</p>
+  </div>
+  <div class="p-6 bg-green-600 text-white rounded shadow">
+    <h3 class="text-lg">Upcoming Events</h3>
+    <p class="text-3xl font-bold" id="countUpcoming">0</p>
+  </div>
+  <div class="p-6 bg-purple-600 text-white rounded shadow">
+    <h3 class="text-lg">Total Members</h3>
+    <p class="text-3xl font-bold" id="countMembers">0</p>
+  </div>
+</div>
 
-    <!-- Sidebar -->
-    <aside id="sidebar"
-           class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30">
-      <h2 class="text-lg font-bold text-white">CCF Sandoval Events</h2>
-      <nav class="mt-6 w-full px-6 space-y-3">
-        <button onclick="loadPage('dashboard.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Dashboard</button>
-        <button onclick="loadPage('manage-events.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Manage Events</button>
-        <button onclick="loadPage('profiles.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Profile</button>
-        <button onclick="loadPage('resources.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Resources</button>
-        <button onclick="loadPage('bookings.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Create Venue Reservation</button>
-        <button disabled class="w-full text-left p-2 rounded bg-gray-700 text-gray-500 cursor-not-allowed">More features soon</button>
-      </nav>
-    </aside>
-
-    <!-- Main content area -->
-    <main class="flex-1 min-h-screen bg-white p-6">
-      <h2 class="text-2xl font-bold mb-6 dark:text-white">Dashboard Overview</h2>
-
-      <!-- ✅ Metrics -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="p-6 bg-blue-600 text-white rounded shadow">
-          <h3 class="text-lg">Booking Reservations</h3>
-          <p class="text-3xl font-bold" id="countBookings">0</p>
-        </div>
-        <div class="p-6 bg-yellow-500 text-white rounded shadow">
-          <h3 class="text-lg">Pending Approval</h3>
-          <p class="text-3xl font-bold" id="countPending">0</p>
-        </div>
-        <div class="p-6 bg-green-600 text-white rounded shadow">
-          <h3 class="text-lg">Upcoming Events</h3>
-          <p class="text-3xl font-bold" id="countUpcoming">0</p>
-        </div>
-        <div class="p-6 bg-purple-600 text-white rounded shadow">
-          <h3 class="text-lg">Total Members</h3>
-          <p class="text-3xl font-bold" id="countMembers">0</p>
-        </div>
-      </div>
-
-      <!-- ✅ Pending Requests Table -->
-      <h3 class="text-xl font-bold mb-4 dark:text-white">Pending Booking Requests</h3>
-      <div class="overflow-auto rounded-lg shadow mb-10">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="bg-gray-200 dark:bg-gray-800 dark:text-white">
-              <th class="p-3">Event Name</th>
-              <th class="p-3">User</th>
-              <th class="p-3">Venue</th>
-              <th class="p-3">Date</th>
-              <th class="p-3">Status</th>
-            </tr>
-          </thead>
-          <tbody id="pendingTable">
-            <!-- Dynamic rows -->
-          </tbody>
-        </table>
-      </div>
-
-      
-</body>
-</html>
+<!-- Pending Requests Table -->
+<h3 class="text-xl font-bold mb-4 dark:text-white">Pending Booking Requests</h3>
+<div class="overflow-auto rounded-lg shadow mb-10">
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr class="bg-gray-200 dark:bg-gray-800 dark:text-white">
+        <th class="p-3">Event Name</th>
+        <th class="p-3">User</th>
+        <th class="p-3">Venue</th>
+        <th class="p-3">Date</th>
+        <th class="p-3">Status</th>
+      </tr>
+    </thead>
+    <tbody id="pendingTable">
+      <!-- Dynamic rows -->
+    </tbody>
+  </table>
+</div>
