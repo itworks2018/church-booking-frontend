@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
 </head>
 
 <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -29,13 +31,13 @@
   </nav>
 
   <!-- Layout wrapper: sidebar + main -->
-  <div class="flex flex-1 min-h-screen">
+  <div class="flex flex-1 relative">
     <!-- Sidebar overlay for mobile -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-20"></div>
 
     <!-- Sidebar -->
     <aside id="sidebar"
-           class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30">
+           class="w-64 bg-gray-900 text-gray-200 flex flex-col items-center py-6 shadow-lg fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 min-h-screen">
       <h2 class="text-lg font-bold text-white">CCF Sandoval Events</h2>
       <nav class="mt-6 w-full px-6 space-y-3">
         <button onclick="loadPage('dashboard.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Dashboard</button>
@@ -48,10 +50,12 @@
     </aside>
 
     <!-- Main content area -->
-    <main class="flex-1  min-h-screen bg-white p-6">
-      <div id="contentArea" class="w-full h-full text-gray-800 overflow-x-auto">
+    <main class="flex-1 p-8 md:ml-0">
+      <!-- Content Area -->
+      <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800 overflow-x-auto">
         <!-- Loaded content appears here -->
       </div>
+
       <!-- FullCalendar Container -->
       <div class="bg-white rounded-lg shadow p-6 w-full mt-8">
         <div id="fullcalendar"></div>
@@ -59,9 +63,8 @@
     </main>
   </div>
 
-  <!-- FullCalendar CSS/JS -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('fullcalendar');
@@ -75,16 +78,13 @@
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
           },
           events: [
-            // Example events, replace with dynamic loading later
-            {
-              title: 'Sample Event',
-              start: new Date().toISOString().slice(0,10)
-            }
+            { title: 'Sample Event', start: new Date().toISOString().slice(0,10) }
           ]
         });
         calendar.render();
       }
     });
+
     // Sidebar toggle for mobile
     document.addEventListener("DOMContentLoaded", () => {
       const sidebar = document.getElementById("sidebar");
@@ -158,5 +158,10 @@
       loadPage("dashboard.html");
     });
   </script>
+
+  <!-- Footer -->
+  <footer class="bg-white shadow-inner py-4 text-center text-sm text-gray-500">
+    &copy; 2026 CCF Sandoval Events. All rights reserved.
+  </footer>
 </body>
 </html>
