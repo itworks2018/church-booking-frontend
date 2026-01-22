@@ -138,6 +138,15 @@
     });
   </script>
 
+  <script type="module">
+  import { Calendar } from "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js";
+  import { initAdminDashboard } from "/js/admin-dashboard.js";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initAdminDashboard(Calendar);
+  });
+</script>
+
   <!-- Footer -->
   <footer class="bg-white shadow-inner py-4 text-center text-sm text-gray-500">
     &copy; 2026 CCF Sandoval Events. All rights reserved.
