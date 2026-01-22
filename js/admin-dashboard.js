@@ -1,6 +1,5 @@
-
 // Admin Dashboard Initialization Script
-export async function initAdminDashboard() {
+async function initAdminDashboard() {
   try {
     const token = localStorage.getItem("access_token");
     const role = localStorage.getItem("user_role") || localStorage.getItem("role");
@@ -112,3 +111,6 @@ function escapeHtml(str) {
   if (typeof str !== "string") return str;
   return str.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
 }
+
+// ✅ Expose globally
+window.initAdminDashboard = initAdminDashboard;
