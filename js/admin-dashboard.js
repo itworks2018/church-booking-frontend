@@ -1,12 +1,5 @@
-// /js/admin-dashboard.js
 
-// Import FullCalendar core and plugins from node_modules
-import { Calendar } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-
-// Exported function so it can be imported in main-dashboard.html
+// Admin Dashboard Initialization Script
 export async function initAdminDashboard() {
   try {
     const token = localStorage.getItem("access_token");
@@ -68,11 +61,10 @@ export async function initAdminDashboard() {
       console.warn("Upcoming bookings error:", e);
     }
 
-    // ✅ Calendar initialization using imported Calendar + plugins
+    // ✅ Calendar initialization using global FullCalendar (CDN build)
     const calendarEl = document.getElementById("fullcalendar");
-    if (calendarEl) {
-      const calendar = new Calendar(calendarEl, {
-        plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    if (calendarEl && window.FullCalendar) {
+      const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: "dayGridMonth",
         height: 600,
         headerToolbar: {
