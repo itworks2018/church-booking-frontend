@@ -16,6 +16,38 @@ async function initAdminDashboard() {
       },
     };
 
+  // ✅ Place helper functions AFTER initAdminDashboard
+
+function populatePendingTable(items) {
+  try {
+    const tbody = document.getElementById("pendingTable");
+    if (!tbody || !items || !Array.isArray(items)) return;
+    tbody.innerHTML = "";
+
+    items.forEach((item) => {
+      const tr = document.createElement("tr");
+      tr.className = "border-b";
+
+      const date = item.date || item.start_datetime || item.event_date || "";
+      const timestamp = item.timestamp || item.created_at || "";
+
+      tr.innerHTML = `
+        <td class="p-3">${escapeHtml(item.booking_id || "")}</td>
+        <td class="p-3">${escapeHtml(item.event_name || "")}</td>
+        <td class="p-3">${escapeHtml(item.user_email || "")}</td>
+        <td class="p-3">${escapeHtml(item.venue || "")}</td>
+        <td class="p-3">${escapeHtml(new Date(date).toLocaleDateString())}</td>
+        <td class="p-3">${escapeHtml(item.status || "")}</td>
+        <td class="p-3">${escapeHtml(new Date(timestamp).toLocaleString())}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  } catch (e) {
+    console.warn("populatePendingTable error:", e);
+  }
+}
+
     // Fetch combined metrics
     const metricsRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/metrics/counts`, authHeaders);
     if (!metricsRes.ok) throw new Error("Failed to fetch metrics");
