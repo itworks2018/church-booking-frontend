@@ -45,7 +45,8 @@ function populatePendingTable(items) {
         <td class="p-3">${escapeHtml(item.purpose || "")}</td>
         <td class="p-3">${escapeHtml(item.attendees || "")}</td>
         <td class="p-3">${escapeHtml(item.venue || "")}</td>
-        <td class="p-3">${escapeHtml(new Date(item.start_datetime).toLocaleDateString())}</td>
+        <td class="p-3">${escapeHtml(new Date(item.start_datetime).toLocaleString())}</td>
+        <td class="p-3">${escapeHtml(new Date(item.end_datetime).toLocaleString())}</td>
         <td class="p-3">${escapeHtml(item.status || "")}</td>
         <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString())}</td>
         <td class="p-3">
@@ -130,7 +131,7 @@ async function updateBookingStatus(id, status) {
         const items = Array.isArray(pendingData.items) ? pendingData.items : [];
         if (!items.length) {
           document.getElementById("pendingTable").innerHTML =
-            '<tr><td colspan="9" class="p-3 text-center">No pending requests.</td></tr>';
+            '<tr><td colspan="10" class="p-3 text-center">No pending requests.</td></tr>';
         } else {
           populatePendingTable(items);
         }
