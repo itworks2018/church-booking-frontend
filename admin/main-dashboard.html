@@ -57,6 +57,7 @@
         <!-- Loaded content appears here -->
       </div>
 
+
   <script>
     // Sidebar toggle for mobile
     document.addEventListener("DOMContentLoaded", () => {
@@ -131,6 +132,11 @@
       loadPage("dashboard.html");
     });
   </script>
+
+<!-- ✅ Define API base BEFORE loading admin-dashboard.js -->
+<script>
+  window.ADMIN_API_BASE_URL = "https://church-booking-backend.onrender.com";
+</script>
 
 <script src="/js/admin-dashboard.js"></script>
 <script>
