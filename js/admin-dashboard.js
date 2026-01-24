@@ -68,51 +68,59 @@ async function initAdminDashboard() {
         console.warn("Pending bookings error:", e);
       }
 
-    // ✅ Calendar initialization using global FullCalendar (CDN build)
-    const calendarEl = document.getElementById("fullcalendar");
-    if (calendarEl && window.FullCalendar) {
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        height: 600,
-        headerToolbar: {
-          left: "prev,next today",
-          center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay",
-        },
-        // ✅ Dynamic events fetch from backend
-        events: async function (fetchInfo, successCallback, failureCallback) {
-          try {
-            const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming`, {
-              headers: { Authorization: `Bearer ${token}` }
-            });
+   // ✅ Calendar initialization using global FullCalendar (CDN build)
+const calendarEl = document.getElementById("fullcalendar");
+if (calendarEl && window.FullCalendar) {
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: "dayGridMonth",
+    height: 600,
+    headerToolbar: {
+      left: "prev,next today",
+      center: "title",
+      right: "dayGridMonth,timeGridWeek,timeGridDay",
+    },
+    // ✅ Dynamic events fetch from backend (approved only)
+    events: async function (fetchInfo, successCallback, failureCallback) {
+      try {
+        const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-            if (!res.ok) throw new Error("Failed to fetch events");
-            const data = await res.json();
+        if (!res.ok) throw new Error("Failed to fetch events");
+        const data = await res.json();
 
-            const events = data.map(item => ({
-              title: item.event_name || item.title || "Untitled",
-              start: item.date || item.event_date,
-              end: item.end_date || null,
-              extendedProps: {
-                user: item.user_email || item.user,
-                venue: item.venue,
-                status: item.status
-              }
-            }));
+        console.log("Upcoming bookings response:", data); // Debug log
 
-            successCallback(events);
-          } catch (err) {
-            console.error("Calendar events fetch error:", err);
-            failureCallback(err);
+        // ✅ Ensure we use the correct array
+        const items = Array.isArray(data.items) ? data.items : Array.isArray(data) ? data : [];
+
+        // ✅ Only approved requests
+        const approvedEvents = items.filter(item => item.status === "approved");
+
+        const events = approvedEvents.map(item => ({
+          title: item.event_name || item.title || "Untitled",
+          start: item.start_datetime || item.date || item.event_date,
+          end: item.end_datetime || item.end_date || null,
+          extendedProps: {
+            user: item.user_email || item.user,
+            venue: item.venue || item.venues?.name,
+            status: item.status
           }
-        }
-      });
+        }));
 
-      calendar.render();
+        successCallback(events);
+      } catch (err) {
+        console.error("Calendar events fetch error:", err);
+        failureCallback(err);
+      }
     }
-  } catch (err) {
-    console.error("Dashboard fetch error:", err);
-  }
+  });
+
+  calendar.render();
+}
+} catch (err) {
+  console.error("Dashboard fetch error:", err);
+}
 }
 
 // Helper to populate pending table with CRUD actions
