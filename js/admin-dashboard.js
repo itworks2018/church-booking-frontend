@@ -139,7 +139,7 @@ function populatePendingTable(items) {
             const items = Array.isArray(data.items) ? data.items : Array.isArray(data) ? data : [];
 
             // ✅ Only approved requests
-            const approvedEvents = items.filter(item => item.status === "approved");
+            const approvedEvents = items.filter(item => item.status === "Approved");
 
             const events = approvedEvents.map(item => ({
               title: item.event_name || item.title || "Untitled",
