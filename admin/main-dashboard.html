@@ -55,8 +55,31 @@
       <!-- Content Area -->
       <div id="contentArea" class="bg-white p-6 rounded shadow-lg border text-gray-800 overflow-x-auto">
         <!-- Loaded content appears here -->
-      </div>
 
+        <!-- ✅ Pending Requests Table -->
+        <h2 class="text-lg font-bold mb-4">Pending Requests</h2>
+        <table class="min-w-full border-collapse border border-gray-300 text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-2">Booking ID</th>
+              <th class="border p-2">Event Name</th>
+              <th class="border p-2">Purpose</th>
+              <th class="border p-2">Attendees</th>
+              <th class="border p-2">Venue</th>
+              <th class="border p-2">Start</th>
+              <th class="border p-2">End</th>
+              <th class="border p-2">Status</th>
+              <th class="border p-2">Created At</th>
+              <th class="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="pendingTable">
+            <tr>
+              <td colspan="10" class="p-3 text-center text-gray-500">Loading pending requests...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
   <script>
     // Sidebar toggle for mobile
@@ -158,7 +181,6 @@ function loadPage(page) {
     }
   });
 </script>
-
 
   <!-- Footer -->
   <footer class="bg-white shadow-inner py-4 text-center text-sm text-gray-500">
