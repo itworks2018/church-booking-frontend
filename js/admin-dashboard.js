@@ -71,10 +71,35 @@ async function initAdminDashboard() {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         },
-        events: [
-          { title: "Sample Event", start: new Date().toISOString().slice(0, 10) },
-        ],
+        // ✅ Dynamic events fetch from backend
+        events: async function (fetchInfo, successCallback, failureCallback) {
+          try {
+            const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming`, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (!res.ok) throw new Error("Failed to fetch events");
+            const data = await res.json();
+
+            const events = data.map(item => ({
+              title: item.event_name || item.title || "Untitled",
+              start: item.date || item.event_date,
+              end: item.end_date || null,
+              extendedProps: {
+                user: item.user_email || item.user,
+                venue: item.venue,
+                status: item.status
+              }
+            }));
+
+            successCallback(events);
+          } catch (err) {
+            console.error("Calendar events fetch error:", err);
+            failureCallback(err);
+          }
+        }
       });
+
       calendar.render();
     }
   } catch (err) {
@@ -109,7 +134,13 @@ function populatePendingTable(items) {
 // Minimal HTML escape helper
 function escapeHtml(str) {
   if (typeof str !== "string") return str;
-  return str.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+  return str.replace(/[&<>"']/g, (m) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[m]));
 }
 
 // ✅ Expose globally
