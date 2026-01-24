@@ -45,20 +45,28 @@ async function initAdminDashboard() {
       console.warn("Pending bookings error:", e);
     }
 
-    // Upcoming bookings
-    try {
-      const upcomingRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming`, authHeaders);
-      if (upcomingRes.ok) {
-        const upcomingData = await upcomingRes.json();
-        const upcomingEl = document.getElementById("countUpcoming");
-        if (upcomingEl && typeof upcomingData.upcomingCount !== "undefined")
-          upcomingEl.textContent = upcomingData.upcomingCount;
-      } else {
-        console.warn("Upcoming bookings fetch failed:", upcomingRes.status);
+      // Pending bookings
+      try {
+        const pendingRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/pending`, authHeaders);
+        if (pendingRes.ok) {
+          const pendingData = await pendingRes.json();
+
+          // 👇 Put the debug log here
+          console.log("Pending bookings response:", pendingData);
+
+          const pendingEl = document.getElementById("countPending");
+          if (pendingEl && typeof pendingData.pendingCount !== "undefined")
+            pendingEl.textContent = pendingData.pendingCount;
+
+          // ✅ Ensure we pass an array
+          const items = Array.isArray(pendingData.items) ? pendingData.items : Array.isArray(pendingData) ? pendingData : [];
+          populatePendingTable(items);
+        } else {
+          console.warn("Pending bookings fetch failed:", pendingRes.status);
+        }
+      } catch (e) {
+        console.warn("Pending bookings error:", e);
       }
-    } catch (e) {
-      console.warn("Upcoming bookings error:", e);
-    }
 
     // ✅ Calendar initialization using global FullCalendar (CDN build)
     const calendarEl = document.getElementById("fullcalendar");
