@@ -93,6 +93,25 @@ function populatePendingTable(items) {
       console.warn("Pending bookings error:", e);
     }
 
+    // ✅ Upcoming bookings count (for metrics card)
+    try {
+      const upcomingRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming`, authHeaders);
+      if (upcomingRes.ok) {
+        const upcomingData = await upcomingRes.json();
+
+        console.log("Upcoming bookings count response:", upcomingData); // Debug log
+
+        const upcomingEl = document.getElementById("countUpcoming");
+        if (upcomingEl && typeof upcomingData.upcomingCount !== "undefined") {
+          upcomingEl.textContent = upcomingData.upcomingCount;
+        }
+      } else {
+        console.warn("Upcoming bookings fetch failed:", upcomingRes.status);
+      }
+    } catch (e) {
+      console.warn("Upcoming bookings error:", e);
+    }
+
     // ✅ Calendar initialization using global FullCalendar (CDN build)
     const calendarEl = document.getElementById("fullcalendar");
     if (calendarEl && window.FullCalendar) {
@@ -107,7 +126,7 @@ function populatePendingTable(items) {
         // ✅ Dynamic events fetch from backend (approved only)
         events: async function (fetchInfo, successCallback, failureCallback) {
           try {
-            const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming`, {
+            const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming/list`, {
               headers: { Authorization: `Bearer ${token}` }
             });
 
