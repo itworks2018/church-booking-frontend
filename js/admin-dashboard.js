@@ -49,7 +49,8 @@ function populatePendingTable(items) {
         <td class="p-3">${escapeHtml(new Date(item.end_datetime).toLocaleString())}</td>
         <td class="p-3">${escapeHtml(item.status || "")}</td>
         <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString())}</td>
-        <td class="p-3">
+        <td class="p-3 space-x-2">
+          <button class="bg-blue-500 text-white px-2 py-1 rounded review-btn" data-id="${item.booking_id}">Review</button>
           <button class="bg-green-500 text-white px-2 py-1 rounded approve-btn" data-id="${item.booking_id}">Approve</button>
           <button class="bg-red-500 text-white px-2 py-1 rounded reject-btn" data-id="${item.booking_id}">Reject</button>
         </td>
@@ -59,6 +60,14 @@ function populatePendingTable(items) {
     });
 
     // ✅ Attach button handlers
+    document.querySelectorAll(".review-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = e.target.dataset.id;
+        const booking = items.find(b => b.booking_id === id);
+        if (booking) showReviewModal(booking);
+      });
+    });
+
     document.querySelectorAll(".approve-btn").forEach(btn => {
       btn.addEventListener("click", async (e) => {
         const id = e.target.dataset.id;
@@ -77,6 +86,33 @@ function populatePendingTable(items) {
     console.warn("populatePendingTable error:", e);
   }
 }
+
+function showReviewModal(booking) {
+  const modal = document.getElementById("reviewModal");
+  const content = document.getElementById("reviewContent");
+
+  content.innerHTML = `
+    <p><strong>Booking ID:</strong> ${escapeHtml(booking.booking_id)}</p>
+    <p><strong>Event Name:</strong> ${escapeHtml(booking.event_name)}</p>
+    <p><strong>Purpose:</strong> ${escapeHtml(booking.purpose)}</p>
+    <p><strong>Attendees:</strong> ${escapeHtml(booking.attendees)}</p>
+    <p><strong>Venue:</strong> ${escapeHtml(booking.venue)}</p>
+    <p><strong>Start:</strong> ${escapeHtml(new Date(booking.start_datetime).toLocaleString())}</p>
+    <p><strong>End:</strong> ${escapeHtml(new Date(booking.end_datetime).toLocaleString())}</p>
+    <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
+    <p><strong>Created At:</strong> ${escapeHtml(new Date(booking.created_at).toLocaleString())}</p>
+    <p><strong>Additional Needs:</strong> ${(booking.additional_needs || []).map(escapeHtml).join(", ")}</p>
+  `;
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  document.getElementById("closeReview").onclick = () => {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  };
+}
+
 
 // ✅ Helper to update booking status
 async function updateBookingStatus(id, status) {
