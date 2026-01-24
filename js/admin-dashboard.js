@@ -28,23 +28,66 @@ function populatePendingTable(items) {
       const tr = document.createElement("tr");
       tr.className = "border-b";
 
-      const date = item.date || item.start_datetime || item.event_date || "";
-      const timestamp = item.timestamp || item.created_at || "";
-
       tr.innerHTML = `
         <td class="p-3">${escapeHtml(item.booking_id || "")}</td>
         <td class="p-3">${escapeHtml(item.event_name || "")}</td>
-        <td class="p-3">${escapeHtml(item.user_email || "")}</td>
+        <td class="p-3">${escapeHtml(item.purpose || "")}</td>
+        <td class="p-3">${escapeHtml(item.attendees || "")}</td>
         <td class="p-3">${escapeHtml(item.venue || "")}</td>
-        <td class="p-3">${escapeHtml(new Date(date).toLocaleDateString())}</td>
+        <td class="p-3">${escapeHtml(new Date(item.start_datetime).toLocaleDateString())}</td>
         <td class="p-3">${escapeHtml(item.status || "")}</td>
-        <td class="p-3">${escapeHtml(new Date(timestamp).toLocaleString())}</td>
+        <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString())}</td>
+        <td class="p-3">
+          <button class="bg-green-500 text-white px-2 py-1 rounded approve-btn" data-id="${item.booking_id}">Approve</button>
+          <button class="bg-red-500 text-white px-2 py-1 rounded reject-btn" data-id="${item.booking_id}">Reject</button>
+        </td>
       `;
 
       tbody.appendChild(tr);
     });
+
+    // ✅ Attach button handlers
+    document.querySelectorAll(".approve-btn").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        const id = e.target.dataset.id;
+        await updateBookingStatus(id, "Approved");
+      });
+    });
+
+    document.querySelectorAll(".reject-btn").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        const id = e.target.dataset.id;
+        await updateBookingStatus(id, "Rejected");
+      });
+    });
+
   } catch (e) {
     console.warn("populatePendingTable error:", e);
+  }
+}
+
+// ✅ Helper to update booking status
+async function updateBookingStatus(id, status) {
+  try {
+    const token = localStorage.getItem("access_token");
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/${id}/status`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (res.ok) {
+      console.log(`Booking ${id} updated to ${status}`);
+      // Refresh dashboard after update
+      initAdminDashboard();
+    } else {
+      console.error("Failed to update booking:", res.status);
+    }
+  } catch (err) {
+    console.error("updateBookingStatus error:", err);
   }
 }
 
@@ -61,9 +104,9 @@ function populatePendingTable(items) {
     if (membersEl && typeof metricsData.users_count !== "undefined")
       membersEl.textContent = metricsData.users_count;
 
-    // ✅ Pending bookings (cleaned up)
+    // ✅ Pending bookings (table + metrics)
     try {
-      const pendingRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/pending`, authHeaders);
+      const pendingRes = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/pending/list`, authHeaders);
       if (pendingRes.ok) {
         const pendingData = await pendingRes.json();
 
@@ -73,16 +116,10 @@ function populatePendingTable(items) {
         if (pendingEl && typeof pendingData.pendingCount !== "undefined")
           pendingEl.textContent = pendingData.pendingCount;
 
-        // ✅ Always pass an array
-        const items = Array.isArray(pendingData.items)
-          ? pendingData.items
-          : Array.isArray(pendingData)
-          ? pendingData
-          : [];
-
+        const items = Array.isArray(pendingData.items) ? pendingData.items : [];
         if (!items.length) {
           document.getElementById("pendingTable").innerHTML =
-            '<tr><td colspan="6" class="p-3 text-center">No pending requests.</td></tr>';
+            '<tr><td colspan="9" class="p-3 text-center">No pending requests.</td></tr>';
         } else {
           populatePendingTable(items);
         }
@@ -135,10 +172,7 @@ function populatePendingTable(items) {
 
             console.log("Upcoming bookings response:", data); // Debug log
 
-            // ✅ Ensure we use the correct array
-            const items = Array.isArray(data.items) ? data.items : Array.isArray(data) ? data : [];
-
-            // ✅ Only approved requests
+            const items = Array.isArray(data.items) ? data.items : [];
             const approvedEvents = items.filter(item => item.status === "Approved");
 
             const events = approvedEvents.map(item => ({
