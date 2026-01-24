@@ -101,7 +101,7 @@ function showReviewModal(booking) {
     <p><strong>End:</strong> ${escapeHtml(new Date(booking.end_datetime).toLocaleString())}</p>
     <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
     <p><strong>Created At:</strong> ${escapeHtml(new Date(booking.created_at).toLocaleString())}</p>
-    <p><strong>Additional Needs:</strong> ${(booking.additional_needs || []).map(escapeHtml).join(", ")}</p>
+    <p><strong>Additional Needs:</strong> ${escapeHtml(booking.additional_needs || "None")}</p>
   `;
 
   modal.classList.remove("hidden");
