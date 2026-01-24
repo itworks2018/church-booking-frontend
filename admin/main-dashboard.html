@@ -139,14 +139,15 @@
     });
   </script>
 
-<script type="module">
-  import { Calendar } from "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js";
-  import { initAdminDashboard } from "/js/admin-dashboard.js";
-
+<script src="/js/admin-dashboard.js"></script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
-    initAdminDashboard(Calendar);
+    if (typeof initAdminDashboard === "function") {
+      initAdminDashboard();
+    }
   });
 </script>
+
 
   <!-- Footer -->
   <footer class="bg-white shadow-inner py-4 text-center text-sm text-gray-500">
