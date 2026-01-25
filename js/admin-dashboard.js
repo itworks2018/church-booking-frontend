@@ -208,8 +208,13 @@ if (calendarEl && window.FullCalendar) {
       center: "title",
       right: "dayGridMonth,timeGridWeek,timeGridDay",
     },
-    // ✅ Force local PC time
     timeZone: "local",
+
+    // ✅ Highlight the clicked day
+    dateClick: function(info) {
+      const clickedDate = info.dateStr;
+      alert(`You selected: ${clickedDate}`);
+    },
 
     // ✅ Dynamic events fetch from backend (approved only)
     events: async function (fetchInfo, successCallback, failureCallback) {
@@ -248,20 +253,31 @@ if (calendarEl && window.FullCalendar) {
       }
     },
 
-    // ✅ Make events clickable to show details
+    // ✅ Show modal when event clicked
     eventClick: function(info) {
       const booking = info.event.extendedProps;
-      alert(
-        `Event: ${info.event.title}\n` +
-        `Venue: ${booking.venue}\n` +
-        `Purpose: ${booking.purpose}\n` +
-        `Attendees: ${booking.attendees}\n` +
-        `Start: ${new Date(info.event.start).toLocaleString("en-US", { hour12: true })}\n` +
-        `End: ${info.event.end ? new Date(info.event.end).toLocaleString("en-US", { hour12: true }) : "N/A"}\n` +
-        `Additional Needs: ${booking.additional_needs || "None"}\n` +
-        `Created At: ${new Date(booking.created_at).toLocaleString("en-US", { hour12: true })}\n` +
-        `Status: ${booking.status}`
-      );
+      const modal = document.getElementById("eventModal");
+      const content = document.getElementById("eventContent");
+
+      content.innerHTML = `
+        <p><strong>Event:</strong> ${info.event.title}</p>
+        <p><strong>Venue:</strong> ${booking.venue}</p>
+        <p><strong>Purpose:</strong> ${booking.purpose}</p>
+        <p><strong>Attendees:</strong> ${booking.attendees}</p>
+        <p><strong>Start:</strong> ${new Date(info.event.start).toLocaleString("en-US", { hour12: true })}</p>
+        <p><strong>End:</strong> ${info.event.end ? new Date(info.event.end).toLocaleString("en-US", { hour12: true }) : "N/A"}</p>
+        <p><strong>Additional Needs:</strong> ${booking.additional_needs || "None"}</p>
+        <p><strong>Created At:</strong> ${new Date(booking.created_at).toLocaleString("en-US", { hour12: true })}</p>
+        <p><strong>Status:</strong> ${booking.status}</p>
+      `;
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+
+      document.getElementById("closeEvent").onclick = () => {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      };
     }
   }); // ✅ closes FullCalendar config
 
