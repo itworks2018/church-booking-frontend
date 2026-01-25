@@ -146,6 +146,3 @@ function showEventModal(booking) {
     modal.classList.remove("flex");
   };
 }
-
-// ✅ Initialize
-window.addEventListener("DOMContentLoaded", loadApprovedEvents);
