@@ -52,6 +52,32 @@ async function loadApprovedEvents() {
       });
     });
 
+    // ✅ Update event helper
+async function updateEvent(id, formData) {
+  try {
+    const token = localStorage.getItem("access_token");
+    const body = Object.fromEntries(formData.entries());
+
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Failed to update event: ${errText}`);
+    }
+
+    console.log(`Event ${id} updated`);
+  } catch (err) {
+    console.error("updateEvent error:", err);
+  }
+}
+
 document.querySelectorAll(".edit-btn").forEach(btn => {
   btn.addEventListener("click", e => {
     const id = e.target.dataset.id;
