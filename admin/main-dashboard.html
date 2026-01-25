@@ -148,6 +148,7 @@ function loadPage(page) {
 
         document.body.appendChild(script);
       }
+
     })
     .catch(() => {
       document.getElementById("contentArea").innerHTML =
@@ -155,23 +156,6 @@ function loadPage(page) {
     });
 }
 
-    // ✅ Profile block
-    if (page === "profile.html") {
-      const oldScript = document.getElementById("manageProfilesScript");
-      if (oldScript) oldScript.remove();
-
-      const script = document.createElement("script");
-      script.src = "/js/manage-profiles.js";
-      script.id = "manageProfilesScript";
-
-      script.onload = () => {
-        if (typeof loadProfiles === "function") {
-          loadProfiles(); // fetch and render users
-        }
-      };
-
-      document.body.appendChild(script);
-    }
     // Profile menu toggle and logout
     document.addEventListener("DOMContentLoaded", () => {
       const profileBtn = document.getElementById("profileBtn");
