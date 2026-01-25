@@ -128,6 +128,25 @@ function loadPage(page) {
 
         document.body.appendChild(script);
       }
+        if (page === "manage-events.html") {
+        // Remove old script if it exists
+        const oldScript = document.getElementById("manageEventsScript");
+        if (oldScript) oldScript.remove();
+
+        // Inject manage-events.js
+        const script = document.createElement("script");
+        script.src = "/js/manage-events.js";
+        script.id = "manageEventsScript";
+
+        // ✅ Call loadApprovedEvents after script loads
+        script.onload = () => {
+          if (typeof loadApprovedEvents === "function") {
+            loadApprovedEvents();
+          }
+        };
+
+        document.body.appendChild(script);
+      }
     })
     .catch(() => {
       document.getElementById("contentArea").innerHTML =
