@@ -82,112 +82,124 @@
       </div>
 
   <script>
-    // Sidebar toggle for mobile
-    document.addEventListener("DOMContentLoaded", () => {
-      const sidebar = document.getElementById("sidebar");
-      const sidebarOverlay = document.getElementById("sidebarOverlay");
-      const sidebarToggleBtn = document.getElementById("sidebarToggle");
-      if (sidebarToggleBtn && sidebar && sidebarOverlay) {
-        sidebarToggleBtn.addEventListener("click", function() {
-          sidebar.classList.toggle("-translate-x-full");
-          sidebarOverlay.classList.toggle("hidden");
-        });
-        sidebarOverlay.addEventListener("click", function() {
-          sidebar.classList.add("-translate-x-full");
-          sidebarOverlay.classList.add("hidden");
-        });
-      }
-    });
-
-// Load a page into #contentArea
-function loadPage(page) {
-  fetch(`pages/${page}`)
-    .then(res => {
-      if (!res.ok) throw new Error("Not found");
-      return res.text();
-    })
-    .then(html => {
-      document.getElementById("contentArea").innerHTML = html;
-
-      if (page === "dashboard.html") {
-        // Remove old script if it exists
-        const oldScript = document.getElementById("adminDashboardScript");
-        if (oldScript) oldScript.remove();
-
-        // Inject admin-dashboard.js
-        const script = document.createElement("script");
-        script.src = "/js/admin-dashboard.js";
-        script.id = "adminDashboardScript";
-
-        // ✅ Call initAdminDashboard after script loads
-        script.onload = () => {
-          if (typeof initAdminDashboard === "function") {
-            initAdminDashboard();
-          }
-        };
-
-        document.body.appendChild(script);
-      }
-
-      if (page === "manage-events.html") {
-        // Remove old script if it exists
-        const oldScript = document.getElementById("manageEventsScript");
-        if (oldScript) oldScript.remove();
-
-        // Inject manage-events.js
-        const script = document.createElement("script");
-        script.src = "/js/manage-events.js";
-        script.id = "manageEventsScript";
-
-        // ✅ Call loadApprovedEvents after script loads
-        script.onload = () => {
-          if (typeof loadApprovedEvents === "function") {
-            loadApprovedEvents();
-          }
-        };
-
-        document.body.appendChild(script);
-      }
-
-    })
-    .catch(() => {
-      document.getElementById("contentArea").innerHTML =
-        "<p class='text-red-600 font-semibold'>Page not found.</p>";
-    });
-}
-
-    // Profile menu toggle and logout
-    document.addEventListener("DOMContentLoaded", () => {
-      const profileBtn = document.getElementById("profileBtn");
-      if (profileBtn) {
-        profileBtn.addEventListener("click", () => {
-          document.getElementById("profileMenu").classList.toggle("hidden");
-        });
-      }
-    });
-
-    function logout() {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("role");
-      localStorage.removeItem("user_role");
-      window.location.href = "login.html";
+  // Sidebar toggle for mobile
+  document.addEventListener("DOMContentLoaded", () => {
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const sidebarToggleBtn = document.getElementById("sidebarToggle");
+    if (sidebarToggleBtn && sidebar && sidebarOverlay) {
+      sidebarToggleBtn.addEventListener("click", function() {
+        sidebar.classList.toggle("-translate-x-full");
+        sidebarOverlay.classList.toggle("hidden");
+      });
+      sidebarOverlay.addEventListener("click", function() {
+        sidebar.classList.add("-translate-x-full");
+        sidebarOverlay.classList.add("hidden");
+      });
     }
+  });
 
-    // Auth check
-    document.addEventListener("DOMContentLoaded", () => {
-      const token = localStorage.getItem("access_token");
-      const role = localStorage.getItem("role") || localStorage.getItem("user_role");
-      if (!token) {
-        window.location.href = "/admin/login.html";
-        return;
-      }
-      if (role !== "admin") {
-        window.location.href = "/user/login.html";
-        return;
-      }
-      loadPage("dashboard.html");
-    });
-  </script>
+  // Load a page into #contentArea
+  function loadPage(page) {
+    fetch(`pages/${page}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Not found");
+        return res.text();
+      })
+      .then(html => {
+        document.getElementById("contentArea").innerHTML = html;
+
+        if (page === "dashboard.html") {
+          const oldScript = document.getElementById("adminDashboardScript");
+          if (oldScript) oldScript.remove();
+
+          const script = document.createElement("script");
+          script.src = "/js/admin-dashboard.js";
+          script.id = "adminDashboardScript";
+
+          script.onload = () => {
+            if (typeof initAdminDashboard === "function") {
+              initAdminDashboard();
+            }
+          };
+
+          document.body.appendChild(script);
+        }
+
+        if (page === "manage-events.html") {
+          const oldScript = document.getElementById("manageEventsScript");
+          if (oldScript) oldScript.remove();
+
+          const script = document.createElement("script");
+          script.src = "/js/manage-events.js";
+          script.id = "manageEventsScript";
+
+          script.onload = () => {
+            if (typeof loadApprovedEvents === "function") {
+              loadApprovedEvents();
+            }
+          };
+
+          document.body.appendChild(script);
+        }
+
+        // ✅ Profile block
+        if (page === "profile.html") {
+          const oldScript = document.getElementById("manageProfilesScript");
+          if (oldScript) oldScript.remove();
+
+          const script = document.createElement("script");
+          script.src = "/js/manage-profiles.js";
+          script.id = "manageProfilesScript";
+
+          script.onload = () => {
+            if (typeof loadProfiles === "function") {
+              loadProfiles(); // fetch and render users
+            }
+          };
+
+          document.body.appendChild(script);
+        }
+      })
+      .catch(() => {
+        document.getElementById("contentArea").innerHTML =
+          "<p class='text-red-600 font-semibold'>Page not found.</p>";
+      });
+  }
+
+  // Profile menu toggle
+  document.addEventListener("DOMContentLoaded", () => {
+    const profileBtn = document.getElementById("profileBtn");
+    if (profileBtn) {
+      profileBtn.addEventListener("click", () => {
+        document.getElementById("profileMenu").classList.toggle("hidden");
+      });
+    }
+  });
+
+  // Logout function
+  function logout() {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("user_role");
+    window.location.href = "login.html";
+  }
+
+  // Auth check
+  document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("access_token");
+    const role = localStorage.getItem("role") || localStorage.getItem("user_role");
+    if (!token) {
+      window.location.href = "/admin/login.html";
+      return;
+    }
+    if (role !== "admin") {
+      window.location.href = "/user/login.html";
+      return;
+    }
+    loadPage("dashboard.html");
+  });
+</script>
 
 <!-- ✅ Define API base BEFORE loading admin-dashboard.js -->
 <script>
