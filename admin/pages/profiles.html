@@ -1,16 +1,39 @@
 <h2 class="text-2xl font-bold mb-6 dark:text-white">User Profiles</h2>
 
-<table class="w-full text-left border-collapse">
+<table class="w-full text-left border-collapse border border-gray-300">
   <thead>
     <tr class="bg-gray-200 dark:bg-gray-800 dark:text-white">
-      <th class="p-3">Name</th>
-      <th class="p-3">Email</th>
-      <th class="p-3">Contact</th>
-      <th class="p-3">Church Role</th>
+      <th class="p-3 border">User ID</th>
+      <th class="p-3 border">Full Name</th>
+      <th class="p-3 border">Email</th>
+      <th class="p-3 border">Role</th>
+      <th class="p-3 border">Created At</th>
+      <th class="p-3 border">Actions</th>
     </tr>
   </thead>
 
   <tbody id="usersTable">
-    <!-- Dynamic rows -->
+    <tr>
+      <td colspan="6" class="p-3 text-center text-gray-500">Loading users...</td>
+    </tr>
   </tbody>
 </table>
+
+<!-- ✅ Edit User Modal -->
+<div id="editUserModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg w-[600px] max-w-full p-6">
+    <h3 class="text-2xl font-bold mb-4">Edit User</h3>
+    <form id="editUserForm" class="space-y-3">
+      <input type="text" name="full_name" class="w-full border p-2" placeholder="Full Name" />
+      <input type="email" name="email" class="w-full border p-2" placeholder="Email" />
+      <select name="role" class="w-full border p-2">
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+      <div class="flex justify-end space-x-2">
+        <button type="button" id="cancelEditUser" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
