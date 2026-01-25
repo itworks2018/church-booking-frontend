@@ -10,33 +10,38 @@ async function loadApprovedEvents() {
     const items = Array.isArray(data.items) ? data.items : [];
 
     const tbody = document.getElementById("eventsTable");
+    if (!tbody) {
+      console.warn("eventsTable not found in DOM yet — skipping loadApprovedEvents");
+      return; // ✅ prevents null.innerHTML error
+    }
+
     tbody.innerHTML = "";
 
     items.forEach(item => {
-  const tr = document.createElement("tr");
-  tr.className = "border-b";
+      const tr = document.createElement("tr");
+      tr.className = "border-b";
 
-  tr.innerHTML = `
-    <td class="p-3 border">${item.booking_id}</td>
-    <td class="p-3 border">${item.user_id || item.user_email || ""}</td>
-    <td class="p-3 border">${item.event_name}</td>
-    <td class="p-3 border">${item.purpose}</td>
-    <td class="p-3 border">${item.attendees}</td>
-    <td class="p-3 border">${item.venue}</td>
-    <td class="p-3 border">${new Date(item.start_datetime).toLocaleString("en-US", { hour12: true })}</td>
-    <td class="p-3 border">${new Date(item.end_datetime).toLocaleString("en-US", { hour12: true })}</td>
-    <td class="p-3 border">${item.additional_needs || "None"}</td>
-    <td class="p-3 border">${item.status}</td>
-    <td class="p-3 border">${new Date(item.created_at).toLocaleString("en-US", { hour12: true })}</td>
-    <td class="p-3 border space-x-2">
-      <button class="bg-blue-500 text-white px-2 py-1 rounded view-btn" data-id="${item.booking_id}">View</button>
-      <button class="bg-yellow-500 text-white px-2 py-1 rounded edit-btn" data-id="${item.booking_id}">Edit</button>
-      <button class="bg-red-500 text-white px-2 py-1 rounded delete-btn" data-id="${item.booking_id}">Delete</button>
-    </td>
-  `;
+      tr.innerHTML = `
+        <td class="p-3 border">${item.booking_id}</td>
+        <td class="p-3 border">${item.user_id || item.user_email || ""}</td>
+        <td class="p-3 border">${item.event_name}</td>
+        <td class="p-3 border">${item.purpose}</td>
+        <td class="p-3 border">${item.attendees}</td>
+        <td class="p-3 border">${item.venue}</td>
+        <td class="p-3 border">${new Date(item.start_datetime).toLocaleString("en-US", { hour12: true })}</td>
+        <td class="p-3 border">${new Date(item.end_datetime).toLocaleString("en-US", { hour12: true })}</td>
+        <td class="p-3 border">${item.additional_needs || "None"}</td>
+        <td class="p-3 border">${item.status}</td>
+        <td class="p-3 border">${new Date(item.created_at).toLocaleString("en-US", { hour12: true })}</td>
+        <td class="p-3 border space-x-2">
+          <button class="bg-blue-500 text-white px-2 py-1 rounded view-btn" data-id="${item.booking_id}">View</button>
+          <button class="bg-yellow-500 text-white px-2 py-1 rounded edit-btn" data-id="${item.booking_id}">Edit</button>
+          <button class="bg-red-500 text-white px-2 py-1 rounded delete-btn" data-id="${item.booking_id}">Delete</button>
+        </td>
+      `;
 
-  tbody.appendChild(tr);
-});
+      tbody.appendChild(tr);
+    });
 
     // ✅ Attach handlers
     document.querySelectorAll(".view-btn").forEach(btn => {
