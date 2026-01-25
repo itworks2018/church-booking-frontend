@@ -2,7 +2,7 @@
 async function loadProfiles() {
   try {
     const token = localStorage.getItem("access_token");
-    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profile`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profiles`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
