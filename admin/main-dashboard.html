@@ -99,7 +99,7 @@
       }
     });
 
-    // Load a page into #contentArea
+// Load a page into #contentArea
 function loadPage(page) {
   fetch(`pages/${page}`)
     .then(res => {
@@ -128,7 +128,8 @@ function loadPage(page) {
 
         document.body.appendChild(script);
       }
-        if (page === "manage-events.html") {
+
+      if (page === "manage-events.html") {
         // Remove old script if it exists
         const oldScript = document.getElementById("manageEventsScript");
         if (oldScript) oldScript.remove();
@@ -153,7 +154,6 @@ function loadPage(page) {
         "<p class='text-red-600 font-semibold'>Page not found.</p>";
     });
 }
-
     // Profile menu toggle and logout
     document.addEventListener("DOMContentLoaded", () => {
       const profileBtn = document.getElementById("profileBtn");
