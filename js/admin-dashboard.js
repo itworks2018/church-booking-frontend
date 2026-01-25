@@ -197,57 +197,80 @@ async function updateBookingStatus(id, status) {
       console.warn("Upcoming bookings error:", e);
     }
 
-    // ✅ Calendar initialization using global FullCalendar (CDN build)
-    const calendarEl = document.getElementById("fullcalendar");
-    if (calendarEl && window.FullCalendar) {
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        height: 600,
-        headerToolbar: {
-          left: "prev,next today",
-          center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay",
-        },
-        // ✅ Dynamic events fetch from backend (approved only)
-        events: async function (fetchInfo, successCallback, failureCallback) {
-          try {
-            const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming/list`, {
-              headers: { Authorization: `Bearer ${token}` }
-            });
+// ✅ Calendar initialization using global FullCalendar (CDN build)
+const calendarEl = document.getElementById("fullcalendar");
+if (calendarEl && window.FullCalendar) {
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: "dayGridMonth",
+    height: 600,
+    headerToolbar: {
+      left: "prev,next today",
+      center: "title",
+      right: "dayGridMonth,timeGridWeek,timeGridDay",
+    },
+    // ✅ Force local PC time
+    timeZone: "local",
 
-            if (!res.ok) throw new Error("Failed to fetch events");
-            const data = await res.json();
+    // ✅ Dynamic events fetch from backend (approved only)
+    events: async function (fetchInfo, successCallback, failureCallback) {
+      try {
+        const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming/list`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-            console.log("Upcoming bookings response:", data); // Debug log
+        if (!res.ok) throw new Error("Failed to fetch events");
+        const data = await res.json();
 
-            const items = Array.isArray(data.items) ? data.items : [];
-            const approvedEvents = items.filter(item => item.status === "Approved");
+        console.log("Upcoming bookings response:", data); // Debug log
 
-            const events = approvedEvents.map(item => ({
-              title: item.event_name || item.title || "Untitled",
-              start: item.start_datetime || item.date || item.event_date,
-              end: item.end_datetime || item.end_date || null,
-              extendedProps: {
-                user: item.user_email || item.user,
-                venue: item.venue || item.venues?.name,
-                status: item.status
-              }
-            }));
+        const items = Array.isArray(data.items) ? data.items : [];
+        const approvedEvents = items.filter(item => item.status === "Approved");
 
-            successCallback(events);
-          } catch (err) {
-            console.error("Calendar events fetch error:", err);
-            failureCallback(err);
+        const events = approvedEvents.map(item => ({
+          id: item.booking_id,
+          title: item.event_name || "Untitled",
+          start: item.start_datetime,
+          end: item.end_datetime || null,
+          extendedProps: {
+            purpose: item.purpose,
+            attendees: item.attendees,
+            venue: item.venue,
+            additional_needs: item.additional_needs,
+            created_at: item.created_at,
+            status: item.status
           }
-        }
-      });
+        }));
 
-      calendar.render();
+        successCallback(events);
+      } catch (err) {
+        console.error("Calendar events fetch error:", err);
+        failureCallback(err);
+      }
+    },
+
+    // ✅ Make events clickable to show details
+    eventClick: function(info) {
+      const booking = info.event.extendedProps;
+      alert(
+        `Event: ${info.event.title}\n` +
+        `Venue: ${booking.venue}\n` +
+        `Purpose: ${booking.purpose}\n` +
+        `Attendees: ${booking.attendees}\n` +
+        `Start: ${new Date(info.event.start).toLocaleString("en-US", { hour12: true })}\n` +
+        `End: ${info.event.end ? new Date(info.event.end).toLocaleString("en-US", { hour12: true }) : "N/A"}\n` +
+        `Additional Needs: ${booking.additional_needs || "None"}\n` +
+        `Created At: ${new Date(booking.created_at).toLocaleString("en-US", { hour12: true })}\n` +
+        `Status: ${booking.status}`
+      );
     }
+  }); // ✅ closes FullCalendar config
+
+  calendar.render();
+} // ✅ closes the if block
   } catch (err) {
     console.error("Dashboard fetch error:", err);
   }
-}
+} // ✅ closes initAdminDashboard function
 
 // ✅ Expose globally
 window.initAdminDashboard = initAdminDashboard;
