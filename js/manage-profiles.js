@@ -21,7 +21,7 @@ async function loadProfiles() {
       tr.className = "border-b";
 
       tr.innerHTML = `
-        <td class="p-3 border">${user.id}</td>
+        <td class="p-3 border">${user.user_id}</td>
         <td class="p-3 border">${user.full_name || ""}</td>
         <td class="p-3 border">${user.email}</td>
         <td class="p-3 border">${user.role}</td>
@@ -38,7 +38,7 @@ async function loadProfiles() {
     document.querySelectorAll(".edit-profile-btn").forEach(btn => {
       btn.addEventListener("click", e => {
         const id = e.target.dataset.id;
-        const user = items.find(u => u.id == id); // use == to match string vs number
+        const user = items.find(u => u.user_id == id); // use == to match string vs number
         if (user) showEditProfileModal(user);
       });
     });
@@ -62,12 +62,12 @@ async function loadProfiles() {
 async function deleteProfile(id) {
   try {
     const token = localStorage.getItem("access_token");
-    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profile/${id}`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profile/${user_id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error("Failed to delete user");
-    console.log(`User ${id} deleted`);
+    console.log(`User ${user_id} deleted`);
   } catch (err) {
     console.error("deleteProfile error:", err);
   }
