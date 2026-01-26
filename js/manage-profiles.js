@@ -27,8 +27,8 @@ async function loadProfiles() {
         <td class="p-3 border">${user.role}</td>
         <td class="p-3 border">${new Date(user.created_at).toLocaleString("en-US", { hour12: true })}</td>
         <td class="p-3 border space-x-2">
-          <button class="bg-yellow-500 text-white px-2 py-1 rounded edit-profile-btn" data-id="${user.id}">Edit</button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded delete-profile-btn" data-id="${user.id}">Delete</button>
+          <button class="bg-yellow-500 text-white px-2 py-1 rounded edit-profile-btn" data-id="${user.user_id}">Edit</button>
+          <button class="bg-red-500 text-white px-2 py-1 rounded delete-profile-btn" data-id="${user.user_id}">Delete</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -100,12 +100,12 @@ function showEditProfileModal(user) {
 }
 
 // ✅ Update user helper
-async function updateProfile(id, formData) {
+async function updateProfile(user_id, formData) {
   try {
     const token = localStorage.getItem("access_token");
     const body = Object.fromEntries(formData.entries());
 
-    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profile/${id}`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profile/${user_id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -115,7 +115,7 @@ async function updateProfile(id, formData) {
     });
 
     if (!res.ok) throw new Error("Failed to update user");
-    console.log(`User ${id} updated`);
+    console.log(`User ${user_id} updated`);
   } catch (err) {
     console.error("updateProfile error:", err);
   }
