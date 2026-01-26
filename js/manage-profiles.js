@@ -92,7 +92,7 @@ function showEditProfileModal(user) {
 
   form.onsubmit = async (ev) => {
     ev.preventDefault();
-    await updateProfile(user.id, new FormData(form));
+    await updateProfile(user.user_id, new FormData(form));
     modal.classList.add("hidden");
     modal.classList.remove("flex");
     loadProfiles();
