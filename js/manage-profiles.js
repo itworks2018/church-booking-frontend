@@ -11,7 +11,7 @@ async function loadProfiles() {
     const data = await res.json();
     const items = Array.isArray(data.items) ? data.items : [];
 
-    const tbody = document.getElementById("profilesTable");
+    const tbody = document.getElementById("usersTable");
     if (!tbody) return;
 
     tbody.innerHTML = "";
