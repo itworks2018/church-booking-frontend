@@ -1,7 +1,7 @@
 // frontend/js/calendar.js
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const calendarEl = document.getElementById('calendar');
+  const calendarEl = document.getElementById('fullcalendar');
   if (!calendarEl) {
     console.error('Calendar element not found');
     return;

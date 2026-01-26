@@ -124,7 +124,7 @@
     const venueId = "123"; // Replace with dynamic venue ID if needed
 
     try {
-      const res = await fetch(`https://church-booking-backend.onrender.com/api/venue/${venueId}/bookings`, {
+      const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${venueId}/bookings`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const bookings = await res.json();
