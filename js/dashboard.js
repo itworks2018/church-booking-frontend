@@ -5,7 +5,7 @@ function initPage() {
 
 async function loadUserBookings() {
   const token = localStorage.getItem("access_token");
-  const res = await fetch("https://church-booking-backend.onrender.com/api/my-bookings", {
+  const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${venueId}/bookings`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   const bookings = await res.json();
@@ -24,7 +24,7 @@ async function loadUserBookings() {
 
 async function loadCalendarEvents() {
   const token = localStorage.getItem("access_token");
-  const venueId = "123"; // later dynamic
+  const venueId = localStorage.getItem("selectedVenueId"); // later dynamic
   const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${venueId}/bookings`, {
     headers: { Authorization: `Bearer ${token}` }
   });
