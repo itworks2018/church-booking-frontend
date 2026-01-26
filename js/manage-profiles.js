@@ -2,11 +2,12 @@
 async function loadProfiles() {
   try {
     const token = localStorage.getItem("access_token");
-    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profiles`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
     if (!res.ok) throw new Error("Failed to fetch profiles");
+
     const data = await res.json();
     const items = Array.isArray(data.items) ? data.items : [];
 
@@ -37,7 +38,7 @@ async function loadProfiles() {
     document.querySelectorAll(".edit-profile-btn").forEach(btn => {
       btn.addEventListener("click", e => {
         const id = e.target.dataset.id;
-        const user = items.find(u => u.id === id);
+        const user = items.find(u => u.id == id); // use == to match string vs number
         if (user) showEditProfileModal(user);
       });
     });
