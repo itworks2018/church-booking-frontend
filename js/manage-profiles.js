@@ -75,8 +75,8 @@ async function deleteProfile(id) {
 
 // ✅ Show edit modal
 function showEditProfileModal(user) {
-  const modal = document.getElementById("editProfileModal");
-  const form = document.getElementById("editProfileForm");
+  const modal = document.getElementById("editUserModal");
+  const form = document.getElementById("editUserForm");
 
   form.elements["full_name"].value = user.full_name || "";
   form.elements["email"].value = user.email;
@@ -85,7 +85,7 @@ function showEditProfileModal(user) {
   modal.classList.remove("hidden");
   modal.classList.add("flex");
 
-  document.getElementById("cancelEditProfile").onclick = () => {
+  document.getElementById("cancelEditUser").onclick = () => {
     modal.classList.add("hidden");
     modal.classList.remove("flex");
   };
