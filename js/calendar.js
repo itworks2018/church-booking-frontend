@@ -5,12 +5,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     return;
   }
 
-  // Dynamically set venueId from localStorage or user selection
-  const venueId = localStorage.getItem("selectedVenueId") || "MainHall"; // replace with a real venue
+  // Use venue (string) from localStorage
+  const venueId = localStorage.getItem("selectedVenueId");
   const token = localStorage.getItem("access_token");
 
+  if (!venueId || typeof venueId !== "string" || venueId.trim() === "") {
+    console.error("No valid venue selected in localStorage");
+    return;
+  }
+
   try {
-    const res = await fetch(`/api/calendar/venue/${venueId}/bookings`, {
+    const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${encodeURIComponent(venueId)}/bookings`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
