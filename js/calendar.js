@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     return;
   }
 
-  // TODO: dynamically set venueId from user selection or localStorage
-  const venueId = localStorage.getItem("selectedVenueId") || "123";
+  // Dynamically set venueId from localStorage or user selection
+  const venueId = localStorage.getItem("selectedVenueId") || "MainHall"; // replace with a real venue
   const token = localStorage.getItem("access_token");
 
   try {
@@ -35,17 +35,19 @@ document.addEventListener('DOMContentLoaded', async function () {
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       events: bookings.map(b => ({
-        id: b.booking_id, // ✅ matches your Supabase schema
+        id: b.booking_id,
         title: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
         start: b.start_datetime,
         end: b.end_datetime,
-        color: b.status === "Approved" ? "blue" : "orange"
+        color: b.status === "Approved" ? "blue" : "orange",
+        extendedProps: { status: b.status, venue: b.venue }
       })),
       eventClick: function (info) {
         alert(
           'Booking ID: ' + info.event.id +
           '\nTitle: ' + info.event.title +
-          '\nStatus: ' + (info.event.extendedProps?.status || "N/A") +
+          '\nStatus: ' + info.event.extendedProps.status +
+          '\nVenue: ' + info.event.extendedProps.venue +
           '\nStart: ' + info.event.start.toLocaleString() +
           '\nEnd: ' + (info.event.end ? info.event.end.toLocaleString() : "N/A")
         );

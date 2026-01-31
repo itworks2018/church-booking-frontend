@@ -3,49 +3,100 @@ function initPage() {
   loadCalendarEvents();
 }
 
+// Booking Table Fetcher
 async function loadUserBookings() {
   const token = localStorage.getItem("access_token");
-  const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${venueId}/bookings`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  const bookings = await res.json();
+  if (!token) return;
 
-  const tbody = document.getElementById("myBookingsBody");
-  tbody.innerHTML = bookings.map(b => `
-    <tr>
-      <td class="px-4 py-2">${b.event_name}</td>
-      <td class="px-4 py-2">${b.venue}</td>
-      <td class="px-4 py-2">${new Date(b.start_datetime).toLocaleString()}</td>
-      <td class="px-4 py-2">${new Date(b.end_datetime).toLocaleString()}</td>
-      <td class="px-4 py-2">${b.status}</td>
-    </tr>
-  `).join("");
+  // ✅ Get venueId dynamically (from localStorage or user selection)
+  const venueId = localStorage.getItem("selectedVenueId") || "MainHall"; // replace with a real venue value
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/calendar/venue/${venueId}/bookings`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) {
+      console.error("Request failed:", res.status);
+      return;
+    }
+
+    const data = await res.json();
+
+    const tbody = document.getElementById("myBookingsBody");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+
+    if (!Array.isArray(data)) {
+      console.error("Bookings is not an array:", data);
+      return;
+    }
+
+    data.forEach(b => {
+      const row = `
+        <tr>
+          <td class="border px-3 py-2">${b.event_name}</td>
+          <td class="border px-3 py-2">${b.venue}</td>
+          <td class="border px-3 py-2">${new Date(b.start_datetime).toLocaleString()}</td>
+          <td class="border px-3 py-2">${new Date(b.end_datetime).toLocaleString()}</td>
+          <td class="border px-3 py-2 capitalize">${b.status}</td>
+        </tr>
+      `;
+      tbody.insertAdjacentHTML("beforeend", row);
+    });
+
+  } catch (err) {
+    console.error("Error loading bookings:", err);
+  }
 }
 
 async function loadCalendarEvents() {
   const token = localStorage.getItem("access_token");
-  const venueId = localStorage.getItem("selectedVenueId"); // later dynamic
-  const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${venueId}/bookings`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  const bookings = await res.json();
-
-  const calendarEl = document.getElementById("fullcalendar");
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    height: 600,
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
-    events: bookings.map(b => ({
-      id: b.id,
-      title: b.status === "Approved" ? "Approved Booking" : "Pending Booking",
-      start: b.start_datetime,
-      end: b.end_datetime,
-      color: b.status === "Approved" ? "blue" : "orange"
-    }))
-  });
-  calendar.render();
+  // Use fallback venueId if not set
+  const venueId = localStorage.getItem("selectedVenueId") || "MainHall";
+  if (!venueId) {
+    console.error("venueId is not defined or selected");
+    return;
+  }
+  try {
+    const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${venueId}/bookings`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) {
+      console.error("Request failed:", res.status);
+      return;
+    }
+    const bookings = await res.json();
+    if (!Array.isArray(bookings)) {
+      console.error("Bookings is not an array:", bookings);
+      return;
+    }
+    const calendarEl = document.getElementById("fullcalendar");
+    if (!calendarEl) {
+      console.error("Calendar element not found");
+      return;
+    }
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: 600,
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      events: bookings.map(b => ({
+        id: b.id || b.booking_id,
+        title: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
+        start: b.start_datetime,
+        end: b.end_datetime,
+        color: b.status === "Approved" ? "blue" : "orange"
+      }))
+    });
+    calendar.render();
+  } catch (err) {
+    console.error("Failed to load bookings:", err);
+  }
 }
