@@ -8,9 +8,15 @@ async function loadUserBookings() {
   const token = localStorage.getItem("access_token");
   if (!token) return;
 
+  // Get venueId dynamically (from localStorage or user selection)
+  const validVenues = ["Main Hall", "Phase A Area 1", "Phase 2 Area B", "NxtGen Room"];
+  let venueId = localStorage.getItem("selectedVenueId");
+  if (!venueId || !validVenues.includes(venueId)) {
+    venueId = validVenues[0];
+    localStorage.setItem("selectedVenueId", venueId);
+  }
   try {
-    // Fetch bookings for the current user (pending/approved)
-    const res = await fetch(`${API_BASE_URL}/api/bookings/me`, {
+    const res = await fetch(`${API_BASE_URL}/api/calendar/venue/${encodeURIComponent(venueId)}/bookings`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
