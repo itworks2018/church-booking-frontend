@@ -105,6 +105,7 @@ async function loadCalendarEvents() {
           <div><strong>Purpose:</strong> ${b.purpose || ''}</div>
           <div><strong>Attendees:</strong> ${b.attendees || ''}</div>
           <div><strong>Additional Needs:</strong> ${b.additional_needs || ''}</div>
+          <div><strong>Requested At:</strong> ${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</div>
         `;
         modal.classList.remove('hidden');
       }

@@ -146,6 +146,7 @@ async function loadUserBookings() {
           <td class="border px-3 py-2">${new Date(b.start_datetime).toLocaleString()}</td>
           <td class="border px-3 py-2">${new Date(b.end_datetime).toLocaleString()}</td>
           <td class="border px-3 py-2 capitalize">${b.status}</td>
+          <td class="border px-3 py-2">${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</td>
         </tr>
       `;
       tbody.insertAdjacentHTML("beforeend", row);
