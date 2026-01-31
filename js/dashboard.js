@@ -89,10 +89,34 @@ async function loadCalendarEvents() {
         title: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
         start: b.start_datetime,
         end: b.end_datetime,
-        color: b.status === "Approved" ? "blue" : "orange"
-      }))
+        color: b.status === "Approved" ? "blue" : "orange",
+        extendedProps: { ...b }
+      })),
+      eventClick: function(info) {
+        const b = info.event.extendedProps;
+        const modal = document.getElementById('bookingModal');
+        const content = document.getElementById('bookingModalContent');
+        content.innerHTML = `
+          <div><strong>Event:</strong> ${b.event_name || ''}</div>
+          <div><strong>Venue:</strong> ${b.venue || ''}</div>
+          <div><strong>Status:</strong> <span class="capitalize">${b.status || ''}</span></div>
+          <div><strong>Start:</strong> ${b.start_datetime ? new Date(b.start_datetime).toLocaleString() : ''}</div>
+          <div><strong>End:</strong> ${b.end_datetime ? new Date(b.end_datetime).toLocaleString() : ''}</div>
+          <div><strong>Purpose:</strong> ${b.purpose || ''}</div>
+          <div><strong>Attendees:</strong> ${b.attendees || ''}</div>
+          <div><strong>Additional Needs:</strong> ${b.additional_needs || ''}</div>
+        `;
+        modal.classList.remove('hidden');
+      }
     });
     calendar.render();
+    // Modal close logic
+    document.getElementById('closeBookingModal').onclick = function() {
+      document.getElementById('bookingModal').classList.add('hidden');
+    };
+    document.getElementById('bookingModal').onclick = function(e) {
+      if (e.target === this) this.classList.add('hidden');
+    };
   } catch (err) {
     console.error("Failed to load bookings:", err);
   }
