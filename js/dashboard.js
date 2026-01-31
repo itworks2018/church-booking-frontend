@@ -56,19 +56,8 @@ async function loadUserBookings() {
 
 async function loadCalendarEvents() {
   const token = localStorage.getItem("access_token");
-  // Use fallback venueId if not set
-  const validVenues = ["Main Hall", "Phase A Area 1", "Phase 2 Area B", "NxtGen Room"];
-  let venueId = localStorage.getItem("selectedVenueId");
-  if (!venueId || !validVenues.includes(venueId)) {
-    venueId = validVenues[0];
-    localStorage.setItem("selectedVenueId", venueId);
-  }
-  if (!venueId) {
-    console.error("venueId is not defined or selected");
-    return;
-  }
   try {
-    const res = await fetch(`${API_BASE_URL}/api/calendar/venue/${encodeURIComponent(venueId)}/bookings`, {
+    const res = await fetch(`${API_BASE_URL}/api/bookings/my`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) {
