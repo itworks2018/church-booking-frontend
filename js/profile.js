@@ -1,10 +1,20 @@
 
+
 let fullNameInput;
 let emailInput;
 let contactInput;
 let roleInput;
 let editBtn;
 let saveBtn;
+
+// Only run profile logic if profile form is present
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('profile_full_name') && document.getElementById('profile_email')) {
+    if (typeof initPage === 'function') {
+      initPage();
+    }
+  }
+});
 
 /* ⭐ Runs AFTER the HTML is injected by loadPage() */
 function initPage() {
@@ -42,7 +52,7 @@ async function loadProfile() {
   }
 
   try {
-    const res = await fetch(`${API_BASE_URL}/api/profile/my`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/profile/my`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -87,7 +97,7 @@ function setupEditButtons() {
       role: roleInput.value.trim()
     };
 
-    const res = await fetch(`${API_BASE_URL}/api/profile/my`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/profile/my`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

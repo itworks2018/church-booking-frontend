@@ -1,6 +1,6 @@
 // booking.js
 
-const API_BASE_URL = "https://church-booking-backend.onrender.com";
+window.API_BASE_URL = window.API_BASE_URL || "https://church-booking-backend.onrender.com";
 
 // Convert AM/PM to ISO
 function convertToISO(dateStr, timeStr) {

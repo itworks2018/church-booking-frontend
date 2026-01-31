@@ -208,8 +208,13 @@
 
       document.body.appendChild(script);
 
+      // Always call initPage after dashboard loads to ensure calendar and table are refreshed
       if (page.includes("dashboard.html")) {
-        setTimeout(() => loadUserBookings(), 100);
+        setTimeout(() => {
+          if (typeof initPage === "function") {
+            initPage();
+          }
+        }, 100);
       }
     });
 }
