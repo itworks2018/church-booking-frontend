@@ -3,15 +3,23 @@
 window.API_BASE_URL = window.API_BASE_URL || "https://church-booking-backend.onrender.com";
 
 // Convert AM/PM to ISO
-function convertToISO(dateStr, timeStr) {
+function convertToLocal(dateStr, timeStr) {
   const [time, modifier] = timeStr.split(" ");
   let [hours, minutes] = time.split(":");
-
   hours = parseInt(hours, 10);
   if (modifier === "PM" && hours !== 12) hours += 12;
   if (modifier === "AM" && hours === 12) hours = 0;
-
-  return new Date(`${dateStr}T${String(hours).padStart(2, "0")}:${minutes}:00`).toISOString();
+  // Create a date in local time (with timezone offset)
+  const localDate = new Date(`${dateStr}T${String(hours).padStart(2, "0")}:${minutes}:00`);
+  // Format as YYYY-MM-DDTHH:mm:ss±hh:mm (local time with offset)
+  const pad = n => String(n).padStart(2, '0');
+  const tzOffset = -localDate.getTimezoneOffset();
+  const sign = tzOffset >= 0 ? '+' : '-';
+  const absOffset = Math.abs(tzOffset);
+  const offsetHours = pad(Math.floor(absOffset / 60));
+  const offsetMinutes = pad(absOffset % 60);
+  const offset = `${sign}${offsetHours}:${offsetMinutes}`;
+  return `${localDate.getFullYear()}-${pad(localDate.getMonth()+1)}-${pad(localDate.getDate())}T${pad(localDate.getHours())}:${pad(localDate.getMinutes())}:00${offset}`;
 }
 
 // Booking submit handler
@@ -49,8 +57,8 @@ async function handleBookingSubmit(e) {
     return;
   }
 
-  const start_datetime = convertToISO(start_date, start_time);
-  const end_datetime = convertToISO(end_date, end_time);
+  const start_datetime = convertToLocal(start_date, start_time);
+  const end_datetime = convertToLocal(end_date, end_time);
 
   if (new Date(end_datetime) <= new Date(start_datetime)) {
     alert("End date/time must be after start date/time.");
