@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', async function () {
+    // Ensure a valid venue is set in localStorage before loading calendar
+    const validVenues = ["Main Hall", "Phase A Area 1", "Phase 2 Area B", "NxtGen Room"];
+    let venueId = localStorage.getItem("selectedVenueId");
+    if (!venueId || !validVenues.includes(venueId)) {
+      venueId = validVenues[0];
+      localStorage.setItem("selectedVenueId", venueId);
+    }
   const calendarEl = document.getElementById('fullcalendar');
   if (!calendarEl) {
     console.error('Calendar element not found');
     return;
   }
 
-  // Use venue (string) from localStorage
-  const venueId = localStorage.getItem("selectedVenueId");
   const token = localStorage.getItem("access_token");
-
-  if (!venueId || typeof venueId !== "string" || venueId.trim() === "") {
-    console.error("No valid venue selected in localStorage");
-    return;
-  }
 
   try {
     const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${encodeURIComponent(venueId)}/bookings`, {
