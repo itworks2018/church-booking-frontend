@@ -8,11 +8,9 @@ async function loadUserBookings() {
   const token = localStorage.getItem("access_token");
   if (!token) return;
 
-  // ✅ Get venueId dynamically (from localStorage or user selection)
-  const venueId = localStorage.getItem("selectedVenueId") || "MainHall"; // replace with a real venue value
-
   try {
-    const res = await fetch(`${API_BASE_URL}/api/calendar/venue/${venueId}/bookings`, {
+    // Fetch bookings for the current user (pending/approved)
+    const res = await fetch(`${API_BASE_URL}/api/bookings/me`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
@@ -24,18 +22,15 @@ async function loadUserBookings() {
     }
 
     const data = await res.json();
-
     const tbody = document.getElementById("myBookingsBody");
     if (!tbody) return;
-
     tbody.innerHTML = "";
-
     if (!Array.isArray(data)) {
       console.error("Bookings is not an array:", data);
       return;
     }
-
-    data.forEach(b => {
+    // Only show pending and approved
+    data.filter(b => b.status === "Pending" || b.status === "Approved").forEach(b => {
       const row = `
         <tr>
           <td class="border px-3 py-2">${b.event_name}</td>
@@ -47,7 +42,6 @@ async function loadUserBookings() {
       `;
       tbody.insertAdjacentHTML("beforeend", row);
     });
-
   } catch (err) {
     console.error("Error loading bookings:", err);
   }
@@ -56,7 +50,12 @@ async function loadUserBookings() {
 async function loadCalendarEvents() {
   const token = localStorage.getItem("access_token");
   // Use fallback venueId if not set
-  const venueId = localStorage.getItem("selectedVenueId") || "MainHall";
+  const validVenues = ["Main Hall", "Phase A Area 1", "Phase 2 Area B", "NxtGen Room"];
+  let venueId = localStorage.getItem("selectedVenueId");
+  if (!venueId || !validVenues.includes(venueId)) {
+    venueId = validVenues[0];
+    localStorage.setItem("selectedVenueId", venueId);
+  }
   if (!venueId) {
     console.error("venueId is not defined or selected");
     return;
