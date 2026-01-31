@@ -88,7 +88,11 @@ async function handleBookingSubmit(e) {
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.error || "Booking failed");
+      if (res.status === 409) {
+        alert(data.error || "This venue is already booked for the selected date and time. Please choose a different schedule or venue.");
+      } else {
+        alert(data.error || "Booking failed");
+      }
       btn.disabled = false;
       btn.textContent = "Submit Booking";
       return;
