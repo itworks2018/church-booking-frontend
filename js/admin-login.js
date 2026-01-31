@@ -29,12 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Save token + email + role
+      // Save token + email + role (set both user_role and role for compatibility)
       localStorage.setItem("access_token", data.token);
       localStorage.setItem("email", data.user.email);
       localStorage.setItem("user_role", data.user.role);
+      localStorage.setItem("role", data.user.role);
 
-      // ✅ Correct redirect path for Vercel
+      // Redirect to admin main dashboard
       window.location.href = "main-dashboard.html";
 
     } catch (err) {

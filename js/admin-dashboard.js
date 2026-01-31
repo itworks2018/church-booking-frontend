@@ -15,8 +15,8 @@ async function initAdminDashboard() {
     const token = localStorage.getItem("access_token");
     const role = localStorage.getItem("user_role") || localStorage.getItem("role");
 
-    // Guard: only allow admins
-    if (!token || role !== "admin") {
+    // Guard: only allow admins (check both user_role and role)
+    if (!token || (role !== "admin" && localStorage.getItem("user_role") !== "admin" && localStorage.getItem("role") !== "admin")) {
       window.location.href = "/admin/login.html";
       return;
     }

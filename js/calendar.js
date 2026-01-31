@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   const token = localStorage.getItem("access_token");
 
   try {
-    const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${encodeURIComponent(venueId)}/bookings`, {
+    const res = await fetch(`${window.API_BASE_URL}/api/calendar/venue/${encodeURIComponent(venueId)}/bookings`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', async function () {
       return;
     }
 
+    // Only show pending and approved bookings
+    const filtered = bookings.filter(b => b.status === "Pending" || b.status === "Approved");
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       height: 'auto',
@@ -39,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      events: bookings.map(b => ({
+      events: filtered.map(b => ({
         id: b.booking_id,
         title: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
         start: b.start_datetime,
