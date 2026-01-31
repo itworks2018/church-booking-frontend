@@ -5,9 +5,14 @@
   <button id="addUserBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">Add User</button>
 </div>
 <script>
-  document.getElementById('addUserBtn').onclick = function() {
-    window.location.href = 'admin-add-user.html';
-  };
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('addUserBtn');
+    if (btn) {
+      btn.onclick = function() {
+        window.location.href = 'admin-add-user.html';
+      };
+    }
+  });
 </script>
 
 <table class="w-full text-left border-collapse border border-gray-300">
@@ -46,11 +51,7 @@
       </div>
     </form>
   </div>
-<script>
-  document.getElementById('addUserBtn').onclick = function() {
-    window.location.href = 'admin-add-user.html';
-  };
-</script>
+
 
 <!-- ✅ Add User Modal (Signup Form) -->
 <div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
