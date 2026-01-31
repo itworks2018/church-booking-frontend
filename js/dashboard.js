@@ -57,7 +57,7 @@ async function loadUserBookings() {
 async function loadCalendarEvents() {
   const token = localStorage.getItem("access_token");
   try {
-    const res = await fetch(`${API_BASE_URL}/api/bookings`, {
+    const res = await fetch(`${API_BASE_URL}/api/bookings/all`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) {
