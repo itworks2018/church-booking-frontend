@@ -48,7 +48,7 @@ function populatePendingTable(items) {
         <td class="p-3">${escapeHtml(new Date(item.start_datetime).toLocaleString())}</td>
         <td class="p-3">${escapeHtml(new Date(item.end_datetime).toLocaleString())}</td>
         <td class="p-3">${escapeHtml(item.status || "")}</td>
-        <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString())}</td>
+        <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
         <td class="p-3 space-x-2">
           <button class="bg-blue-500 text-white px-2 py-1 rounded review-btn" data-id="${item.booking_id}">Review</button>
           <button class="bg-green-500 text-white px-2 py-1 rounded approve-btn" data-id="${item.booking_id}">Approve</button>
