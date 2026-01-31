@@ -9,7 +9,11 @@
     var btn = document.getElementById('addUserBtn');
     if (btn) {
       btn.onclick = function() {
-        window.location.href = 'admin-add-user.html';
+        if (typeof loadPage === 'function') {
+          loadPage('admin-add-user.html');
+        } else {
+          window.location.href = 'admin-add-user.html';
+        }
       };
     }
   });
