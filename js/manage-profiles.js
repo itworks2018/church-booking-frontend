@@ -131,10 +131,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (addUserBtn && addUserModal && cancelAddUser && addUserForm) {
     addUserBtn.onclick = () => {
       addUserModal.classList.remove("hidden");
-      addUserModal.classList.add("flex");
+      addUserModal.classList.add("block");
+      addUserModal.classList.remove("flex"); // Remove flex if present
     };
     cancelAddUser.onclick = () => {
       addUserModal.classList.add("hidden");
+      addUserModal.classList.remove("block");
       addUserModal.classList.remove("flex");
       addUserForm.reset();
     };
@@ -170,6 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         alert("User added successfully!");
         addUserModal.classList.add("hidden");
+        addUserModal.classList.remove("block");
         addUserModal.classList.remove("flex");
         addUserForm.reset();
         if (typeof loadProfiles === "function") loadProfiles();
