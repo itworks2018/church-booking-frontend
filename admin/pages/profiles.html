@@ -2,7 +2,12 @@
 
 <div class="flex justify-end mb-4">
   <button id="addUserBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">Add User</button>
-</div>
+
+<script>
+  document.getElementById('addUserBtn').onclick = function() {
+    window.location.href = '/signup.html?admin=1';
+  };
+</script>
 
 <table class="w-full text-left border-collapse border border-gray-300">
   <thead>

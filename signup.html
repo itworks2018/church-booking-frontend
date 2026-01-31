@@ -19,19 +19,7 @@
 
 <body class="bg-cover bg-center bg-no-repeat min-h-screen flex flex-col"
       style="background-image: url('/assets/images/bg2.jpg');">
-
-  <!-- NAVBAR -->
-  <div id="navbar"></div>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      fetch("components/navbar.html")
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById("navbar").innerHTML = html;
-        })
-        .catch(err => console.error("Navbar failed to load:", err));
-    });
-  </script>
+  <!-- Navbar removed for admin add user -->
 
   <!-- SIGN UP FORM -->
   <div class="flex-grow flex items-center justify-center py-12">
