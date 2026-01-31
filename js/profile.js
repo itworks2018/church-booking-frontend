@@ -81,8 +81,9 @@ function setupEditButtons() {
 
   editBtn.addEventListener("click", () => {
     emailInput.disabled = false;
-    contactInput.disabled = false;
-    roleInput.disabled = false;
+    // fullNameInput.disabled = true; // always disabled
+    contactInput.disabled = true; // always disabled
+    roleInput.disabled = true; // always disabled
 
     editBtn.classList.add("hidden");
     saveBtn.classList.remove("hidden");
@@ -92,9 +93,7 @@ function setupEditButtons() {
     const token = localStorage.getItem("access_token");
 
     const body = {
-      email: emailInput.value.trim(),
-      contact_number: contactInput.value.trim(),
-      role: roleInput.value.trim()
+      email: emailInput.value.trim()
     };
 
     const res = await fetch(`${window.API_BASE_URL}/api/profile/my`, {
@@ -120,6 +119,7 @@ function setupEditButtons() {
     localStorage.setItem("email", body.email);
 
     emailInput.disabled = true;
+    // fullNameInput.disabled = true;
     contactInput.disabled = true;
     roleInput.disabled = true;
 
