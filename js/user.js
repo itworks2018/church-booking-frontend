@@ -26,8 +26,8 @@ async function loadVenues() {
     venueSelect.innerHTML = ''
     venues.forEach(v => {
       const option = document.createElement('option')
-      option.value = v.id
-      option.setAttribute('data-venue-name', v.name)
+      option.value = v.name; // Use exact enum name for value
+      option.setAttribute('data-venue-id', v.id); // Store numeric id for booking creation
       option.textContent = `${v.name} (${v.area}) [${v.capacity_min}-${v.capacity_max}]`
       venueSelect.appendChild(option)
     })
@@ -83,37 +83,45 @@ async function loadMyBookings() {
 }
 
 
-// Store venue name in localStorage on selection
+
+// Store exact venue name in localStorage on selection
 venueSelect.addEventListener('change', function() {
   const selectedOption = venueSelect.options[venueSelect.selectedIndex];
-  const venueName = selectedOption.getAttribute('data-venue-name');
+  const venueName = selectedOption.value; // exact enum name
+  const venueId = selectedOption.getAttribute('data-venue-id');
   localStorage.setItem('selectedVenueId', venueName);
-  localStorage.setItem('selectedVenueNumericId', venueSelect.value);
+  localStorage.setItem('selectedVenueNumericId', venueId);
 });
 
 // Set initial venue in localStorage if not set
-venueSelect.addEventListener('DOMContentLoaded', function() {
+function setInitialVenueLocalStorage() {
   if (venueSelect.options.length > 0) {
     const selectedOption = venueSelect.options[venueSelect.selectedIndex];
-    const venueName = selectedOption.getAttribute('data-venue-name');
+    const venueName = selectedOption.value;
+    const venueId = selectedOption.getAttribute('data-venue-id');
     localStorage.setItem('selectedVenueId', venueName);
-    localStorage.setItem('selectedVenueNumericId', venueSelect.value);
+    localStorage.setItem('selectedVenueNumericId', venueId);
   }
-});
+}
+venueSelect.addEventListener('DOMContentLoaded', setInitialVenueLocalStorage);
+window.addEventListener('DOMContentLoaded', setInitialVenueLocalStorage);
 
 bookingForm.addEventListener('submit', async (e) => {
   e.preventDefault()
   showMessage('Submitting booking...')
 
-  // Always use numeric ID for booking creation
-  const venueNumericId = localStorage.getItem('selectedVenueNumericId') || venueSelect.value;
+
+  // Always use venue name (string) for booking creation
+  const venueName = localStorage.getItem('selectedVenueId') || venueSelect.value;
 
   const body = {
-    venue_id: Number(venueNumericId),
+    venue: venueName,
     event_name: document.getElementById('event-name').value,
-    event_purpose: document.getElementById('event-purpose').value,
+    purpose: document.getElementById('event-purpose').value,
+    attendees: Number(document.getElementById('attendees').value),
     start_datetime: document.getElementById('start-datetime').value,
-    end_datetime: document.getElementById('end-datetime').value
+    end_datetime: document.getElementById('end-datetime').value,
+    additional_needs: [] // You can update this if you have a field for additional_needs
   }
 
   try {
