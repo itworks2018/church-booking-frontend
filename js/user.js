@@ -27,6 +27,7 @@ async function loadVenues() {
     venues.forEach(v => {
       const option = document.createElement('option')
       option.value = v.id
+      option.setAttribute('data-venue-name', v.name)
       option.textContent = `${v.name} (${v.area}) [${v.capacity_min}-${v.capacity_max}]`
       venueSelect.appendChild(option)
     })
@@ -81,12 +82,34 @@ async function loadMyBookings() {
   }
 }
 
+
+// Store venue name in localStorage on selection
+venueSelect.addEventListener('change', function() {
+  const selectedOption = venueSelect.options[venueSelect.selectedIndex];
+  const venueName = selectedOption.getAttribute('data-venue-name');
+  localStorage.setItem('selectedVenueId', venueName);
+  localStorage.setItem('selectedVenueNumericId', venueSelect.value);
+});
+
+// Set initial venue in localStorage if not set
+venueSelect.addEventListener('DOMContentLoaded', function() {
+  if (venueSelect.options.length > 0) {
+    const selectedOption = venueSelect.options[venueSelect.selectedIndex];
+    const venueName = selectedOption.getAttribute('data-venue-name');
+    localStorage.setItem('selectedVenueId', venueName);
+    localStorage.setItem('selectedVenueNumericId', venueSelect.value);
+  }
+});
+
 bookingForm.addEventListener('submit', async (e) => {
   e.preventDefault()
   showMessage('Submitting booking...')
 
+  // Always use numeric ID for booking creation
+  const venueNumericId = localStorage.getItem('selectedVenueNumericId') || venueSelect.value;
+
   const body = {
-    venue_id: Number(venueSelect.value),
+    venue_id: Number(venueNumericId),
     event_name: document.getElementById('event-name').value,
     event_purpose: document.getElementById('event-purpose').value,
     start_datetime: document.getElementById('start-datetime').value,
