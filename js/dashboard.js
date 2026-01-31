@@ -16,7 +16,8 @@ async function loadUserBookings() {
     localStorage.setItem("selectedVenueId", venueId);
   }
   try {
-    const res = await fetch(`${API_BASE_URL}/api/calendar/venue/${encodeURIComponent(venueId)}/bookings`, {
+    // Fetch only bookings for the logged-in user
+    const res = await fetch(`${API_BASE_URL}/api/bookings/my`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
@@ -67,7 +68,7 @@ async function loadCalendarEvents() {
     return;
   }
   try {
-    const res = await fetch(`https://church-booking-backend.onrender.com/api/calendar/venue/${venueId}/bookings`, {
+    const res = await fetch(`${API_BASE_URL}/api/calendar/venue/${encodeURIComponent(venueId)}/bookings`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) {
@@ -84,6 +85,8 @@ async function loadCalendarEvents() {
       console.error("Calendar element not found");
       return;
     }
+    // Only show pending and approved bookings in the calendar
+    const filtered = bookings.filter(b => b.status === "Pending" || b.status === "Approved");
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       height: 600,
@@ -92,7 +95,7 @@ async function loadCalendarEvents() {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      events: bookings.map(b => ({
+      events: filtered.map(b => ({
         id: b.id || b.booking_id,
         title: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
         start: b.start_datetime,
