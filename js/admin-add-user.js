@@ -49,20 +49,26 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
         console.log("Submitting to:", apiUrl);
-        const res = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({ full_name, email, contact_number, role, password })
-        });
-        const text = await res.text();
-        let data;
-        try { data = JSON.parse(text); } catch { data = { raw: text }; }
+        let res, text, data;
+        try {
+          res = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { Authorization: `Bearer ${token}` } : {})
+            },
+            body: JSON.stringify({ full_name, email, contact_number, role, password })
+          });
+          text = await res.text();
+          try { data = JSON.parse(text); } catch { data = { raw: text }; }
+        } catch (fetchErr) {
+          errorMsg.textContent = "Network error: " + fetchErr;
+          console.error("Network error:", fetchErr);
+          return;
+        }
         console.log("Signup response:", res.status, data);
-        if (!res.ok) {
-          errorMsg.textContent = (data && data.error) || "Failed to add user.";
+        if (!res.ok || !data || data.error || (typeof data === 'object' && data.raw && data.raw.includes('<!DOCTYPE'))) {
+          errorMsg.textContent = (data && data.error) || "Failed to add user. (" + (data && data.raw ? data.raw.substring(0, 100) : "Unknown error") + ")";
           return;
         }
         alert("User added successfully!");
