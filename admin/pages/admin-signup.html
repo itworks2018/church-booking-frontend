@@ -3,13 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Add User – Admin Only</title>
+  <title>Admin Sign Up – Church Booking</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .glass-box {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+  </style>
 </head>
-<body class="bg-white text-gray-800">
+
+<body class="bg-cover bg-center bg-no-repeat min-h-screen flex flex-col"
+      style="background-image: url('/assets/images/bg2.jpg');">
+  <!-- SIGN UP FORM -->
   <div class="flex-grow flex items-center justify-center py-12">
     <div class="glass-box shadow-xl rounded-lg p-8 w-full max-w-md text-white">
-      <h2 class="text-2xl font-bold text-center mb-6">Add User (Admin)</h2>
+      <h2 class="text-2xl font-bold text-center mb-6">Create an Account (Admin)</h2>
       <p id="errorMessage" class="text-red-300 text-sm mb-2"></p>
       <form id="signupForm" class="space-y-4">
         <label for="full_name" class="sr-only">Full Name</label>
@@ -51,9 +64,13 @@
                required />
         <button id="submitBtn" type="submit"
                 class="w-full bg-green-600/80 hover:bg-green-700 text-white py-2 rounded">
-          Add User
+          Sign Up
         </button>
       </form>
+      <p class="text-center text-sm mt-4 text-white">
+        Already have an account?
+        <a href="login.html" class="underline">Log In</a>
+      </p>
     </div>
   </div>
   <script src="../../js/signup.js" defer></script>
