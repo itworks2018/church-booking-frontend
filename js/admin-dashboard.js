@@ -290,5 +290,24 @@ if (calendarEl && window.FullCalendar) {
   }
 } // ✅ closes initAdminDashboard function
 
+// === Session Timeout (5 min inactivity) ===
+(function setupSessionTimeout() {
+  let timeout;
+  const LOGOUT_TIME = 5 * 60 * 1000; // 5 minutes
+  function resetTimer() {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      alert("Session expired due to inactivity. You will be logged out.");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user_role");
+      window.location.href = "/admin/login.html";
+    }, LOGOUT_TIME);
+  }
+  ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evt => {
+    window.addEventListener(evt, resetTimer, true);
+  });
+  resetTimer();
+})();
+
 // ✅ Expose globally
 window.initAdminDashboard = initAdminDashboard;
