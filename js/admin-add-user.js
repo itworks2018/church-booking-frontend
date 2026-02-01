@@ -41,7 +41,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!confirm("Are you sure you want to add this user?")) return;
       try {
         const token = localStorage.getItem("access_token");
-        const res = await fetch("/api/auth/signup", {
+        // Set your backend API base URL here (for Vercel deployment)
+        const API_BASE_URL = "https://church-booking-backend.onrender.com";
+        const apiUrl = API_BASE_URL + "/api/auth/signup";
+        if (!API_BASE_URL.startsWith("http")) {
+          errorMsg.textContent = "API_BASE_URL is not set. Please set your backend URL in admin-add-user.js.";
+          return;
+        }
+        console.log("Submitting to:", apiUrl);
+        const res = await fetch(apiUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -49,9 +57,12 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify({ full_name, email, contact_number, role, password })
         });
+        const text = await res.text();
+        let data;
+        try { data = JSON.parse(text); } catch { data = { raw: text }; }
+        console.log("Signup response:", res.status, data);
         if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          errorMsg.textContent = data.error || "Failed to add user.";
+          errorMsg.textContent = (data && data.error) || "Failed to add user.";
           return;
         }
         alert("User added successfully!");
