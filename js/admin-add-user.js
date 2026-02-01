@@ -12,7 +12,10 @@ function showError(msg) {
 
 signupForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  showError(""); 
+  showError("");
+  // Confirmation dialog before submitting
+  const confirmed = confirm("Are you sure you want to add this user?");
+  if (!confirmed) return;
 
   const full_name = document.getElementById("full_name").value.trim();
   const email = document.getElementById("email").value.trim();
