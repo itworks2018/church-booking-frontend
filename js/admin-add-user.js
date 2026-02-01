@@ -1,50 +1,89 @@
 // Admin-only Add User form logic
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("adminAddUserForm");
-  const errorMsg = document.getElementById("adminAddUserError");
-  const cancelBtn = document.getElementById("cancelAdminAddUser");
+const API_BASE_URL = "https://church-booking-backend.onrender.com";
 
-  if (cancelBtn) {
-    cancelBtn.onclick = () => {
-      window.history.back();
-    };
+const signupForm = document.getElementById("signupForm");
+const errorMessage = document.getElementById("errorMessage");
+const submitBtn = document.getElementById("submitBtn");
+
+function showError(msg) {
+  errorMessage.textContent = msg;
+}
+
+signupForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  showError(""); 
+
+  const full_name = document.getElementById("full_name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const contact_number = document.getElementById("contact_number").value.trim();
+  const role = document.getElementById("role").value;
+  const password = document.getElementById("password").value;
+  const confirm_password = document.getElementById("confirm_password").value;
+
+  // Basic validation
+  if (!/^\S+@\S+\.\S+$/.test(email)) {
+    return showError("Please enter a valid email address.");
   }
 
-  if (form) {
-    form.onsubmit = async (e) => {
-      e.preventDefault();
-      errorMsg.textContent = "";
-      const full_name = form.full_name.value.trim();
-      const email = form.email.value.trim();
-      const contact_number = form.contact_number.value.trim();
-      const role = form.role.value;
-      const password = form.password.value;
-      const confirm_password = form.confirm_password.value;
-      if (password !== confirm_password) {
-        errorMsg.textContent = "Passwords do not match.";
-        return;
-      }
-      try {
-        const res = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({ full_name, email, contact_number, role, password })
-        });
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          errorMsg.textContent = data.error || "Failed to add user.";
-          return;
-        }
-        alert("User added successfully!");
-        window.location.href = "profiles.html";
-      } catch (err) {
-        errorMsg.textContent = "Error adding user.";
-        console.error(err);
-      }
-    };
+  if (!/^[0-9+\- ]+$/.test(contact_number)) {
+    return showError("Contact number must contain only digits, +, -, or spaces.");
+  }
+
+  if (password.length < 6) {
+    return showError("Password must be at least 6 characters.");
+  }
+
+  if (password !== confirm_password) {
+    return showError("Passwords do not match.");
+  }
+
+  if (!role) {
+    return showError("Please select a role.");
+  }
+
+  // Disable button during submission
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Creating account...";
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        full_name,
+        email,
+        contact_number,
+        role,
+        password
+      })
+    });
+
+    // Check if the response is not JSON
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+        const textResponse = await res.text();
+        console.error("Server returned non-JSON response:", textResponse);
+        throw new Error(`Server error: ${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      // Log the full error from the backend
+      console.error("Signup failed with status:", res.status, "Response:", data);
+      showError(data.error || "Sign up failed. Check console for details.");
+      return;
+    }
+
+    alert("Account created successfully! Please log in.");
+    window.location.href = "login.html";
+
+  } catch (err) {
+    console.error("An unexpected error occurred during signup:", err);
+    showError("Something went wrong. Please check the console and try again.");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Sign Up";
   }
 });
