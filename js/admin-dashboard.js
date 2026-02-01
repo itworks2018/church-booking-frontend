@@ -49,10 +49,12 @@ function populatePendingTable(items) {
         <td class="p-3">${escapeHtml(new Date(item.end_datetime).toLocaleString())}</td>
         <td class="p-3">${escapeHtml(item.status || "")}</td>
         <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
-        <td class="p-3 space-x-2">
-          <button class="bg-blue-500 text-white px-2 py-1 rounded review-btn" data-id="${item.booking_id}">Review</button>
-          <button class="bg-green-500 text-white px-2 py-1 rounded approve-btn" data-id="${item.booking_id}">Approve</button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded reject-btn" data-id="${item.booking_id}">Reject</button>
+        <td class="p-3">
+          <div class="flex flex-row gap-2 justify-center">
+            <button class="review-btn min-w-[90px] px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" data-id="${item.booking_id}">Review</button>
+            <button class="approve-btn min-w-[90px] px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition" data-id="${item.booking_id}">Approve</button>
+            <button class="reject-btn min-w-[90px] px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" data-id="${item.booking_id}">Reject</button>
+          </div>
         </td>
       `;
 

@@ -33,10 +33,12 @@ async function loadApprovedEvents() {
         <td class="p-3 border">${item.additional_needs || "None"}</td>
         <td class="p-3 border">${item.status}</td>
         <td class="p-3 border">${new Date(item.created_at).toLocaleString("en-US", { hour12: true })}</td>
-        <td class="p-3 border space-x-2">
-          <button class="bg-blue-500 text-white px-2 py-1 rounded view-btn" data-id="${item.booking_id}">View</button>
-          <button class="bg-yellow-500 text-white px-2 py-1 rounded edit-btn" data-id="${item.booking_id}">Edit</button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded delete-btn" data-id="${item.booking_id}">Delete</button>
+        <td class="p-3 border">
+          <div class="flex flex-row gap-2 justify-center">
+            <button class="view-btn min-w-[80px] px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" data-id="${item.booking_id}">View</button>
+            <button class="edit-btn min-w-[80px] px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition" data-id="${item.booking_id}">Edit</button>
+            <button class="delete-btn min-w-[80px] px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" data-id="${item.booking_id}">Delete</button>
+          </div>
         </td>
       `;
 

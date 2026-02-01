@@ -6,14 +6,20 @@
   <title>Add User – Admin Only</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-    <h2 class="text-2xl font-bold text-center mb-6">Add User (Admin Only)</h2>
+<body class="bg-white text-gray-800">
+  <h2 class="text-2xl font-bold mb-6">Add User (Admin Only)</h2>
+  <form id="adminAddUserForm" class="space-y-4 max-w-xl">
     <p id="adminAddUserError" class="text-red-500 text-sm mb-2"></p>
-    <form id="adminAddUserForm" class="space-y-4">
+    <div>
       <input type="text" id="full_name" name="full_name" placeholder="Full Name" maxlength="100" class="w-full px-4 py-2 rounded border" required />
+    </div>
+    <div>
       <input type="email" id="email" name="email" placeholder="Email" maxlength="120" class="w-full px-4 py-2 rounded border" required />
+    </div>
+    <div>
       <input type="tel" id="contact_number" name="contact_number" placeholder="Contact Number" maxlength="15" class="w-full px-4 py-2 rounded border" required />
+    </div>
+    <div>
       <select id="role" name="role" class="w-full px-4 py-2 rounded border" required>
         <option value="">Select Role</option>
         <option value="dgroup_leader">DGroup Leader</option>
@@ -23,14 +29,18 @@
         <option value="new_member">New Member</option>
         <option value="admin">Admin</option>
       </select>
+    </div>
+    <div>
       <input type="password" id="password" name="password" placeholder="Password" minlength="6" class="w-full px-4 py-2 rounded border" required />
+    </div>
+    <div>
       <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" minlength="6" class="w-full px-4 py-2 rounded border" required />
-      <div class="flex justify-end space-x-2">
-        <button type="button" id="cancelAdminAddUser" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Add User</button>
-      </div>
-    </form>
-  </div>
+    </div>
+    <div class="flex justify-end space-x-2">
+      <button type="button" id="cancelAdminAddUser" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Add User</button>
+    </div>
+  </form>
   <script src="../../js/admin-add-user.js"></script>
 </body>
 </html>
