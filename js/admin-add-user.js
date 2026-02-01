@@ -80,8 +80,10 @@ signupForm.addEventListener("submit", async (e) => {
       return;
     }
 
-    alert("Account created successfully! Please log in.");
-    window.location.href = "login.html";
+    alert("New user account created successfully!");
+    signupForm.reset();
+    // Prevent page refresh
+    return false;
 
   } catch (err) {
     console.error("An unexpected error occurred during signup:", err);
