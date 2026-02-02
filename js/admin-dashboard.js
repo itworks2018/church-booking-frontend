@@ -102,7 +102,7 @@ function showReviewModal(booking) {
     <p><strong>Start:</strong> ${escapeHtml(new Date(booking.start_datetime).toLocaleString())}</p>
     <p><strong>End:</strong> ${escapeHtml(new Date(booking.end_datetime).toLocaleString())}</p>
     <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
-    <p><strong>Created At:</strong> ${escapeHtml(new Date(booking.created_at).toLocaleString())}</p>
+    <p><strong>Created At:</strong> ${escapeHtml(new Date(booking.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</p>
     <p><strong>Additional Needs:</strong> ${escapeHtml(booking.additional_needs || "None")}</p>
   `;
 
@@ -269,7 +269,7 @@ if (calendarEl && window.FullCalendar) {
         <p><strong>Start:</strong> ${new Date(info.event.start).toLocaleString("en-US", { hour12: true })}</p>
         <p><strong>End:</strong> ${info.event.end ? new Date(info.event.end).toLocaleString("en-US", { hour12: true }) : "N/A"}</p>
         <p><strong>Additional Needs:</strong> ${booking.additional_needs || "None"}</p>
-        <p><strong>Created At:</strong> ${new Date(booking.created_at).toLocaleString("en-US", { hour12: true })}</p>
+        <p><strong>Created At:</strong> ${new Date(booking.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true })}</p>
         <p><strong>Status:</strong> ${booking.status}</p>
       `;
 
