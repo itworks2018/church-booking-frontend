@@ -9,23 +9,17 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
 </head>
 <body class="bg-blue-100 text-gray-800">
-  <!-- ✅ NAVBAR (Updated with working links) -->
-  <div id="navbar"></div>
-  <script>
-    fetch("components/navbar.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("navbar").innerHTML = html;
-        // Remove dashboard-only sidebar elements so they don't appear on the public index page
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("sidebarOverlay");
-        const sidebarToggle = document.getElementById("sidebarToggle");
-        if (sidebar) sidebar.remove();
-        if (overlay) overlay.remove();
-        if (sidebarToggle) sidebarToggle.remove();
-      })
-      .catch(err => console.error("Failed to load navbar:", err));
-  </script>
+  <!-- ✅ CUSTOM NAVBAR -->
+  <nav class="w-full bg-[#258ba3] py-6 px-8 flex justify-between items-center">
+    <span class="text-3xl font-extrabold text-white tracking-wide">CCF SANDOVAL EVENTS</span>
+    <div class="flex space-x-8 text-white text-2xl font-bold">
+      <a href="/index.html" class="hover:underline">Home</a>
+      <span>|</span>
+      <a href="#ministries" class="hover:underline">Ministries</a>
+      <span>|</span>
+      <a href="#venue" class="hover:underline">Venue</a>
+    </div>
+  </nav>
 
   <!-- ✅ HERO BANNER -->
   <div id="hero"></div>
@@ -35,28 +29,12 @@
       .then(html => document.getElementById("hero").innerHTML = html);
   </script>
 
-  <!-- ✅ ANNOUNCEMENT CAROUSEL -->
-  <div id="carousel"></div>
-  <script>
-    fetch("components/carousel.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("carousel").innerHTML = html);
-  </script>
-
-  <!-- ✅ MEET THE PASTORS / MINISTRIES -->
+  <!-- ✅ MINISTRIES SLIDER -->
   <div id="ministries"></div>
   <script>
     fetch("components/ministries.html")
       .then(res => res.text())
       .then(html => document.getElementById("ministries").innerHTML = html);
-  </script>
-
-  <!-- ✅ EVENTS SECTION (70% Upcoming / 30% Regular) -->
-  <div id="events"></div>
-  <script>
-    fetch("components/events.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("events").innerHTML = html);
   </script>
 
   <!-- ✅ FOOTER -->
