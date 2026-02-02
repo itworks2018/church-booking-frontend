@@ -42,10 +42,7 @@
 
         <div id="profileDropdown"
              class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded hidden border">
-          <a href="/login.html"
-             class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700">
-            Log Out
-          </a>
+          <button id="logout-btn" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700">Log Out</button>
         </div>
       </div>
     </div>
@@ -173,13 +170,21 @@
       });
     }
 
-    /* PROFILE DROPDOWN */
+    /* PROFILE DROPDOWN & LOGOUT */
     const profileBtn = document.getElementById("profileMenuBtn");
     const profileDropdown = document.getElementById("profileDropdown");
+    const logoutBtn = document.getElementById("logout-btn");
 
     if (profileBtn && profileDropdown) {
       profileBtn.addEventListener("click", () => {
         profileDropdown.classList.toggle("hidden");
+      });
+    }
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        // Use the same logout logic as user.js
+        localStorage.removeItem("access_token");
+        window.location.href = "/index.html";
       });
     }
 
