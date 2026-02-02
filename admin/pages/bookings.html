@@ -1,90 +1,91 @@
-<h2 class="text-2xl font-bold mb-6 text-gray-800">Create Event</h2>
+<div class="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
+  <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8 w-full max-w-lg">
+    <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800 dark:text-gray-200">Create Event</h2>
+    <form class="space-y-6">
 
-<form class="space-y-6">
+      <!-- Event Name -->
+      <div class="flex flex-col">
+        <label class="mb-1 font-medium text-gray-700 dark:text-gray-200">Event Name</label>
+        <input 
+          type="text"
+          placeholder="Enter event name"
+          class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
 
-  <!-- Event Name -->
-  <div class="flex flex-col">
-    <label class="mb-1 font-medium text-gray-700">Event Name</label>
-    <input 
-      type="text"
-      placeholder="Enter event name"
-      class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    />
+      <!-- Purpose -->
+      <div class="flex flex-col">
+        <label class="mb-1 font-medium text-gray-700 dark:text-gray-200">Purpose</label>
+        <textarea
+          placeholder="Describe the purpose of the event"
+          class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200 h-28 resize-none
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        ></textarea>
+      </div>
+
+      <!-- Number of Attendees -->
+      <div class="flex flex-col">
+        <label class="mb-1 font-medium text-gray-700 dark:text-gray-200">Number of Attendees</label>
+        <input 
+          type="number"
+          placeholder="Enter expected number of attendees"
+          class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+
+      <!-- Venue -->
+      <div class="flex flex-col">
+        <label class="mb-1 font-medium text-gray-700 dark:text-gray-200">Venue</label>
+        <select
+          class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option>Main Hall</option>
+          <option>Phase A Area 1</option>
+          <option>Phase 2 Area B</option>
+          <option>NxtGen Room</option>
+        </select>
+      </div>
+
+      <!-- Date & Time -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col">
+          <label class="mb-1 font-medium text-gray-700 dark:text-gray-200">Start Date & Time</label>
+          <input 
+            type="datetime-local"
+            class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <label class="mb-1 font-medium text-gray-700 dark:text-gray-200">End Date & Time</label>
+          <input 
+            type="datetime-local"
+            class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+      </div>
+
+      <!-- Description / Additional Instructions -->
+      <div class="flex flex-col">
+        <label class="mb-1 font-medium text-gray-700 dark:text-gray-200">Description / Additional Instructions</label>
+        <textarea
+          placeholder="Hosting, music, tech requirements, special instructions, etc."
+          class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200 h-32 resize-none
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        ></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition-all duration-150 w-full"
+      >
+        Submit Event
+      </button>
+    </form>
   </div>
-
-  <!-- Purpose -->
-  <div class="flex flex-col">
-    <label class="mb-1 font-medium text-gray-700">Purpose</label>
-    <textarea
-      placeholder="Describe the purpose of the event"
-      class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 h-28 resize-none
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    ></textarea>
-  </div>
-
-  <!-- Number of Attendees -->
-  <div class="flex flex-col">
-    <label class="mb-1 font-medium text-gray-700">Number of Attendees</label>
-    <input 
-      type="number"
-      placeholder="Enter expected number of attendees"
-      class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    />
-  </div>
-
-  <!-- Venue -->
-  <div class="flex flex-col">
-    <label class="mb-1 font-medium text-gray-700">Venue</label>
-    <select
-      class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    >
-      <option>Main Hall</option>
-      <option>Phase A Area 1</option>
-      <option>Phase 2 Area B</option>
-      <option>NxtGen Room</option>
-    </select>
-  </div>
-
-  <!-- Date & Time -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="flex flex-col">
-      <label class="mb-1 font-medium text-gray-700">Start Date & Time</label>
-      <input 
-        type="datetime-local"
-        class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800
-               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      />
-    </div>
-
-    <div class="flex flex-col">
-      <label class="mb-1 font-medium text-gray-700">End Date & Time</label>
-      <input 
-        type="datetime-local"
-        class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800
-               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      />
-    </div>
-  </div>
-
-  <!-- Description / Additional Instructions -->
-  <div class="flex flex-col">
-    <label class="mb-1 font-medium text-gray-700">Description / Additional Instructions</label>
-    <textarea
-      placeholder="Hosting, music, tech requirements, special instructions, etc."
-      class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 h-32 resize-none
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    ></textarea>
-  </div>
-
-  <!-- Submit Button -->
-  <button
-    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow 
-           transition-all duration-150"
-  >
-    Submit Event
-  </button>
-
-</form>
+</div>
