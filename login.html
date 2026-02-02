@@ -46,71 +46,41 @@
 
   <!-- LOGIN LOGIC -->
   <script type="module">
-    import { apiRequest, setToken, setRole } from './js/api.js'
-
-    const API_BASE_URL = "https://church-booking-backend.onrender.com";
+    import { apiRequest, setToken, setRole } from './js/api.js';
     const USER_ADMIN_EMAIL = "admin@church.com";
-
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  
-          method: "POST",
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const loginButton = e.target.querySelector('button[type="submit"]');
+      // Prevent admin from using user login
+      if (email === USER_ADMIN_EMAIL) {
+        alert("Admins must use the ADMIN login page.");
+        return;
+      }
+      loginButton.disabled = true;
+      loginButton.textContent = "Logging in...";
+      try {
+        const data = await apiRequest('/auth/login', {
+          method: 'POST',
           body: JSON.stringify({ email, password })
         });
-
-        if (!data.token || !data.user?.email) {
+        if (!data.token || !data.user || !data.user.email) {
           alert("Invalid server response.");
           return;
         }
-
-        // ⭐ ORIGINAL FLOW — but token stored correctly
         setToken(data.token); // stores as access_token
-
-        <!-- LOGIN LOGIC -->
-        <script type="module">
-          import { apiRequest, setToken, setRole } from './js/api.js';
-
-          const USER_ADMIN_EMAIL = "admin@church.com";
-
-          document.getElementById("loginForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value;
-            const loginButton = e.target.querySelector('button[type="submit"]');
-
-            // Prevent admin from using user login
-            if (email === USER_ADMIN_EMAIL) {
-              alert("Admins must use the ADMIN login page.");
-              return;
-            }
-
-            loginButton.disabled = true;
-            loginButton.textContent = "Logging in...";
-
-            try {
-              const data = await apiRequest('/auth/login', {
-                method: 'POST',
-                body: JSON.stringify({ email, password })
-              });
-
-              if (!data.token || !data.user || !data.user.email) {
-                alert("Invalid server response.");
-                return;
-              }
-
-              setToken(data.token); // stores as access_token
-              setRole(data.user.role);
-              localStorage.setItem("email", data.user.email);
-              localStorage.setItem("full_name", data.user.full_name);
-
-              // Redirect to user dashboard
-              window.location.href = "user/maindashboard.html";
-
-            } catch (err) {
-              console.error(err);
-              alert(err.message || "Login failed");
-            } finally {
-              loginButton.disabled = false;
-              loginButton.textContent = "Log In";
-            }
-          });
-        </script>
+        setRole(data.user.role);
+        localStorage.setItem("email", data.user.email);
+        localStorage.setItem("full_name", data.user.full_name);
+        // Redirect to user dashboard
+        window.location.href = "user/maindashboard.html";
+      } catch (err) {
+        console.error(err);
+        alert(err.message || "Login failed");
+      } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = "Log In";
+      }
+    });
+  </script>
