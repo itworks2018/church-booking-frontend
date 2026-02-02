@@ -26,9 +26,11 @@ async function loadProfiles() {
         <td class="p-3 border">${user.email}</td>
         <td class="p-3 border">${user.role}</td>
         <td class="p-3 border">${new Date(user.created_at).toLocaleString("en-US", { hour12: true })}</td>
-        <td class="p-3 border space-x-2">
-          <button class="bg-yellow-500 text-white px-2 py-1 rounded edit-profile-btn" data-id="${user.user_id}">Edit</button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded delete-profile-btn" data-id="${user.user_id}">Delete</button>
+        <td class="p-3 border">
+          <div class="flex flex-row gap-2 justify-center">
+            <button class="bg-yellow-500 text-white px-4 py-1 rounded edit-profile-btn" data-id="${user.user_id}">Edit</button>
+            <button class="bg-red-500 text-white px-4 py-1 rounded delete-profile-btn" data-id="${user.user_id}">Delete</button>
+          </div>
         </td>
       `;
       tbody.appendChild(tr);
@@ -62,12 +64,12 @@ async function loadProfiles() {
 async function deleteProfile(id) {
   try {
     const token = localStorage.getItem("access_token");
-    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profile/${user_id}`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/profile/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error("Failed to delete user");
-    console.log(`User ${user_id} deleted`);
+    console.log(`User ${id} deleted`);
   } catch (err) {
     console.error("deleteProfile error:", err);
   }

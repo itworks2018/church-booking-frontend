@@ -1,3 +1,14 @@
+<!-- FullCalendar Container and Legend -->
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 w-full mb-6">
+  <div id="fullcalendar"></div>
+  <div id="calendar-legend"></div>
+</div>
+<script>
+  fetch("calendar-legend.html")
+    .then(res => res.text())
+    .then(html => document.getElementById("calendar-legend").innerHTML = html);
+</script>
+<script src="/js/admin-calendar.js"></script>
 <!-- FullCalendar Professional Responsive CSS -->
 <style>
   #fullcalendar {
