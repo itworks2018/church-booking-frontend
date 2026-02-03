@@ -83,14 +83,22 @@ async function loadCalendarEvents() {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      },
+      views: {
+        listMonth: { buttonText: 'List' }
       },
       events: filtered.map(b => ({
         id: b.id || b.booking_id,
         title: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
         start: b.start_datetime,
         end: b.end_datetime,
-        color: b.status === "Approved" ? "blue" : "orange",
+        className: [
+          b.status === "Approved" ? "fc-event-approved" :
+          b.status === "Pending" ? "fc-event-pending" :
+          b.status === "Rejected" ? "fc-event-rejected" :
+          b.status === "Canceled" ? "fc-event-canceled" : ""
+        ],
         extendedProps: { ...b }
       })),
       eventClick: function(info) {
