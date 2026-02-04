@@ -84,19 +84,65 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Invalid server response");
       }
 
+
       if (!res.ok) {
-        alert(data.error || "Booking failed");
+        // Show error notification at top
+        const notif = document.createElement("div");
+        notif.textContent = data.error || "Booking failed";
+        notif.style.position = "fixed";
+        notif.style.top = "30px";
+        notif.style.left = "50%";
+        notif.style.transform = "translateX(-50%)";
+        notif.style.background = "#ef4444";
+        notif.style.color = "white";
+        notif.style.padding = "16px 32px";
+        notif.style.borderRadius = "8px";
+        notif.style.fontSize = "1.1rem";
+        notif.style.zIndex = 9999;
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 2500);
         btn.disabled = false;
         btn.textContent = "Submit Event";
         return;
       }
 
-      alert("Booking created successfully!");
-      window.location.href = "/admin/pages/dashboard.html";
+
+      // Show notification before redirect
+      const notif = document.createElement("div");
+      notif.textContent = "Booking created successfully! Redirecting to dashboard...";
+      notif.style.position = "fixed";
+      notif.style.top = "30px";
+      notif.style.left = "50%";
+      notif.style.transform = "translateX(-50%)";
+      notif.style.background = "#22c55e";
+      notif.style.color = "white";
+      notif.style.padding = "16px 32px";
+      notif.style.borderRadius = "8px";
+      notif.style.fontSize = "1.1rem";
+      notif.style.zIndex = 9999;
+      document.body.appendChild(notif);
+      setTimeout(() => {
+        notif.remove();
+        window.location.href = "/admin/pages/dashboard.html";
+      }, 1800);
 
     } catch (err) {
       console.error(err);
-      alert("Something went wrong. Please try again.");
+      // Show error notification at top
+      const notif = document.createElement("div");
+      notif.textContent = "Something went wrong. Please try again.";
+      notif.style.position = "fixed";
+      notif.style.top = "30px";
+      notif.style.left = "50%";
+      notif.style.transform = "translateX(-50%)";
+      notif.style.background = "#ef4444";
+      notif.style.color = "white";
+      notif.style.padding = "16px 32px";
+      notif.style.borderRadius = "8px";
+      notif.style.fontSize = "1.1rem";
+      notif.style.zIndex = 9999;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 2500);
     } finally {
       btn.disabled = false;
       btn.textContent = "Submit Event";
