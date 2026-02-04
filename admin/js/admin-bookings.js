@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Show notification before redirect
       const notif = document.createElement("div");
-      notif.textContent = "Booking created successfully! Redirecting to dashboard...";
+      notif.textContent = "Booking created successfully!";
       notif.style.position = "fixed";
       notif.style.top = "30px";
       notif.style.left = "50%";
@@ -121,10 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       notif.style.fontSize = "1.1rem";
       notif.style.zIndex = 9999;
       document.body.appendChild(notif);
-      setTimeout(() => {
-        notif.remove();
-        window.location.href = "/admin/pages/dashboard.html";
-      }, 1800);
+      setTimeout(() => notif.remove(), 2500);
 
     } catch (err) {
       console.error(err);
