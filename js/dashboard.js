@@ -37,72 +37,19 @@ async function loadUserBookings() {
       return;
     }
     // Only show pending and approved
-    const bookings = data.filter(b => b.status === "Pending" || b.status === "Approved");
-
-    // Pagination logic
-    const pageSize = 5;
-    let currentPage = 1;
-    const totalPages = Math.ceil(bookings.length / pageSize);
-
-    function renderTablePage(page) {
-      tbody.innerHTML = "";
-      const start = (page - 1) * pageSize;
-      const end = start + pageSize;
-      bookings.slice(start, end).forEach(b => {
-        const row = `
-          <tr>
-            <td class="border px-3 py-2">${b.event_name}</td>
-            <td class="border px-3 py-2">${b.venue}</td>
-            <td class="border px-3 py-2">${new Date(b.start_datetime).toLocaleString()}</td>
-            <td class="border px-3 py-2">${new Date(b.end_datetime).toLocaleString()}</td>
-            <td class="border px-3 py-2 capitalize">${b.status}</td>
-            <td class="border px-3 py-2">${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</td>
-          </tr>
-        `;
-        tbody.insertAdjacentHTML("beforeend", row);
-      });
-    }
-
-    function renderPagination() {
-      const nav = document.getElementById("userBookingsPagination");
-      const pagesDiv = document.getElementById("userBookingsPages");
-      if (bookings.length > pageSize) {
-        nav.style.display = "flex";
-        pagesDiv.innerHTML = "";
-        for (let i = 1; i <= totalPages; i++) {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "btn btn-soft btn-square aria-[current='page']:text-bg-soft-primary";
-          if (i === currentPage) btn.setAttribute("aria-current", "page");
-          btn.textContent = i;
-          btn.onclick = () => {
-            currentPage = i;
-            renderTablePage(currentPage);
-            renderPagination();
-          };
-          pagesDiv.appendChild(btn);
-        }
-        document.getElementById("userBookingsPrev").onclick = () => {
-          if (currentPage > 1) {
-            currentPage--;
-            renderTablePage(currentPage);
-            renderPagination();
-          }
-        };
-        document.getElementById("userBookingsNext").onclick = () => {
-          if (currentPage < totalPages) {
-            currentPage++;
-            renderTablePage(currentPage);
-            renderPagination();
-          }
-        };
-      } else {
-        nav.style.display = "none";
-      }
-    }
-
-    renderTablePage(currentPage);
-    renderPagination();
+    data.filter(b => b.status === "Pending" || b.status === "Approved").forEach(b => {
+      const row = `
+        <tr>
+          <td class="border px-3 py-2">${b.event_name}</td>
+          <td class="border px-3 py-2">${b.venue}</td>
+          <td class="border px-3 py-2">${new Date(b.start_datetime).toLocaleString()}</td>
+          <td class="border px-3 py-2">${new Date(b.end_datetime).toLocaleString()}</td>
+          <td class="border px-3 py-2 capitalize">${b.status}</td>
+          <td class="border px-3 py-2">${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</td>
+        </tr>
+      `;
+      tbody.insertAdjacentHTML("beforeend", row);
+    });
   } catch (err) {
     console.error("Error loading bookings:", err);
   }
@@ -136,22 +83,14 @@ async function loadCalendarEvents() {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-      },
-      views: {
-        listMonth: { buttonText: 'List' }
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       events: filtered.map(b => ({
         id: b.id || b.booking_id,
         title: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
         start: b.start_datetime,
         end: b.end_datetime,
-        className: [
-          b.status === "Approved" ? "fc-event-approved" :
-          b.status === "Pending" ? "fc-event-pending" :
-          b.status === "Rejected" ? "fc-event-rejected" :
-          b.status === "Canceled" ? "fc-event-canceled" : ""
-        ],
+        color: b.status === "Approved" ? "blue" : "orange",
         extendedProps: { ...b }
       })),
       eventClick: function(info) {
@@ -170,20 +109,15 @@ async function loadCalendarEvents() {
           <div><strong>Requested At:</strong> ${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</div>
         `;
         modal.classList.remove('hidden');
-        modal.classList.add('modal-open');
       }
     });
     calendar.render();
-    // Modal close logic for FlyonUI modal
-    function closeBookingModal() {
-      const modal = document.getElementById('bookingModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('modal-open');
-    }
-    document.getElementById('closeBookingModal').onclick = closeBookingModal;
-    document.getElementById('closeBookingModalFooter').onclick = closeBookingModal;
+    // Modal close logic
+    document.getElementById('closeBookingModal').onclick = function() {
+      document.getElementById('bookingModal').classList.add('hidden');
+    };
     document.getElementById('bookingModal').onclick = function(e) {
-      if (e.target === this) closeBookingModal();
+      if (e.target === this) this.classList.add('hidden');
     };
   } catch (err) {
     console.error("Failed to load bookings:", err);
