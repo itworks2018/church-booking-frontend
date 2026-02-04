@@ -106,12 +106,24 @@
   </div>
     </div>
 
-<!-- Booking Details Modal -->
-<div id="bookingModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-  <div class="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-2xl w-full p-8 relative">
-    <button id="closeBookingModal" class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-800">&times;</button>
-    <h2 class="text-2xl font-bold mb-4">Booking Details</h2>
-    <div id="bookingModalContent" class="text-lg space-y-2"></div>
+
+<!-- Booking Details Modal (FlyonUI) -->
+<div id="bookingModal" class="overlay modal overlay-open:opacity-100 overlay-open:duration-300 modal-middle hidden" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Booking Details</h3>
+        <button type="button" class="btn btn-text btn-circle btn-sm absolute end-3 top-3" aria-label="Close" id="closeBookingModal" data-overlay="#bookingModal">
+          <span class="icon-[tabler--x] size-4">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="bookingModalContent" class="text-lg space-y-2"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-soft btn-secondary" id="closeBookingModalFooter" data-overlay="#bookingModal">Close</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -143,4 +155,13 @@
     </tbody>
   </table>
 </div>
+
+  <!-- Pagination for Booking Table (FlyonUI) -->
+  <nav id="userBookingsPagination" class="flex items-center gap-x-1 justify-center my-4" style="display:none">
+    <button type="button" class="btn btn-soft" id="userBookingsPrev">Previous</button>
+    <div class="flex items-center gap-x-1" id="userBookingsPages">
+      <!-- Page buttons inserted dynamically -->
+    </div>
+    <button type="button" class="btn btn-soft" id="userBookingsNext">Next</button>
+  </nav>
 
