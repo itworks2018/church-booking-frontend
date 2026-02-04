@@ -14,15 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.textContent = "Submitting...";
     }
 
-    // Collect form values
-    const event_name = form.querySelector("input[type='text']").value.trim();
-    const purpose = form.querySelector("textarea").value.trim();
-    const attendees = Number(form.querySelector("input[type='number']").value);
-    const venue = form.querySelector("select").value;
-    const [startInput, endInput] = form.querySelectorAll("input[type='datetime-local']");
-    const start_datetime = startInput.value;
-    const end_datetime = endInput.value;
-    const additional_needs = form.querySelectorAll("textarea")[1]?.value.trim() || "";
+    // Collect form values by name
+    const event_name = form.elements["event_name"].value.trim();
+    const purpose = form.elements["purpose"].value.trim();
+    const attendees = Number(form.elements["attendees"].value);
+    const venue = form.elements["venue"].value;
+    const start_datetime = form.elements["start_datetime"].value;
+    const end_datetime = form.elements["end_datetime"].value;
+    const additional_needs = form.elements["additional_needs"]?.value.trim() || "";
 
     // Basic validation
     if (!event_name || !purpose || !attendees || !venue || !start_datetime || !end_datetime) {
