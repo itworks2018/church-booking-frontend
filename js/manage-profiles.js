@@ -14,27 +14,94 @@ async function loadProfiles() {
     const tbody = document.getElementById("usersTable");
     if (!tbody) return;
 
-    tbody.innerHTML = "";
 
-    items.forEach(user => {
-      const tr = document.createElement("tr");
-      tr.className = "border-b";
+    // Pagination logic
+    const pageSize = 10;
+    let currentPage = 1;
+    const totalPages = Math.ceil(items.length / pageSize);
 
-      tr.innerHTML = `
-        <td class="p-3 border">${user.user_id}</td>
-        <td class="p-3 border">${user.full_name || ""}</td>
-        <td class="p-3 border">${user.email}</td>
-        <td class="p-3 border">${user.role}</td>
-        <td class="p-3 border">${new Date(user.created_at).toLocaleString("en-US", { hour12: true })}</td>
-        <td class="p-3 border">
-          <div class="flex flex-row gap-2 justify-center">
-            <button class="bg-yellow-500 text-white px-4 py-1 rounded edit-profile-btn" data-id="${user.user_id}">Edit</button>
-            <button class="bg-red-500 text-white px-4 py-1 rounded delete-profile-btn" data-id="${user.user_id}">Delete</button>
-          </div>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
+    function renderTablePage(page) {
+      tbody.innerHTML = "";
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize;
+      items.slice(start, end).forEach(user => {
+        const tr = document.createElement("tr");
+        tr.className = "border-b";
+        tr.innerHTML = `
+          <td class="p-3 border">${user.user_id}</td>
+          <td class="p-3 border">${user.full_name || ""}</td>
+          <td class="p-3 border">${user.email}</td>
+          <td class="p-3 border">${user.role}</td>
+          <td class="p-3 border">${new Date(user.created_at).toLocaleString("en-US", { hour12: true })}</td>
+          <td class="p-3 border">
+            <div class="flex flex-row gap-2 justify-center">
+              <button class="bg-yellow-500 text-white px-4 py-1 rounded edit-profile-btn" data-id="${user.user_id}">Edit</button>
+              <button class="bg-red-500 text-white px-4 py-1 rounded delete-profile-btn" data-id="${user.user_id}">Delete</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Attach handlers for current page
+      tbody.querySelectorAll(".edit-profile-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = e.target.dataset.id;
+          const user = items.find(u => u.user_id == id);
+          if (user) showEditProfileModal(user);
+        });
+      });
+      tbody.querySelectorAll(".delete-profile-btn").forEach(btn => {
+        btn.addEventListener("click", async e => {
+          const id = e.target.dataset.id;
+          if (confirm("Are you sure you want to delete this user?")) {
+            await deleteProfile(id);
+            loadProfiles();
+          }
+        });
+      });
+    }
+
+    function renderPagination() {
+      const nav = document.getElementById("profilesPagination");
+      const pagesDiv = document.getElementById("profilesPages");
+      if (items.length > pageSize) {
+        nav.style.display = "flex";
+        pagesDiv.innerHTML = "";
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn btn-soft btn-square aria-[current='page']:text-bg-soft-primary";
+          if (i === currentPage) btn.setAttribute("aria-current", "page");
+          btn.textContent = i;
+          btn.onclick = () => {
+            currentPage = i;
+            renderTablePage(currentPage);
+            renderPagination();
+          };
+          pagesDiv.appendChild(btn);
+        }
+        document.getElementById("profilesPrev").onclick = () => {
+          if (currentPage > 1) {
+            currentPage--;
+            renderTablePage(currentPage);
+            renderPagination();
+          }
+        };
+        document.getElementById("profilesNext").onclick = () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderTablePage(currentPage);
+            renderPagination();
+          }
+        };
+      } else {
+        nav.style.display = "none";
+      }
+    }
+
+    renderTablePage(currentPage);
+    renderPagination();
 
     // Attach handlers
     document.querySelectorAll(".edit-profile-btn").forEach(btn => {

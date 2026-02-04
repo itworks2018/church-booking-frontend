@@ -35,55 +35,101 @@ function populatePendingTable(items) {
     if (!tbody || !items || !Array.isArray(items)) return;
     tbody.innerHTML = "";
 
-    items.forEach((item) => {
-      const tr = document.createElement("tr");
-      tr.className = "border-b";
+    // Pagination logic
+    const pageSize = 5;
+    let currentPage = 1;
+    const totalPages = Math.ceil(items.length / pageSize);
 
-      tr.innerHTML = `
-        <td class="p-3">${escapeHtml(item.booking_id || "")}</td>
-        <td class="p-3">${escapeHtml(item.event_name || "")}</td>
-        <td class="p-3">${escapeHtml(item.purpose || "")}</td>
-        <td class="p-3">${escapeHtml(item.attendees || "")}</td>
-        <td class="p-3">${escapeHtml(item.venue || "")}</td>
-        <td class="p-3">${escapeHtml(new Date(item.start_datetime).toLocaleString())}</td>
-        <td class="p-3">${escapeHtml(new Date(item.end_datetime).toLocaleString())}</td>
-        <td class="p-3">${escapeHtml(item.status || "")}</td>
-        <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
-        <td class="p-3">
-          <div class="flex flex-row gap-2 justify-center">
-            <button class="review-btn min-w-[90px] px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" data-id="${item.booking_id}">Review</button>
-            <button class="approve-btn min-w-[90px] px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition" data-id="${item.booking_id}">Approve</button>
-            <button class="reject-btn min-w-[90px] px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" data-id="${item.booking_id}">Reject</button>
-          </div>
-        </td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-
-    // ✅ Attach button handlers
-    document.querySelectorAll(".review-btn").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const id = e.target.dataset.id;
-        const booking = items.find(b => b.booking_id === id);
-        if (booking) showReviewModal(booking);
+    function renderTablePage(page) {
+      tbody.innerHTML = "";
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize;
+      items.slice(start, end).forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.className = "border-b";
+        tr.innerHTML = `
+          <td class="p-3">${escapeHtml(item.booking_id || "")}</td>
+          <td class="p-3">${escapeHtml(item.event_name || "")}</td>
+          <td class="p-3">${escapeHtml(item.purpose || "")}</td>
+          <td class="p-3">${escapeHtml(item.attendees || "")}</td>
+          <td class="p-3">${escapeHtml(item.venue || "")}</td>
+          <td class="p-3">${escapeHtml(new Date(item.start_datetime).toLocaleString())}</td>
+          <td class="p-3">${escapeHtml(new Date(item.end_datetime).toLocaleString())}</td>
+          <td class="p-3">${escapeHtml(item.status || "")}</td>
+          <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
+          <td class="p-3">
+            <div class="flex flex-row gap-2 justify-center">
+              <button class="review-btn min-w-[90px] px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" data-id="${item.booking_id}">Review</button>
+              <button class="approve-btn min-w-[90px] px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition" data-id="${item.booking_id}">Approve</button>
+              <button class="reject-btn min-w-[90px] px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" data-id="${item.booking_id}">Reject</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
       });
-    });
 
-    document.querySelectorAll(".approve-btn").forEach(btn => {
-      btn.addEventListener("click", async (e) => {
-        const id = e.target.dataset.id;
-        await updateBookingStatus(id, "Approved");
+      // Attach button handlers for current page
+      tbody.querySelectorAll(".review-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const id = e.target.dataset.id;
+          const booking = items.find(b => b.booking_id === id);
+          if (booking) showReviewModal(booking);
+        });
       });
-    });
-
-    document.querySelectorAll(".reject-btn").forEach(btn => {
-      btn.addEventListener("click", async (e) => {
-        const id = e.target.dataset.id;
-        await updateBookingStatus(id, "Rejected");
+      tbody.querySelectorAll(".approve-btn").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+          const id = e.target.dataset.id;
+          await updateBookingStatus(id, "Approved");
+        });
       });
-    });
+      tbody.querySelectorAll(".reject-btn").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+          const id = e.target.dataset.id;
+          await updateBookingStatus(id, "Rejected");
+        });
+      });
+    }
 
+    function renderPagination() {
+      const nav = document.getElementById("adminBookingsPagination");
+      const pagesDiv = document.getElementById("adminBookingsPages");
+      if (items.length > pageSize) {
+        nav.style.display = "flex";
+        pagesDiv.innerHTML = "";
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn btn-soft btn-square aria-[current='page']:text-bg-soft-primary";
+          if (i === currentPage) btn.setAttribute("aria-current", "page");
+          btn.textContent = i;
+          btn.onclick = () => {
+            currentPage = i;
+            renderTablePage(currentPage);
+            renderPagination();
+          };
+          pagesDiv.appendChild(btn);
+        }
+        document.getElementById("adminBookingsPrev").onclick = () => {
+          if (currentPage > 1) {
+            currentPage--;
+            renderTablePage(currentPage);
+            renderPagination();
+          }
+        };
+        document.getElementById("adminBookingsNext").onclick = () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderTablePage(currentPage);
+            renderPagination();
+          }
+        };
+      } else {
+        nav.style.display = "none";
+      }
+    }
+
+    renderTablePage(currentPage);
+    renderPagination();
   } catch (e) {
     console.warn("populatePendingTable error:", e);
   }

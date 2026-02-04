@@ -15,12 +15,20 @@
     </tr>
   </thead>
 
-  <tbody id="usersTable">
     <tr>
       <td colspan="6" class="p-3 text-center text-gray-500">Loading users...</td>
     </tr>
   </tbody>
 </table>
+
+<!-- Pagination for Profiles Table (FlyonUI) -->
+<nav id="profilesPagination" class="flex items-center gap-x-1 justify-center my-4" style="display:none">
+  <button type="button" class="btn btn-soft" id="profilesPrev">Previous</button>
+  <div class="flex items-center gap-x-1" id="profilesPages">
+    <!-- Page buttons inserted dynamically -->
+  </div>
+  <button type="button" class="btn btn-soft" id="profilesNext">Next</button>
+</nav>
 
 <!-- ✅ Edit User Modal -->
 <div id="editUserModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
