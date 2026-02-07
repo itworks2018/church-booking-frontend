@@ -70,10 +70,14 @@ function populatePendingTable(items) {
 
       // Attach button handlers for current page
       tbody.querySelectorAll(".review-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
+        btn.addEventListener("click", async (e) => {
           const id = e.target.dataset.id;
           const booking = items.find(b => b.booking_id === id);
-          if (booking) showReviewModal(booking);
+          if (booking) {
+            // Log the review action
+            await logAuditAction(id, "Reviewed");
+            showReviewModal(booking);
+          }
         });
       });
       tbody.querySelectorAll(".approve-btn").forEach(btn => {
@@ -164,6 +168,29 @@ function showReviewModal(booking) {
 }
 
 
+// ✅ Helper to log audit action
+async function logAuditAction(booking_id, action) {
+  try {
+    const token = localStorage.getItem("access_token");
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/audit-logs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ booking_id, action }),
+    });
+
+    if (res.ok) {
+      console.log(`Audit log created for booking ${booking_id}: ${action}`);
+    } else {
+      console.error("Failed to create audit log:", res.status);
+    }
+  } catch (err) {
+    console.error("logAuditAction error:", err);
+  }
+}
+
 // ✅ Helper to update booking status
 async function updateBookingStatus(id, status) {
   try {
@@ -179,6 +206,8 @@ async function updateBookingStatus(id, status) {
 
     if (res.ok) {
       console.log(`Booking ${id} updated to ${status}`);
+      // Log the action
+      await logAuditAction(id, status);
       // Refresh dashboard after update
       initAdminDashboard();
     } else {

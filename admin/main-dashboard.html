@@ -44,7 +44,7 @@
         <button onclick="loadPage('dashboard.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Dashboard</button>
         <button onclick="loadPage('manage-events.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Manage Events</button>
         <button onclick="loadPage('profiles.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Profile</button>
-        <button onclick="loadPage('resources.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Resources</button>
+        <button onclick="loadPage('logs.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Logs</button>
         <button disabled class="w-full text-left p-2 rounded bg-gray-700 text-gray-500 cursor-not-allowed">More features soon</button>
       </nav>
     </aside>
@@ -158,6 +158,24 @@
             // Setup the Add User modal event listeners
             if (typeof setupAddUserModal === "function") {
               setupAddUserModal();
+            }
+          };
+
+          document.body.appendChild(script);
+        }
+
+        // ✅ Logs block
+        if (page === "logs.html") {
+          const oldScript = document.getElementById("auditLogsScript");
+          if (oldScript) oldScript.remove();
+
+          const script = document.createElement("script");
+          script.src = "/js/audit-logs.js";
+          script.id = "auditLogsScript";
+
+          script.onload = () => {
+            if (typeof loadAuditLogs === "function") {
+              loadAuditLogs();
             }
           };
 
