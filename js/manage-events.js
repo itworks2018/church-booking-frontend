@@ -86,8 +86,10 @@ async function loadApprovedEvents() {
         for (let i = 1; i <= totalPages; i++) {
           const btn = document.createElement("button");
           btn.type = "button";
-          btn.className = "btn btn-soft btn-square aria-[current='page']:text-bg-soft-primary";
-          if (i === currentPage) btn.setAttribute("aria-current", "page");
+          const isActive = i === currentPage;
+          btn.className = isActive 
+            ? "px-3 py-2 bg-blue-600 text-white rounded font-semibold transition"
+            : "px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition";
           btn.textContent = i;
           btn.onclick = () => {
             currentPage = i;

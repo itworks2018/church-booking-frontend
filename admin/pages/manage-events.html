@@ -27,13 +27,13 @@
   </tbody>
 </table>
 
-<!-- Pagination for Events Table (FlyonUI) -->
-<nav id="eventsPagination" class="flex items-center gap-x-1 justify-center my-4 hidden">
-  <button type="button" class="btn btn-soft" id="eventsPrev">Previous</button>
-  <div class="flex items-center gap-x-1" id="eventsPages">
+<!-- Pagination for Events Table -->
+<nav id="eventsPagination" class="flex items-center justify-center gap-2 my-6 px-4 py-3 bg-gray-800 dark:bg-gray-900 rounded-lg hidden">
+  <button type="button" id="eventsPrev" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">&lt;</button>
+  <div class="flex items-center gap-1" id="eventsPages">
     <!-- Page buttons inserted dynamically -->
   </div>
-  <button type="button" class="btn btn-soft" id="eventsNext">Next</button>
+  <button type="button" id="eventsNext" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">&gt;</button>
 </nav>
 
 <!-- ✅ Event Details Modal -->
