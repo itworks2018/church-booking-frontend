@@ -254,7 +254,7 @@ if (calendarEl && window.FullCalendar) {
     headerToolbar: {
       left: "prev,next today",
       center: "title",
-      right: "dayGridMonth,timeGridWeek,timeGridDay",
+      right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
     },
     timeZone: "local",
 
@@ -277,13 +277,14 @@ if (calendarEl && window.FullCalendar) {
         console.log("Upcoming bookings response:", data); // Debug log
 
         const items = Array.isArray(data.items) ? data.items : [];
-        const approvedEvents = items.filter(item => item.status === "Approved");
+        const approvedAndPendingEvents = items.filter(item => item.status === "Approved" || item.status === "Pending");
 
-        const events = approvedEvents.map(item => ({
+        const events = approvedAndPendingEvents.map(item => ({
           id: item.booking_id,
           title: item.event_name || "Untitled",
           start: item.start_datetime,
           end: item.end_datetime || null,
+          color: item.status === "Approved" ? "blue" : "orange",
           extendedProps: {
             purpose: item.purpose,
             attendees: item.attendees,
@@ -335,6 +336,151 @@ if (calendarEl && window.FullCalendar) {
     console.error("Dashboard fetch error:", err);
   }
 } // ✅ closes initAdminDashboard function
+
+// === Admin Create Venue Reservation Modal Logic ===
+(function setupAdminCreateVenueModal() {
+  const modal = document.getElementById('adminCreateVenueModal');
+  const form = document.getElementById('adminCreateVenueForm');
+  const createVenueBtn = document.getElementById('adminCreateVenueBtn');
+  const closeAdminCreateVenueModal = document.getElementById('closeAdminCreateVenueModal');
+  const cancelCreateBtn = document.getElementById('adminCancelCreateBtn');
+  const draftBtn = document.getElementById('adminDraftBtn');
+  const confirmationDialog = document.getElementById('adminConfirmationDialog');
+  const confirmNo = document.getElementById('adminConfirmNo');
+  const confirmYes = document.getElementById('adminConfirmYes');
+  const DRAFT_KEY = 'adminVenueBookingDraft';
+  const API_BASE_URL = window.ADMIN_API_BASE_URL;
+
+  if (!createVenueBtn || !modal) return;
+
+  // Open modal
+  createVenueBtn.addEventListener('click', function() {
+    loadDraftData();
+    modal.classList.remove('hidden');
+  });
+
+  // Close modal
+  function closeModal() {
+    modal.classList.add('hidden');
+  }
+
+  closeAdminCreateVenueModal.addEventListener('click', closeModal);
+  
+  cancelCreateBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    closeModal();
+  });
+
+  // Click outside modal to close
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeModal();
+  });
+
+  // Load draft data from localStorage
+  function loadDraftData() {
+    const draft = localStorage.getItem(DRAFT_KEY);
+    if (draft) {
+      const data = JSON.parse(draft);
+      document.getElementById('acv_event_name').value = data.event_name || '';
+      document.getElementById('acv_purpose').value = data.purpose || '';
+      document.getElementById('acv_attendees').value = data.attendees || '';
+      document.getElementById('acv_venue').value = data.venue || '';
+      document.getElementById('acv_start_datetime').value = data.start_datetime || '';
+      document.getElementById('acv_end_datetime').value = data.end_datetime || '';
+      document.getElementById('acv_additional_needs').value = data.additional_needs || '';
+    }
+  }
+
+  // Save draft to localStorage
+  draftBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const formData = {
+      event_name: document.getElementById('acv_event_name').value,
+      purpose: document.getElementById('acv_purpose').value,
+      attendees: document.getElementById('acv_attendees').value,
+      venue: document.getElementById('acv_venue').value,
+      start_datetime: document.getElementById('acv_start_datetime').value,
+      end_datetime: document.getElementById('acv_end_datetime').value,
+      additional_needs: document.getElementById('acv_additional_needs').value
+    };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(formData));
+    alert('Draft saved! You can edit it anytime.');
+  });
+
+  // Submit form
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    confirmationDialog.classList.remove('hidden');
+  });
+
+  // Confirmation dialog - No
+  confirmNo.addEventListener('click', function() {
+    confirmationDialog.classList.add('hidden');
+  });
+
+  // Confirmation dialog - Yes
+  confirmYes.addEventListener('click', async function() {
+    confirmationDialog.classList.add('hidden');
+    
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      alert('Admin not authenticated. Please log in.');
+      return;
+    }
+
+    const formData = {
+      event_name: document.getElementById('acv_event_name').value,
+      purpose: document.getElementById('acv_purpose').value,
+      attendees: parseInt(document.getElementById('acv_attendees').value),
+      venue: document.getElementById('acv_venue').value,
+      start_datetime: document.getElementById('acv_start_datetime').value,
+      end_datetime: document.getElementById('acv_end_datetime').value,
+      additional_needs: document.getElementById('acv_additional_needs').value
+    };
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/bookings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        alert('Error submitting booking: ' + (error.message || 'Unknown error'));
+        return;
+      }
+
+      const result = await res.json();
+      alert('Booking submitted successfully!');
+      
+      // Clear draft
+      localStorage.removeItem(DRAFT_KEY);
+      
+      // Reset form
+      form.reset();
+      closeModal();
+      
+      // Reload dashboard
+      if (typeof initAdminDashboard === 'function') {
+        initAdminDashboard();
+      }
+    } catch (err) {
+      console.error('Error submitting booking:', err);
+      alert('Failed to submit booking. Please try again.');
+    }
+  });
+
+  // Close confirmation dialog when clicking outside
+  confirmationDialog.addEventListener('click', function(e) {
+    if (e.target === confirmationDialog) {
+      confirmationDialog.classList.add('hidden');
+    }
+  });
+})();
 
 // === Session Timeout (5 min inactivity) ===
 (function setupSessionTimeout() {
