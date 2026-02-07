@@ -192,6 +192,20 @@ async function updateProfile(user_id, formData) {
   }
 }
 
+// ✅ Toast notification function
+function showToast(message, duration = 3000) {
+  const toast = document.getElementById("toastNotification");
+  const toastMessage = document.getElementById("toastMessage");
+  if (!toast || !toastMessage) return;
+  
+  toastMessage.textContent = message;
+  toast.classList.remove("hidden");
+  
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, duration);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   // Add User Modal logic
   const addUserBtn = document.getElementById("addUserBtn");
@@ -202,18 +216,17 @@ document.addEventListener("DOMContentLoaded", () => {
   if (addUserBtn && addUserModal && cancelAddUser && addUserForm) {
     addUserBtn.onclick = () => {
       addUserModal.classList.remove("hidden");
-      addUserModal.classList.add("block");
-      addUserModal.classList.remove("flex"); // Remove flex if present
+      addUserModal.classList.add("flex");
     };
     cancelAddUser.onclick = () => {
       addUserModal.classList.add("hidden");
-      addUserModal.classList.remove("block");
       addUserModal.classList.remove("flex");
       addUserForm.reset();
     };
     addUserForm.onsubmit = async (e) => {
       e.preventDefault();
       if (!confirm("Are you sure you want to add this user?")) return;
+      
       // Gather form data
       const full_name = document.getElementById("add_full_name").value.trim();
       const email = document.getElementById("add_email").value.trim();
@@ -221,10 +234,33 @@ document.addEventListener("DOMContentLoaded", () => {
       const role = document.getElementById("add_role").value;
       const password = document.getElementById("add_password").value;
       const confirm_password = document.getElementById("add_confirm_password").value;
-      if (password !== confirm_password) {
-        alert("Passwords do not match.");
+      
+      // Validation
+      if (!full_name) {
+        showToast("Full name is required.");
         return;
       }
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+        showToast("Please enter a valid email address.");
+        return;
+      }
+      if (!contact_number || !/^[0-9+\- ]+$/.test(contact_number)) {
+        showToast("Contact number must contain only digits, +, -, or spaces.");
+        return;
+      }
+      if (!role) {
+        showToast("Please select a role.");
+        return;
+      }
+      if (password.length < 6) {
+        showToast("Password must be at least 6 characters.");
+        return;
+      }
+      if (password !== confirm_password) {
+        showToast("Passwords do not match.");
+        return;
+      }
+      
       // API call to create user
       try {
         const token = localStorage.getItem("access_token");
@@ -236,19 +272,20 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify({ full_name, email, contact_number, role, password })
         });
+        
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          alert(data.error || "Failed to add user.");
+          showToast(data.error || "Failed to add user.");
           return;
         }
-        alert("User added successfully!");
+        
+        showToast("User added successfully!");
         addUserModal.classList.add("hidden");
-        addUserModal.classList.remove("block");
         addUserModal.classList.remove("flex");
         addUserForm.reset();
         if (typeof loadProfiles === "function") loadProfiles();
       } catch (err) {
-        alert("Error adding user.");
+        showToast("Error adding user. Check console for details.");
         console.error(err);
       }
     };
