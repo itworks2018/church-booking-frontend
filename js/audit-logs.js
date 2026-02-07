@@ -28,7 +28,7 @@ async function loadAuditLogs() {
         tr.className = "border-b";
         tr.innerHTML = `
           <td class="p-3">${log.booking_id || "N/A"}</td>
-          <td class="p-3">${log.bookings?.event_name || "N/A"}</td>
+          <td class="p-3">${log.event_name || "N/A"}</td>
           <td class="p-3">${log.booker_email || "N/A"}</td>
           <td class="p-3">
             <span class="px-3 py-1 rounded text-white text-sm font-semibold ${
@@ -39,7 +39,7 @@ async function loadAuditLogs() {
               ${log.action}
             </span>
           </td>
-          <td class="p-3">${log.users?.full_name || "N/A"}</td>
+          <td class="p-3">${log.admin_name || "N/A"}</td>
           <td class="p-3">${new Date(log.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true })}</td>
         `;
         tbody.appendChild(tr);
