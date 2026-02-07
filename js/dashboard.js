@@ -78,12 +78,13 @@ async function loadCalendarEvents() {
     // Only show pending and approved bookings in the calendar
     const filtered = bookings.filter(b => b.status === "Pending" || b.status === "Approved");
     const calendar = new FullCalendar.Calendar(calendarEl, {
+      plugins: [ FullCalendar.dayGridPlugin, FullCalendar.timeGridPlugin, FullCalendar.listPlugin, FullCalendar.interactionPlugin ],
       initialView: 'dayGridMonth',
       height: 600,
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
       },
       events: filtered.map(b => ({
         id: b.id || b.booking_id,
