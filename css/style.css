@@ -1,4 +1,35 @@
 /* =========================
+   HERO SECTION
+   ========================= */
+.hero-bg {
+  background-image: url('/assets/images/bg1.jpg');
+  min-height: 420px;
+}
+/* =========================
+   MINISTRIES SECTION
+   ========================= */
+.ministries-title {
+  color: #111827;
+}
+/* =========================
+   LOGIN PAGE BACKGROUND
+   ========================= */
+.login-bg {
+  background-image: url('/assets/images/bg2.jpg');
+}
+/* =========================
+   CUSTOM UTILITY CLASSES
+   ========================= */
+.font-main {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+}
+.text-brand-blue {
+  color: #60a5fa;
+}
+.normal-case {
+  text-transform: none;
+}
+/* =========================
    RESET & BASE
    ========================= */
 * {

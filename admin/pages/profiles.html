@@ -23,7 +23,7 @@
 </table>
 
 <!-- Pagination for Profiles Table (FlyonUI) -->
-<nav id="profilesPagination" class="flex items-center gap-x-1 justify-center my-4" style="display:none">
+<nav id="profilesPagination" class="flex items-center gap-x-1 justify-center my-4 hidden">
   <button type="button" class="btn btn-soft" id="profilesPrev">Previous</button>
   <div class="flex items-center gap-x-1" id="profilesPages">
     <!-- Page buttons inserted dynamically -->
@@ -38,7 +38,7 @@
     <form id="editUserForm" class="space-y-3">
       <input type="text" name="full_name" class="w-full border p-2" placeholder="Full Name" />
       <input type="email" name="email" class="w-full border p-2" placeholder="Email" />
-      <select name="role" class="w-full border p-2">
+      <select name="role" class="w-full border p-2" title="Role" aria-label="Role">
         <option value="">Select Role</option>
         <option value="dgroup_leader">DGroup Leader</option>
         <option value="ministry_head">Ministry Head</option>

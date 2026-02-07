@@ -5,35 +5,41 @@
 
     <!-- Full Name -->
     <div>
-      <label class="block text-sm font-semibold dark:text-gray-300">Full Name</label>
+      <label for="profile_full_name" class="block text-sm font-semibold dark:text-gray-300">Full Name</label>
             <input id="profile_full_name"
               type="text"
               class="max-w-xl w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200 mx-auto block"
+              aria-label="Full Name"
+              placeholder="Full Name"
               disabled />
     </div>
 
     <!-- Email -->
     <div>
-      <label class="block text-sm font-semibold dark:text-gray-300">Email</label>
+      <label for="profile_email" class="block text-sm font-semibold dark:text-gray-300">Email</label>
             <input id="profile_email"
               type="email"
               class="max-w-xl w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200 mx-auto block"
+              aria-label="Email"
+              placeholder="Email"
               disabled />
     </div>
 
     <!-- Contact Number -->
     <div>
-      <label class="block text-sm font-semibold dark:text-gray-300">Contact Number</label>
+      <label for="profile_contact" class="block text-sm font-semibold dark:text-gray-300">Contact Number</label>
             <input id="profile_contact"
               type="text"
               class="max-w-xl w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200 mx-auto block"
+              aria-label="Contact Number"
+              placeholder="Contact Number"
               disabled />
     </div>
 
     <!-- Church Role -->
     <div>
-      <label class="block text-sm font-semibold dark:text-gray-300">Church Role</label>
-      <select id="profile_role" class="max-w-xl w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200 mx-auto block" disabled>
+      <label for="profile_role" class="block text-sm font-semibold dark:text-gray-300">Church Role</label>
+      <select id="profile_role" class="max-w-xl w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200 mx-auto block" aria-label="Church Role" title="Church Role" disabled>
         <option value="">Select Role</option>
         <option value="dgroup_leader">DGroup Leader</option>
         <option value="ministry_head">Ministry Head</option>

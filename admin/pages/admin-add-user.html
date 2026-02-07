@@ -8,18 +8,35 @@
   <style>
     .glass-box {
       background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .admin-add-bg {
+      background-image: url('/assets/images/bg2.jpg');
+    }
+    .admin-add-user-box {
+      background: rgba(30, 41, 59, 0.85);
+      color: #fff;
+    }
+    .admin-add-user-title {
+      color: #fff;
+    }
+    .admin-add-user-select {
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+    }
+    .admin-add-user-option {
+      color: #222;
+      background: #fff;
     }
   </style>
 </head>
-<body class="bg-cover bg-center bg-no-repeat min-h-screen flex flex-col"
-      style="background-image: url('/assets/images/bg2.jpg');">
+<body class="bg-cover bg-center bg-no-repeat min-h-screen flex flex-col admin-add-bg">
   <div class="flex-grow flex items-center justify-center py-12">
-    <div class="glass-box shadow-xl rounded-lg p-12 w-full max-w-2xl" style="background: rgba(30, 41, 59, 0.85); color: #fff;">
-      <h1 class="text-3xl font-extrabold text-center mb-2" style="color: #fff;">Add User Form</h1>
-      <h2 class="text-xl font-bold text-center mb-6" style="color: #fff;">Add User (Admin)</h2>
+    <div class="glass-box shadow-xl rounded-lg p-12 w-full max-w-2xl admin-add-user-box">
+      <h1 class="text-3xl font-extrabold text-center mb-2 admin-add-user-title">Add User Form</h1>
+      <h2 class="text-xl font-bold text-center mb-6 admin-add-user-title">Add User (Admin)</h2>
       <p id="errorMessage" class="text-red-300 text-sm mb-2"></p>
       <form id="signupForm" class="space-y-4">
         <label for="full_name" class="sr-only">Full Name</label>
@@ -39,16 +56,15 @@
            required />
         <label for="role" class="sr-only">Role</label>
         <select id="role" name="role"
-          class="w-full px-4 py-2 rounded bg-white/20 text-white border border-white/30 focus:bg-white/30 focus:text-white"
-          style="color: #fff; background: rgba(255,255,255,0.15);"
+          class="w-full px-4 py-2 rounded bg-white/20 text-white border border-white/30 focus:bg-white/30 focus:text-white admin-add-user-select"
           required>
-          <option value="" style="color:#222; background:#fff;">Select Role</option>
-          <option value="dgroup_leader" style="color:#222; background:#fff;">DGroup Leader</option>
-          <option value="ministry_head" style="color:#222; background:#fff;">Ministry Head</option>
-          <option value="dgroup_member" style="color:#222; background:#fff;">DGroup Member</option>
-          <option value="cos" style="color:#222; background:#fff;">COS</option>
-          <option value="new_member" style="color:#222; background:#fff;">New Member</option>
-          <option value="admin" style="color:#222; background:#fff;">Admin</option>
+          <option value="" class="admin-add-user-option">Select Role</option>
+          <option value="dgroup_leader" class="admin-add-user-option">DGroup Leader</option>
+          <option value="ministry_head" class="admin-add-user-option">Ministry Head</option>
+          <option value="dgroup_member" class="admin-add-user-option">DGroup Member</option>
+          <option value="cos" class="admin-add-user-option">COS</option>
+          <option value="new_member" class="admin-add-user-option">New Member</option>
+          <option value="admin" class="admin-add-user-option">Admin</option>
         </select>
         <label for="password" class="sr-only">Password</label>
          <input type="password" id="password" name="password" placeholder="Password"
