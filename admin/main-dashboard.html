@@ -155,6 +155,10 @@
             if (typeof loadProfiles === "function") {
               loadProfiles(); // fetch and render users
             }
+            // Setup the Add User modal event listeners
+            if (typeof setupAddUserModal === "function") {
+              setupAddUserModal();
+            }
           };
 
           document.body.appendChild(script);

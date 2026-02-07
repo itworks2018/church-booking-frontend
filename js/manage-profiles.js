@@ -206,88 +206,100 @@ function showToast(message, duration = 3000) {
   }, duration);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Add User Modal logic
+// ✅ Setup Add User Modal event listeners
+function setupAddUserModal() {
   const addUserBtn = document.getElementById("addUserBtn");
   const addUserModal = document.getElementById("addUserModal");
   const cancelAddUser = document.getElementById("cancelAddUser");
   const addUserForm = document.getElementById("addUserForm");
 
-  if (addUserBtn && addUserModal && cancelAddUser && addUserForm) {
-    addUserBtn.onclick = () => {
-      addUserModal.classList.remove("hidden");
-      addUserModal.classList.add("flex");
-    };
-    cancelAddUser.onclick = () => {
+  if (!addUserBtn || !addUserModal || !cancelAddUser || !addUserForm) {
+    console.warn("Add User modal elements not found");
+    return;
+  }
+
+  // Open modal
+  addUserBtn.onclick = () => {
+    addUserModal.classList.remove("hidden");
+    addUserModal.classList.add("flex");
+  };
+
+  // Close modal
+  cancelAddUser.onclick = () => {
+    addUserModal.classList.add("hidden");
+    addUserModal.classList.remove("flex");
+    addUserForm.reset();
+  };
+
+  // Form submission
+  addUserForm.onsubmit = async (e) => {
+    e.preventDefault();
+    if (!confirm("Are you sure you want to add this user?")) return;
+    
+    // Gather form data
+    const full_name = document.getElementById("add_full_name").value.trim();
+    const email = document.getElementById("add_email").value.trim();
+    const contact_number = document.getElementById("add_contact_number").value.trim();
+    const role = document.getElementById("add_role").value;
+    const password = document.getElementById("add_password").value;
+    const confirm_password = document.getElementById("add_confirm_password").value;
+    
+    // Validation
+    if (!full_name) {
+      showToast("Full name is required.");
+      return;
+    }
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      showToast("Please enter a valid email address.");
+      return;
+    }
+    if (!contact_number || !/^[0-9+\- ]+$/.test(contact_number)) {
+      showToast("Contact number must contain only digits, +, -, or spaces.");
+      return;
+    }
+    if (!role) {
+      showToast("Please select a role.");
+      return;
+    }
+    if (password.length < 6) {
+      showToast("Password must be at least 6 characters.");
+      return;
+    }
+    if (password !== confirm_password) {
+      showToast("Passwords do not match.");
+      return;
+    }
+    
+    // API call to create user
+    try {
+      const token = localStorage.getItem("access_token");
+      const res = await fetch(`${window.ADMIN_API_BASE_URL || ''}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ full_name, email, contact_number, role, password })
+      });
+      
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || "Failed to add user.");
+        return;
+      }
+      
+      showToast("User added successfully!");
       addUserModal.classList.add("hidden");
       addUserModal.classList.remove("flex");
       addUserForm.reset();
-    };
-    addUserForm.onsubmit = async (e) => {
-      e.preventDefault();
-      if (!confirm("Are you sure you want to add this user?")) return;
-      
-      // Gather form data
-      const full_name = document.getElementById("add_full_name").value.trim();
-      const email = document.getElementById("add_email").value.trim();
-      const contact_number = document.getElementById("add_contact_number").value.trim();
-      const role = document.getElementById("add_role").value;
-      const password = document.getElementById("add_password").value;
-      const confirm_password = document.getElementById("add_confirm_password").value;
-      
-      // Validation
-      if (!full_name) {
-        showToast("Full name is required.");
-        return;
-      }
-      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-        showToast("Please enter a valid email address.");
-        return;
-      }
-      if (!contact_number || !/^[0-9+\- ]+$/.test(contact_number)) {
-        showToast("Contact number must contain only digits, +, -, or spaces.");
-        return;
-      }
-      if (!role) {
-        showToast("Please select a role.");
-        return;
-      }
-      if (password.length < 6) {
-        showToast("Password must be at least 6 characters.");
-        return;
-      }
-      if (password !== confirm_password) {
-        showToast("Passwords do not match.");
-        return;
-      }
-      
-      // API call to create user
-      try {
-        const token = localStorage.getItem("access_token");
-        const res = await fetch(`${window.ADMIN_API_BASE_URL || ''}/api/auth/signup`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({ full_name, email, contact_number, role, password })
-        });
-        
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          showToast(data.error || "Failed to add user.");
-          return;
-        }
-        
-        showToast("User added successfully!");
-        addUserModal.classList.add("hidden");
-        addUserModal.classList.remove("flex");
-        addUserForm.reset();
-        if (typeof loadProfiles === "function") loadProfiles();
-      } catch (err) {
-        showToast("Error adding user. Check console for details.");
-        console.error(err);
-      }
-    };
-  }
+      if (typeof loadProfiles === "function") loadProfiles();
+    } catch (err) {
+      showToast("Error adding user. Check console for details.");
+      console.error(err);
+    }
+  };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupAddUserModal();
 });
