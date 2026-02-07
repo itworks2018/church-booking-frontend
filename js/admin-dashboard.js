@@ -264,7 +264,7 @@ if (calendarEl && window.FullCalendar) {
       alert(`You selected: ${clickedDate}`);
     },
 
-    // ✅ Dynamic events fetch from backend (approved only)
+    // ✅ Dynamic events fetch from backend (approved and pending)
     events: async function (fetchInfo, successCallback, failureCallback) {
       try {
         const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/upcoming/list`, {
@@ -274,10 +274,20 @@ if (calendarEl && window.FullCalendar) {
         if (!res.ok) throw new Error("Failed to fetch events");
         const data = await res.json();
 
-        console.log("Upcoming bookings response:", data); // Debug log
+        console.log("=== ADMIN CALENDAR DEBUG ===");
+        console.log("Full API response:", data);
+        console.log("Data type:", typeof data);
 
         const items = Array.isArray(data.items) ? data.items : [];
+        console.log("Items array:", items);
+        console.log("Total items count:", items.length);
+        
+        // Check status values in the data
+        console.log("Unique statuses in items:", [...new Set(items.map(i => i.status))]);
+        
         const approvedAndPendingEvents = items.filter(item => item.status === "Approved" || item.status === "Pending");
+        console.log("Approved and Pending items count:", approvedAndPendingEvents.length);
+        console.log("Filtered approved and pending:", approvedAndPendingEvents);
 
         const events = approvedAndPendingEvents.map(item => ({
           id: item.booking_id,
@@ -294,6 +304,10 @@ if (calendarEl && window.FullCalendar) {
             status: item.status
           }
         }));
+        
+        console.log("Final events for calendar:", events);
+        console.log("Events count for calendar:", events.length);
+        console.log("=== END DEBUG ===");
 
         successCallback(events);
       } catch (err) {
