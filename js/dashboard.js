@@ -89,6 +89,7 @@ async function loadCalendarEvents() {
       events: filtered.map(b => ({
         id: b.id || b.booking_id,
         title: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
+        name: b.event_name || (b.status === "Approved" ? "Approved Booking" : "Pending Booking"),
         start: b.start_datetime,
         end: b.end_datetime,
         color: b.status === "Approved" ? "blue" : "orange",
