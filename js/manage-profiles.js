@@ -35,8 +35,8 @@ async function loadProfiles() {
           <td class="p-3 border">${new Date(user.created_at).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">
             <div class="flex flex-row gap-2 justify-center">
-              <button class="bg-yellow-500 text-white px-4 py-1 rounded edit-profile-btn" data-id="${user.user_id}">Edit</button>
-              <button class="bg-red-500 text-white px-4 py-1 rounded delete-profile-btn" data-id="${user.user_id}">Delete</button>
+              <button class="bg-yellow-500 text-white px-4 py-1 rounded edit-profile-btn text-lg" data-id="${user.user_id}" title="Edit">✏️</button>
+              <button class="bg-red-500 text-white px-4 py-1 rounded delete-profile-btn text-lg" data-id="${user.user_id}" title="Delete">🗑️</button>
             </div>
           </td>
         `;

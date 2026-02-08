@@ -19,7 +19,7 @@ async function loadApprovedEvents() {
     // Pagination logic
     const pageSize = 10;
     let currentPage = 1;
-    const totalPages = Math.ceil(items.length / pageSize);
+    let totalPages = Math.ceil(items.length / pageSize);
 
     function renderTablePage(page) {
       tbody.innerHTML = "";
@@ -42,9 +42,9 @@ async function loadApprovedEvents() {
           <td class="p-3 border">${new Date(item.created_at).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">
             <div class="flex flex-row gap-2 justify-center">
-              <button class="view-btn min-w-[80px] px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" data-id="${item.booking_id}">View</button>
-              <button class="edit-btn min-w-[80px] px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition" data-id="${item.booking_id}">Edit</button>
-              <button class="delete-btn min-w-[80px] px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" data-id="${item.booking_id}">Delete</button>
+              <button class="view-btn px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-lg" data-id="${item.booking_id}" title="View">👁️</button>
+              <button class="edit-btn px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-lg" data-id="${item.booking_id}" title="Edit">✏️</button>
+              <button class="delete-btn px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition text-lg" data-id="${item.booking_id}" title="Delete">🗑️</button>
             </div>
           </td>
         `;
@@ -119,6 +119,63 @@ async function loadApprovedEvents() {
 
     renderTablePage(currentPage);
     renderPagination();
+
+    // ✅ Filter Logic
+    const originalItems = [...items]; // Keep original items for filtering
+
+    function applyFilters() {
+      const eventNameFilter = document.getElementById("filterEventName")?.value.toLowerCase() || "";
+      const statusFilter = document.getElementById("filterStatus")?.value || "";
+      const startDateFilter = document.getElementById("filterStartDate")?.value || "";
+      const endDateFilter = document.getElementById("filterEndDate")?.value || "";
+      const venueFilter = document.getElementById("filterVenue")?.value.toLowerCase() || "";
+      const bookerFilter = document.getElementById("filterBooker")?.value.toLowerCase() || "";
+
+      items.length = 0; // Clear items array
+      originalItems.forEach(item => {
+        const eventNameMatch = !eventNameFilter || item.event_name?.toLowerCase().includes(eventNameFilter);
+        const statusMatch = !statusFilter || item.status === statusFilter;
+        const startDateMatch = !startDateFilter || new Date(item.start_datetime) >= new Date(startDateFilter);
+        const endDateMatch = !endDateFilter || new Date(item.start_datetime) <= new Date(endDateFilter);
+        const venueMatch = !venueFilter || item.venue?.toLowerCase().includes(venueFilter);
+        const bookerMatch = !bookerFilter || item.user_email?.toLowerCase().includes(bookerFilter) || (item.user_id?.toString().toLowerCase().includes(bookerFilter));
+
+        if (eventNameMatch && statusMatch && startDateMatch && endDateMatch && venueMatch && bookerMatch) {
+          items.push(item);
+        }
+      });
+
+      // Reset pagination and re-render
+      currentPage = 1;
+      totalPages = Math.ceil(items.length / pageSize);
+      renderTablePage(currentPage);
+      renderPagination();
+    }
+
+    // Add event listeners to filter buttons
+    const applyBtn = document.getElementById("applyFilters");
+    const clearBtn = document.getElementById("clearFilters");
+
+    if (applyBtn) {
+      applyBtn.addEventListener("click", applyFilters);
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        document.getElementById("filterEventName").value = "";
+        document.getElementById("filterStatus").value = "";
+        document.getElementById("filterStartDate").value = "";
+        document.getElementById("filterEndDate").value = "";
+        document.getElementById("filterVenue").value = "";
+        document.getElementById("filterBooker").value = "";
+        items.length = 0;
+        items.push(...originalItems);
+        currentPage = 1;
+        totalPages = Math.ceil(items.length / pageSize);
+        renderTablePage(currentPage);
+        renderPagination();
+      });
+    }
 
     // ✅ Attach handlers
     document.querySelectorAll(".view-btn").forEach(btn => {

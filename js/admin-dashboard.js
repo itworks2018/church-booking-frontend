@@ -59,9 +59,9 @@ function populatePendingTable(items) {
           <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
           <td class="p-3">
             <div class="flex flex-row gap-2 justify-center">
-              <button class="review-btn min-w-[90px] px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" data-id="${item.booking_id}">Review</button>
-              <button class="approve-btn min-w-[90px] px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition" data-id="${item.booking_id}">Approve</button>
-              <button class="reject-btn min-w-[90px] px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" data-id="${item.booking_id}">Reject</button>
+              <button class="review-btn px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-lg" data-id="${item.booking_id}" title="Review">👁️</button>
+              <button class="approve-btn px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition text-lg" data-id="${item.booking_id}" title="Approve">✅</button>
+              <button class="reject-btn px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition text-lg" data-id="${item.booking_id}" title="Reject">❌</button>
             </div>
           </td>
         `;
