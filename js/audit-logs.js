@@ -6,7 +6,10 @@ async function loadAuditLogs() {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    if (!res.ok) throw new Error("Failed to fetch audit logs");
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(`Failed to fetch audit logs: ${res.status} - ${JSON.stringify(errorData)}`);
+    }
 
     const data = await res.json();
     const items = Array.isArray(data.items) ? data.items : [];

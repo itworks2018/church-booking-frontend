@@ -184,7 +184,8 @@ async function logAuditAction(booking_id, action) {
     if (res.ok) {
       console.log(`Audit log created for booking ${booking_id}: ${action}`);
     } else {
-      console.error("Failed to create audit log:", res.status);
+      const errorData = await res.json();
+      console.error("Failed to create audit log:", res.status, errorData);
     }
   } catch (err) {
     console.error("logAuditAction error:", err);
