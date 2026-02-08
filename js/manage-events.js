@@ -124,23 +124,13 @@ async function loadApprovedEvents() {
     const originalItems = [...items]; // Keep original items for filtering
 
     function applyFilters() {
-      const eventNameFilter = document.getElementById("filterEventName")?.value.toLowerCase() || "";
-      const statusFilter = document.getElementById("filterStatus")?.value || "";
-      const startDateFilter = document.getElementById("filterStartDate")?.value || "";
-      const endDateFilter = document.getElementById("filterEndDate")?.value || "";
-      const venueFilter = document.getElementById("filterVenue")?.value.toLowerCase() || "";
-      const bookerFilter = document.getElementById("filterBooker")?.value.toLowerCase() || "";
+      const bookingIdFilter = document.getElementById("filterBookingId")?.value.toLowerCase() || "";
 
       items.length = 0; // Clear items array
       originalItems.forEach(item => {
-        const eventNameMatch = !eventNameFilter || item.event_name?.toLowerCase().includes(eventNameFilter);
-        const statusMatch = !statusFilter || item.status === statusFilter;
-        const startDateMatch = !startDateFilter || new Date(item.start_datetime) >= new Date(startDateFilter);
-        const endDateMatch = !endDateFilter || new Date(item.start_datetime) <= new Date(endDateFilter);
-        const venueMatch = !venueFilter || item.venue?.toLowerCase().includes(venueFilter);
-        const bookerMatch = !bookerFilter || item.user_email?.toLowerCase().includes(bookerFilter) || (item.user_id?.toString().toLowerCase().includes(bookerFilter));
+        const bookingIdMatch = !bookingIdFilter || item.booking_id?.toLowerCase().includes(bookingIdFilter);
 
-        if (eventNameMatch && statusMatch && startDateMatch && endDateMatch && venueMatch && bookerMatch) {
+        if (bookingIdMatch) {
           items.push(item);
         }
       });
@@ -162,12 +152,7 @@ async function loadApprovedEvents() {
 
     if (clearBtn) {
       clearBtn.addEventListener("click", () => {
-        document.getElementById("filterEventName").value = "";
-        document.getElementById("filterStatus").value = "";
-        document.getElementById("filterStartDate").value = "";
-        document.getElementById("filterEndDate").value = "";
-        document.getElementById("filterVenue").value = "";
-        document.getElementById("filterBooker").value = "";
+        document.getElementById("filterBookingId").value = "";
         items.length = 0;
         items.push(...originalItems);
         currentPage = 1;
