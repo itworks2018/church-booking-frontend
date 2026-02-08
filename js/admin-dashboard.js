@@ -74,8 +74,7 @@ function populatePendingTable(items) {
           const id = e.target.dataset.id;
           const booking = items.find(b => b.booking_id === id);
           if (booking) {
-            // Log the review action
-            await logAuditAction(id, "Reviewed");
+            // Just show the review modal - no audit log needed (no DB change)
             showReviewModal(booking);
           }
         });
@@ -83,12 +82,18 @@ function populatePendingTable(items) {
       tbody.querySelectorAll(".approve-btn").forEach(btn => {
         btn.addEventListener("click", async (e) => {
           const id = e.target.dataset.id;
+          // Log the approval action
+          await logAuditAction(id, "Approved");
+          // Then update the booking status
           await updateBookingStatus(id, "Approved");
         });
       });
       tbody.querySelectorAll(".reject-btn").forEach(btn => {
         btn.addEventListener("click", async (e) => {
           const id = e.target.dataset.id;
+          // Log the rejection action
+          await logAuditAction(id, "Rejected");
+          // Then update the booking status
           await updateBookingStatus(id, "Rejected");
         });
       });
@@ -182,17 +187,21 @@ async function logAuditAction(booking_id, action) {
     });
 
     if (res.ok) {
-      console.log(`Audit log created for booking ${booking_id}: ${action}`);
+      const data = await res.json();
+      console.log(`✅ Audit log created for booking ${booking_id}: ${action}`, data);
+      return true;
     } else {
       const errorData = await res.json();
-      console.error("Failed to create audit log:", res.status, errorData);
+      console.error(`❌ Failed to create audit log:`, res.status, errorData);
+      return false;
     }
   } catch (err) {
-    console.error("logAuditAction error:", err);
+    console.error("❌ logAuditAction error:", err);
+    return false;
   }
 }
 
-// ✅ Helper to update booking status
+// ✅ Helper to update booking status (WITHOUT logging - logging is done separately)
 async function updateBookingStatus(id, status) {
   try {
     const token = localStorage.getItem("access_token");
@@ -206,16 +215,14 @@ async function updateBookingStatus(id, status) {
     });
 
     if (res.ok) {
-      console.log(`Booking ${id} updated to ${status}`);
-      // Log the action
-      await logAuditAction(id, status);
+      console.log(`✅ Booking ${id} updated to ${status}`);
       // Refresh dashboard after update
       initAdminDashboard();
     } else {
-      console.error("Failed to update booking:", res.status);
+      console.error("❌ Failed to update booking:", res.status);
     }
   } catch (err) {
-    console.error("updateBookingStatus error:", err);
+    console.error("❌ updateBookingStatus error:", err);
   }
 }
 
