@@ -236,12 +236,14 @@ async function loadCalendarEvents() {
 
       if (!res.ok) {
         const error = await res.json();
-        alert('Error submitting booking: ' + (error.message || 'Unknown error'));
+        // Show error modal with specific message for booking conflicts
+        const errorMessage = error.error || error.message || 'Unknown error';
+        showBookingError(errorMessage);
         return;
       }
 
       const result = await res.json();
-      alert('Booking submitted successfully!');
+      showBookingSuccess();
       
       // Clear draft
       localStorage.removeItem(DRAFT_KEY);
@@ -270,6 +272,50 @@ async function loadCalendarEvents() {
     }
   });
 })();
+
+// ✅ Show booking error modal
+function showBookingError(message) {
+  const errorModal = document.getElementById('bookingErrorModal');
+  const errorMessageEl = document.getElementById('errorModalMessage');
+  
+  // Customize message for venue conflict
+  let displayMessage = message;
+  if (message.toLowerCase().includes('already booked') || message.toLowerCase().includes('prior schedule')) {
+    displayMessage = 'A prior schedule is already booked in the venue, select different day or time.';
+  }
+  
+  errorMessageEl.textContent = displayMessage;
+  errorModal.classList.remove('hidden');
+  
+  // Add close handlers
+  const closeBtn = document.getElementById('closeErrorBtn');
+  const closeXBtn = document.getElementById('closeErrorModal');
+  
+  if (closeBtn) closeBtn.addEventListener('click', () => {
+    errorModal.classList.add('hidden');
+  });
+  if (closeXBtn) closeXBtn.addEventListener('click', () => {
+    errorModal.classList.add('hidden');
+  });
+}
+
+// ✅ Show booking success modal
+function showBookingSuccess() {
+  const successModal = document.getElementById('bookingSuccessModal');
+  
+  successModal.classList.remove('hidden');
+  
+  // Add close handlers
+  const closeBtn = document.getElementById('closeSuccessBtn');
+  const closeXBtn = document.getElementById('closeSuccessModal');
+  
+  if (closeBtn) closeBtn.addEventListener('click', () => {
+    successModal.classList.add('hidden');
+  });
+  if (closeXBtn) closeXBtn.addEventListener('click', () => {
+    successModal.classList.add('hidden');
+  });
+}
 
 // === Session Timeout (5 min inactivity) ===
 (function setupSessionTimeout() {
