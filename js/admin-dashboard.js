@@ -82,19 +82,37 @@ function populatePendingTable(items) {
       tbody.querySelectorAll(".approve-btn").forEach(btn => {
         btn.addEventListener("click", async (e) => {
           const id = e.target.dataset.id;
-          // Log the approval action
-          await logAuditAction(id, "Approved");
-          // Then update the booking status
-          await updateBookingStatus(id, "Approved");
+          // Disable button to prevent double-click
+          e.target.disabled = true;
+          e.target.textContent = "Processing...";
+          try {
+            // Log the approval action
+            await logAuditAction(id, "Approved");
+            // Then update the booking status
+            await updateBookingStatus(id, "Approved");
+          } finally {
+            // Re-enable button (will be replaced when dashboard refreshes)
+            e.target.disabled = false;
+            e.target.textContent = "Approve";
+          }
         });
       });
       tbody.querySelectorAll(".reject-btn").forEach(btn => {
         btn.addEventListener("click", async (e) => {
           const id = e.target.dataset.id;
-          // Log the rejection action
-          await logAuditAction(id, "Rejected");
-          // Then update the booking status
-          await updateBookingStatus(id, "Rejected");
+          // Disable button to prevent double-click
+          e.target.disabled = true;
+          e.target.textContent = "Processing...";
+          try {
+            // Log the rejection action
+            await logAuditAction(id, "Rejected");
+            // Then update the booking status
+            await updateBookingStatus(id, "Rejected");
+          } finally {
+            // Re-enable button (will be replaced when dashboard refreshes)
+            e.target.disabled = false;
+            e.target.textContent = "Reject";
+          }
         });
       });
     }
