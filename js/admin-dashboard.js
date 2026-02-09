@@ -342,7 +342,7 @@ if (calendarEl && window.FullCalendar) {
         // Check status values in the data
         console.log("Unique statuses in items:", [...new Set(items.map(i => i.status))]);
         
-        const approvedAndPendingEvents = items.filter(item => item.status === "Approved" || item.status === "Pending");
+        const approvedAndPendingEvents = items.filter(item => item.status === "approved" || item.status === "pending");
         console.log("Approved and Pending items count:", approvedAndPendingEvents.length);
         console.log("Filtered approved and pending:", approvedAndPendingEvents);
 
@@ -351,7 +351,7 @@ if (calendarEl && window.FullCalendar) {
           title: item.event_name || "Untitled",
           start: item.start_datetime,
           end: item.end_datetime || null,
-          color: item.status === "Approved" ? "blue" : "orange",
+          color: item.status === "approved" ? "blue" : "orange",
           extendedProps: {
             purpose: item.purpose,
             attendees: item.attendees,
