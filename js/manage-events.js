@@ -63,7 +63,30 @@ async function loadApprovedEvents() {
         btn.addEventListener("click", e => {
           const id = e.target.dataset.id;
           const booking = items.find(b => b.booking_id === id);
-          if (booking) showEditEventModal(booking);
+          if (booking) {
+            const modal = document.getElementById("editEventModal");
+            const form = document.getElementById("editEventForm");
+            form.elements["event_name"].value = booking.event_name;
+            form.elements["purpose"].value = booking.purpose;
+            form.elements["attendees"].value = booking.attendees;
+            form.elements["venue"].value = booking.venue;
+            form.elements["start_datetime"].value = booking.start_datetime.slice(0,16);
+            form.elements["end_datetime"].value = booking.end_datetime.slice(0,16);
+            form.elements["additional_needs"].value = booking.additional_needs || "";
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            document.getElementById("cancelEdit").onclick = () => {
+              modal.classList.add("hidden");
+              modal.classList.remove("flex");
+            };
+            form.onsubmit = async (ev) => {
+              ev.preventDefault();
+              await updateEvent(id, new FormData(form));
+              modal.classList.add("hidden");
+              modal.classList.remove("flex");
+              loadApprovedEvents();
+            };
+          }
         });
       });
       tbody.querySelectorAll(".delete-btn").forEach(btn => {
