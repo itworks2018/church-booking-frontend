@@ -222,61 +222,6 @@ async function updateEvent(id, formData) {
   }
 }
 
-document.querySelectorAll(".edit-btn").forEach(btn => {
-  btn.addEventListener("click", e => {
-    const id = e.target.dataset.id;
-    const booking = items.find(b => b.booking_id === id);
-
-    if (booking) {
-      const modal = document.getElementById("editEventModal");
-      const form = document.getElementById("editEventForm");
-
-      // Pre-fill form fields
-      form.elements["event_name"].value = booking.event_name;
-      form.elements["purpose"].value = booking.purpose;
-      form.elements["attendees"].value = booking.attendees;
-      form.elements["venue"].value = booking.venue;
-      form.elements["start_datetime"].value = booking.start_datetime.slice(0,16); // ISO string trimmed
-      form.elements["end_datetime"].value = booking.end_datetime.slice(0,16);
-      form.elements["additional_needs"].value = booking.additional_needs || "";
-
-      // Show modal
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-
-      // Cancel button
-      document.getElementById("cancelEdit").onclick = () => {
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-      };
-
-      // Save handler
-      form.onsubmit = async (ev) => {
-        ev.preventDefault();
-        await updateEvent(id, new FormData(form));
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-        loadApprovedEvents(); // refresh table
-      };
-    }
-  });
-});
-
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.addEventListener("click", async e => {
-        const id = e.target.dataset.id;
-        if (confirm("Are you sure you want to delete this event?")) {
-          await deleteEvent(id);
-          loadApprovedEvents(); // refresh table
-        }
-      });
-    });
-
-  } catch (err) {
-    console.error("loadApprovedEvents error:", err);
-  }
-}
-
 // ✅ Delete event helper
 async function deleteEvent(id) {
   try {
