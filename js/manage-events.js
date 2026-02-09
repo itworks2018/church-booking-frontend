@@ -196,7 +196,12 @@ async function loadApprovedEvents() {
       });
     });
 
-    // ✅ Update event helper
+  } catch (err) {
+    console.error("loadApprovedEvents error:", err);
+  }
+}
+
+// ✅ Update event helper
 async function updateEvent(id, formData) {
   try {
     const token = localStorage.getItem("access_token");
