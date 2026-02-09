@@ -82,6 +82,8 @@ function populatePendingTable(items) {
       tbody.querySelectorAll(".approve-btn").forEach(btn => {
         btn.addEventListener("click", async (e) => {
           const id = e.target.dataset.id;
+          const confirmed = await showConfirmationDialog("Are you sure you want to approve this booking request?");
+          if (!confirmed) return;
           // Disable button to prevent double-click
           e.target.disabled = true;
           e.target.textContent = "Processing...";
@@ -100,6 +102,8 @@ function populatePendingTable(items) {
       tbody.querySelectorAll(".reject-btn").forEach(btn => {
         btn.addEventListener("click", async (e) => {
           const id = e.target.dataset.id;
+          const confirmed = await showConfirmationDialog("Are you sure you want to reject this booking request?");
+          if (!confirmed) return;
           // Disable button to prevent double-click
           e.target.disabled = true;
           e.target.textContent = "Processing...";
@@ -242,6 +246,39 @@ async function updateBookingStatus(id, status) {
   } catch (err) {
     console.error("❌ updateBookingStatus error:", err);
   }
+}
+
+// ✅ Helper to show confirmation dialog
+async function showConfirmationDialog(message) {
+  return new Promise((resolve) => {
+    const dialog = document.getElementById("adminConfirmationDialog");
+    const messageEl = dialog.querySelector("p");
+    const confirmNo = document.getElementById("adminConfirmNo");
+    const confirmYes = document.getElementById("adminConfirmYes");
+
+    messageEl.textContent = message;
+    dialog.classList.remove("hidden");
+
+    function cleanup() {
+      confirmNo.removeEventListener("click", handleNo);
+      confirmYes.removeEventListener("click", handleYes);
+    }
+
+    function handleNo() {
+      cleanup();
+      dialog.classList.add("hidden");
+      resolve(false);
+    }
+
+    function handleYes() {
+      cleanup();
+      dialog.classList.add("hidden");
+      resolve(true);
+    }
+
+    confirmNo.addEventListener("click", handleNo);
+    confirmYes.addEventListener("click", handleYes);
+  });
 }
 
     // Fetch combined metrics

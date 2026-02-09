@@ -110,6 +110,18 @@
   </div>
 </div>
 
+<!-- ✅ Confirmation Dialog -->
+<div id="profilesConfirmationDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-md w-full p-8 relative">
+    <h3 class="text-2xl font-bold mb-4 dark:text-gray-200">Confirm Action</h3>
+    <p id="profilesConfirmationMessage" class="text-lg mb-6 dark:text-gray-300"></p>
+    <div class="flex justify-end gap-3">
+      <button id="profilesConfirmNo" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition">No</button>
+      <button id="profilesConfirmYes" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">Yes</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast Notification -->
 <div id="toastNotification" class="fixed bottom-6 right-6 px-6 py-4 bg-green-600 text-white rounded-lg shadow-lg hidden z-50 max-w-xs">
   <p id="toastMessage" class="font-semibold"></p>

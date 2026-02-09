@@ -60,8 +60,10 @@ async function loadApprovedEvents() {
         });
       });
       tbody.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.addEventListener("click", e => {
+        btn.addEventListener("click", async e => {
           const id = e.target.dataset.id;
+          const confirmed = await showEventsConfirmationDialog("Are you sure you want to edit this event?");
+          if (!confirmed) return;
           const booking = items.find(b => b.booking_id === id);
           if (booking) {
             const modal = document.getElementById("editEventModal");
@@ -92,10 +94,10 @@ async function loadApprovedEvents() {
       tbody.querySelectorAll(".delete-btn").forEach(btn => {
         btn.addEventListener("click", async e => {
           const id = e.target.dataset.id;
-          if (confirm("Are you sure you want to delete this event?")) {
-            await deleteEvent(id);
-            loadApprovedEvents();
-          }
+          const confirmed = await showEventsConfirmationDialog("Are you sure you want to delete this event?");
+          if (!confirmed) return;
+          await deleteEvent(id);
+          loadApprovedEvents();
         });
       });
     }
@@ -313,4 +315,37 @@ function showEventModal(booking) {
     modal.classList.add("hidden");
     modal.classList.remove("flex");
   };
+}
+
+// ✅ Helper to show confirmation dialog for events
+async function showEventsConfirmationDialog(message) {
+  return new Promise((resolve) => {
+    const dialog = document.getElementById("eventsConfirmationDialog");
+    const messageEl = document.getElementById("eventsConfirmationMessage");
+    const confirmNo = document.getElementById("eventsConfirmNo");
+    const confirmYes = document.getElementById("eventsConfirmYes");
+
+    messageEl.textContent = message;
+    dialog.classList.remove("hidden");
+
+    function cleanup() {
+      confirmNo.removeEventListener("click", handleNo);
+      confirmYes.removeEventListener("click", handleYes);
+    }
+
+    function handleNo() {
+      cleanup();
+      dialog.classList.add("hidden");
+      resolve(false);
+    }
+
+    function handleYes() {
+      cleanup();
+      dialog.classList.add("hidden");
+      resolve(true);
+    }
+
+    confirmNo.addEventListener("click", handleNo);
+    confirmYes.addEventListener("click", handleYes);
+  });
 }

@@ -45,8 +45,10 @@ async function loadProfiles() {
 
       // Attach handlers for current page
       tbody.querySelectorAll(".edit-profile-btn").forEach(btn => {
-        btn.addEventListener("click", e => {
+        btn.addEventListener("click", async e => {
           const id = e.target.dataset.id;
+          const confirmed = await showProfilesConfirmationDialog("Are you sure you want to edit this profile?");
+          if (!confirmed) return;
           const user = items.find(u => u.user_id == id);
           if (user) showEditProfileModal(user);
         });
@@ -54,10 +56,10 @@ async function loadProfiles() {
       tbody.querySelectorAll(".delete-profile-btn").forEach(btn => {
         btn.addEventListener("click", async e => {
           const id = e.target.dataset.id;
-          if (confirm("Are you sure you want to delete this user?")) {
-            await deleteProfile(id);
-            loadProfiles();
-          }
+          const confirmed = await showProfilesConfirmationDialog("Are you sure you want to delete this profile?");
+          if (!confirmed) return;
+          await deleteProfile(id);
+          loadProfiles();
         });
       });
     }
@@ -107,8 +109,10 @@ async function loadProfiles() {
 
     // Attach handlers
     document.querySelectorAll(".edit-profile-btn").forEach(btn => {
-      btn.addEventListener("click", e => {
+      btn.addEventListener("click", async e => {
         const id = e.target.dataset.id;
+        const confirmed = await showProfilesConfirmationDialog("Are you sure you want to edit this profile?");
+        if (!confirmed) return;
         const user = items.find(u => u.user_id == id); // use == to match string vs number
         if (user) showEditProfileModal(user);
       });
@@ -117,10 +121,10 @@ async function loadProfiles() {
     document.querySelectorAll(".delete-profile-btn").forEach(btn => {
       btn.addEventListener("click", async e => {
         const id = e.target.dataset.id;
-        if (confirm("Are you sure you want to delete this user?")) {
-          await deleteProfile(id);
-          loadProfiles(); // refresh table
-        }
+        const confirmed = await showProfilesConfirmationDialog("Are you sure you want to delete this profile?");
+        if (!confirmed) return;
+        await deleteProfile(id);
+        loadProfiles(); // refresh table
       });
     });
 
@@ -303,3 +307,36 @@ function setupAddUserModal() {
 document.addEventListener("DOMContentLoaded", () => {
   setupAddUserModal();
 });
+
+// ✅ Helper to show confirmation dialog for profiles
+async function showProfilesConfirmationDialog(message) {
+  return new Promise((resolve) => {
+    const dialog = document.getElementById("profilesConfirmationDialog");
+    const messageEl = document.getElementById("profilesConfirmationMessage");
+    const confirmNo = document.getElementById("profilesConfirmNo");
+    const confirmYes = document.getElementById("profilesConfirmYes");
+
+    messageEl.textContent = message;
+    dialog.classList.remove("hidden");
+
+    function cleanup() {
+      confirmNo.removeEventListener("click", handleNo);
+      confirmYes.removeEventListener("click", handleYes);
+    }
+
+    function handleNo() {
+      cleanup();
+      dialog.classList.add("hidden");
+      resolve(false);
+    }
+
+    function handleYes() {
+      cleanup();
+      dialog.classList.add("hidden");
+      resolve(true);
+    }
+
+    confirmNo.addEventListener("click", handleNo);
+    confirmYes.addEventListener("click", handleYes);
+  });
+}
