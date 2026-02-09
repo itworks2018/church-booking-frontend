@@ -29,22 +29,22 @@ async function loadApprovedEvents() {
         const tr = document.createElement("tr");
         tr.className = "border-b";
         tr.innerHTML = `
-          <td class="p-3 border">${item.booking_id}</td>
+          <td class="p-3 border">${item.booking_id || ""}</td>
           <td class="p-3 border">${item.user_id || item.user_email || ""}</td>
-          <td class="p-3 border">${item.event_name}</td>
-          <td class="p-3 border">${item.purpose}</td>
-          <td class="p-3 border">${item.attendees}</td>
-          <td class="p-3 border">${item.venue}</td>
+          <td class="p-3 border">${item.event_name || ""}</td>
+          <td class="p-3 border">${item.purpose || ""}</td>
+          <td class="p-3 border">${item.attendees || ""}</td>
+          <td class="p-3 border">${item.venue || ""}</td>
           <td class="p-3 border">${new Date(item.start_datetime).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">${new Date(item.end_datetime).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">${item.additional_needs || "None"}</td>
-          <td class="p-3 border">${item.status}</td>
+          <td class="p-3 border">${item.status || ""}</td>
           <td class="p-3 border">${new Date(item.created_at).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">
             <div class="flex flex-row gap-2 justify-center">
-              <button class="view-btn px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-lg" data-id="${item.booking_id}" title="View">👁️</button>
-              <button class="edit-btn px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-lg" data-id="${item.booking_id}" title="Edit">✏️</button>
-              <button class="delete-btn px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition text-lg" data-id="${item.booking_id}" title="Delete">🗑️</button>
+              <button class="view-btn px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-lg" data-id="${item.booking_id || ""}" title="View">👁️</button>
+              <button class="edit-btn px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-lg" data-id="${item.booking_id || ""}" title="Edit">✏️</button>
+              <button class="delete-btn px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition text-lg" data-id="${item.booking_id || ""}" title="Delete">🗑️</button>
             </div>
           </td>
         `;
