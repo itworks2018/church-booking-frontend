@@ -45,10 +45,8 @@ async function loadProfiles() {
 
       // Attach handlers for current page
       tbody.querySelectorAll(".edit-profile-btn").forEach(btn => {
-        btn.addEventListener("click", async e => {
+        btn.addEventListener("click", e => {
           const id = e.target.dataset.id;
-          const confirmed = await showProfilesConfirmationDialog("Are you sure you want to edit this profile?");
-          if (!confirmed) return;
           const user = items.find(u => u.user_id == id);
           if (user) showEditProfileModal(user);
         });
@@ -109,10 +107,8 @@ async function loadProfiles() {
 
     // Attach handlers
     document.querySelectorAll(".edit-profile-btn").forEach(btn => {
-      btn.addEventListener("click", async e => {
+      btn.addEventListener("click", e => {
         const id = e.target.dataset.id;
-        const confirmed = await showProfilesConfirmationDialog("Are you sure you want to edit this profile?");
-        if (!confirmed) return;
         const user = items.find(u => u.user_id == id); // use == to match string vs number
         if (user) showEditProfileModal(user);
       });
@@ -167,6 +163,8 @@ function showEditProfileModal(user) {
 
   form.onsubmit = async (ev) => {
     ev.preventDefault();
+    const confirmed = await showProfilesConfirmationDialog("Are you sure you want to edit this profile?");
+    if (!confirmed) return;
     await updateProfile(user.user_id, new FormData(form));
     modal.classList.add("hidden");
     modal.classList.remove("flex");

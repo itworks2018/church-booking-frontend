@@ -62,8 +62,6 @@ async function loadApprovedEvents() {
       tbody.querySelectorAll(".edit-btn").forEach(btn => {
         btn.addEventListener("click", async e => {
           const id = e.target.dataset.id;
-          const confirmed = await showEventsConfirmationDialog("Are you sure you want to edit this event?");
-          if (!confirmed) return;
           const booking = items.find(b => b.booking_id === id);
           if (booking) {
             const modal = document.getElementById("editEventModal");
@@ -83,6 +81,8 @@ async function loadApprovedEvents() {
             };
             form.onsubmit = async (ev) => {
               ev.preventDefault();
+              const confirmed = await showEventsConfirmationDialog("Are you sure you want to edit this event?");
+              if (!confirmed) return;
               await updateEvent(id, new FormData(form));
               modal.classList.add("hidden");
               modal.classList.remove("flex");
