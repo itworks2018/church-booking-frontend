@@ -89,7 +89,24 @@ async function handleBookingSubmit(e) {
 
     if (!res.ok) {
       if (res.status === 409) {
-        alert(data.error || "This venue is already booked for the selected date and time. Please choose a different schedule or venue.");
+        // Display conflict with available options
+        let errorMessage = data.error || "Booking conflict detected.";
+        
+        if (data.conflictingBooking) {
+          errorMessage += `\n\n⚠️ Conflict Details:\nVenue: ${data.conflictingBooking.venue}\nDate: ${data.conflictingBooking.date}\nTime: ${data.conflictingBooking.time}`;
+        }
+
+        if (data.availableSlots && data.availableSlots.length > 0) {
+          errorMessage += `\n\n${data.message}\n`;
+          data.availableSlots.forEach((slot, index) => {
+            errorMessage += `${index + 1}. ${slot.start_time} - ${slot.end_time}\n`;
+          });
+          errorMessage += "\nPlease select one of these available times.";
+        } else {
+          errorMessage += "\n\nNo available time slots for this date. Please choose another date or venue.";
+        }
+
+        alert(errorMessage);
       } else {
         alert(data.error || "Booking failed");
       }

@@ -237,8 +237,18 @@ async function loadCalendarEvents() {
       if (!res.ok) {
         const error = await res.json();
         // Show error modal with specific message for booking conflicts
-        const errorMessage = error.error || error.message || 'Unknown error';
-        showBookingError(errorMessage);
+        const errorData = error.error || error.message || 'Unknown error';
+        
+        // For 409 conflicts, show available slots
+        let displayMessage = errorData;
+        if (res.status === 409 && error.availableSlots && error.availableSlots.length > 0) {
+          displayMessage = errorData + "\n\nAvailable time slots:\n";
+          error.availableSlots.forEach((slot, index) => {
+            displayMessage += `${index + 1}. ${slot.start_time} - ${slot.end_time}\n`;
+          });
+        }
+        
+        showBookingError(displayMessage);
         return;
       }
 
@@ -278,13 +288,19 @@ function showBookingError(message) {
   const errorModal = document.getElementById('bookingErrorModal');
   const errorMessageEl = document.getElementById('errorModalMessage');
   
-  // Customize message for venue conflict
-  let displayMessage = message;
-  if (message.toLowerCase().includes('already booked') || message.toLowerCase().includes('prior schedule')) {
-    displayMessage = 'A prior schedule is already booked in the venue, select different day or time.';
+  // Check if message contains available slots (multi-line format)
+  if (message.includes('\n')) {
+    // Use pre-formatted text for multi-line messages
+    errorMessageEl.innerHTML = `<pre style="white-space: pre-wrap; text-align: left; font-family: inherit; font-size: 0.95rem; line-height: 1.4;">${message}</pre>`;
+  } else {
+    // Customize message for venue conflict (single line)
+    let displayMessage = message;
+    if (message.toLowerCase().includes('already booked') || message.toLowerCase().includes('prior schedule')) {
+      displayMessage = 'A prior schedule is already booked in the venue, select different day or time.';
+    }
+    errorMessageEl.textContent = displayMessage;
   }
   
-  errorMessageEl.textContent = displayMessage;
   errorModal.classList.remove('hidden');
   
   // Add close handlers

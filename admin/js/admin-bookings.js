@@ -87,8 +87,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!res.ok) {
         // Show error notification at top
+        let errorMessage = data.error || "Booking failed";
+        
+        // Handle 409 conflict with available slots
+        if (res.status === 409 && data.availableSlots && data.availableSlots.length > 0) {
+          let slotsText = "Available time slots:\n";
+          data.availableSlots.forEach((slot, index) => {
+            slotsText += `${index + 1}. ${slot.start_time} - ${slot.end_time}\n`;
+          });
+          errorMessage = errorMessage + "\n\n" + slotsText;
+        }
+        
         const notif = document.createElement("div");
-        notif.textContent = data.error || "Booking failed";
+        notif.innerHTML = `<pre style="white-space: pre-wrap; text-align: left; font-size: 0.9rem;">${errorMessage}</pre>`;
         notif.style.position = "fixed";
         notif.style.top = "30px";
         notif.style.left = "50%";
@@ -98,9 +109,10 @@ document.addEventListener("DOMContentLoaded", () => {
         notif.style.padding = "16px 32px";
         notif.style.borderRadius = "8px";
         notif.style.fontSize = "1.1rem";
+        notif.style.maxWidth = "600px";
         notif.style.zIndex = 9999;
         document.body.appendChild(notif);
-        setTimeout(() => notif.remove(), 2500);
+        setTimeout(() => notif.remove(), 4000);
         btn.disabled = false;
         btn.textContent = "Submit Event";
         return;
