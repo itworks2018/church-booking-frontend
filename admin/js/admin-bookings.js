@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
       if (!res.ok) {
-        // Show error notification at top
+        // Show error modal (alert) like user side
         let errorMessage = data.error || "Booking failed";
         
         // Handle 409 conflict with available slots
@@ -98,21 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
           errorMessage = errorMessage + "\n\n" + slotsText;
         }
         
-        const notif = document.createElement("div");
-        notif.innerHTML = `<pre style="white-space: pre-wrap; text-align: left; font-size: 0.9rem;">${errorMessage}</pre>`;
-        notif.style.position = "fixed";
-        notif.style.top = "30px";
-        notif.style.left = "50%";
-        notif.style.transform = "translateX(-50%)";
-        notif.style.background = "#ef4444";
-        notif.style.color = "white";
-        notif.style.padding = "16px 32px";
-        notif.style.borderRadius = "8px";
-        notif.style.fontSize = "1.1rem";
-        notif.style.maxWidth = "600px";
-        notif.style.zIndex = 9999;
-        document.body.appendChild(notif);
-        setTimeout(() => notif.remove(), 4000);
+        alert(errorMessage);
         btn.disabled = false;
         btn.textContent = "Submit Event";
         return;
