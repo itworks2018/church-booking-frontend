@@ -549,6 +549,16 @@ function setupChangeRequestModalListeners() {
       handleChangeRequestResponse('Approved');
     });
   }
+
+  // Delete button
+  const deleteBtn = document.getElementById('deleteChangeRequest');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete this change request? This action cannot be undone.')) {
+        handleDeleteChangeRequest();
+      }
+    });
+  }
   
   window.modalListenersAttached = true;
 }
@@ -596,6 +606,42 @@ async function handleChangeRequestResponse(status) {
   } catch (err) {
     console.error("Error handling change request:", err);
     alert('Failed to process change request. Please try again.');
+  }
+}
+
+// ✅ Handle change request deletion
+async function handleDeleteChangeRequest() {
+  const requestId = document.getElementById('crRequestId').value;
+  const token = localStorage.getItem("access_token");
+
+  if (!token) {
+    alert('You must be logged in');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/change-requests/${requestId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      alert('Failed to delete change request: ' + (error.message || 'Unknown error'));
+      return;
+    }
+
+    alert('Change request deleted successfully!');
+    document.getElementById('changeRequestModal').classList.add('hidden');
+    
+    // Reload change requests table
+    loadChangeRequests();
+  } catch (err) {
+    console.error("Error deleting change request:", err);
+    alert('Failed to delete change request. Please try again.');
   }
 }
 
