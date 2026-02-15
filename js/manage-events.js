@@ -512,9 +512,11 @@ async function openChangeRequestModal(requestId, eventName, description, date) {
 }
 
 // ✅ Setup change request modal event listeners (called after modal is rendered)
-let modalListenersAttached = false;
+if (typeof window.modalListenersAttached === 'undefined') {
+  window.modalListenersAttached = false;
+}
 function setupChangeRequestModalListeners() {
-  if (modalListenersAttached) return; // Only attach once
+  if (window.modalListenersAttached) return; // Only attach once
   
   // Close button
   const closeBtn = document.getElementById('closeChangeRequestModal');
@@ -548,7 +550,7 @@ function setupChangeRequestModalListeners() {
     });
   }
   
-  modalListenersAttached = true;
+  window.modalListenersAttached = true;
 }
 
 // ✅ Handle change request approval/rejection
