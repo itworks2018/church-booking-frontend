@@ -1,5 +1,7 @@
-// ✅ Backend API URL
-const API_BASE_URL = "https://church-booking-backend.onrender.com";
+// ✅ Backend API URL - prevent redeclaration on script reload
+if (typeof API_BASE_URL === 'undefined') {
+  var API_BASE_URL = "https://church-booking-backend.onrender.com";
+}
 
 // ✅ Security: HTML escape utility to prevent XSS
 function escapeHtml(unsafe) {
@@ -47,12 +49,14 @@ async function loadUserBookings() {
     const tbody = document.getElementById("myBookingsBody");
     if (!tbody) return;
     tbody.innerHTML = "";
-    if (!Array.isArray(data)) {
+    // Handle both direct array and {items: [...]} response formats
+    const bookings = Array.isArray(data) ? data : (data.items || []);
+    if (!Array.isArray(bookings)) {
       console.error("Bookings is not an array:", data);
       return;
     }
     // Only show pending and approved
-    data.filter(b => b.status === "Pending" || b.status === "Approved").forEach(b => {
+    bookings.filter(b => b.status === "Pending" || b.status === "Approved").forEach(b => {
       const statusBgColor = b.status === "Approved" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800";
       const row = `
         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
@@ -103,9 +107,11 @@ async function loadCalendarEvents() {
       console.error("Request failed:", res.status);
       return;
     }
-    const bookings = await res.json();
+    const data = await res.json();
+    // Handle both direct array and {items: [...]} response formats
+    const bookings = Array.isArray(data) ? data : (data.items || []);
     if (!Array.isArray(bookings)) {
-      console.error("Bookings is not an array:", bookings);
+      console.error("Bookings is not an array:", data);
       return;
     }
     const calendarEl = document.getElementById("fullcalendar");
@@ -498,9 +504,20 @@ function attachModalEventListeners() {
     const confirmChangeYes = document.getElementById('confirmChangeYes');
     if (confirmChangeYes) {
       confirmChangeYes.addEventListener('click', async () => {
-        const bookingId = document.getElementById('updateBookingId').value;
+        const bookingId = document.getElementById('updateBookingId').value.trim();
         const description = document.getElementById('changeDescription').value.trim();
         const token = localStorage.getItem("access_token");
+        
+        // Validate both fields are present
+        if (!bookingId) {
+          alert('Error: Booking ID not found. Please close and reopen the form.');
+          return;
+        }
+        
+        if (!description) {
+          alert('Please enter a description for your change request');
+          return;
+        }
         
         if (!token) {
           alert('You must be logged in to submit a change request');
