@@ -401,6 +401,11 @@ async function loadChangeRequests() {
             </button>`
         : `<span class="text-gray-500 text-sm">Processed</span>`;
       
+      // Delete button (trash icon) for all requests
+      const deleteButton = `<button class="deleteChangeBtn text-red-600 hover:text-red-800 text-xl font-bold transition" data-request-id="${cr.id}" data-event-name="${escapeHtml(cr.event_name)}" title="Delete this change request">
+              🗑️
+            </button>`;
+      
       // Show admin notes for completed requests
       const adminNotesDisplay = cr.status !== "Pending" 
         ? `<div class="text-xs mt-1 p-2 bg-gray-100 rounded">${escapeHtml(cr.admin_notes || "No notes")}</div>`
@@ -414,8 +419,9 @@ async function loadChangeRequests() {
             <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusBgColor}">${cr.status}</span>
             ${adminNotesDisplay}
           </td>
-          <td class="px-6 py-4 text-center">
+          <td class="px-6 py-4 text-center flex gap-2 justify-center items-center">
             ${reviewButton}
+            ${deleteButton}
           </td>
           <td class="px-6 py-4 text-center text-sm">${cr.created_at ? new Date(cr.created_at).toLocaleString("en-US", { hour12: true }) : ''}</td>
         </tr>
@@ -431,6 +437,19 @@ async function loadChangeRequests() {
         const description = e.target.dataset.description;
         const date = e.target.dataset.date;
         openChangeRequestModal(requestId, eventName, description, date);
+      });
+    });
+
+    // Attach event listeners to delete buttons
+    document.querySelectorAll('.deleteChangeBtn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const requestId = e.target.dataset.requestId;
+        const eventName = e.target.dataset.eventName;
+        
+        if (confirm(`Are you sure you want to delete the change request for "${eventName}"? This action cannot be undone.`)) {
+          await deleteChangeRequestFromTable(requestId);
+        }
       });
     });
   } catch (err) {
@@ -549,16 +568,6 @@ function setupChangeRequestModalListeners() {
       handleChangeRequestResponse('Approved');
     });
   }
-
-  // Delete button
-  const deleteBtn = document.getElementById('deleteChangeRequest');
-  if (deleteBtn) {
-    deleteBtn.addEventListener('click', () => {
-      if (confirm('Are you sure you want to delete this change request? This action cannot be undone.')) {
-        handleDeleteChangeRequest();
-      }
-    });
-  }
   
   window.modalListenersAttached = true;
 }
@@ -609,9 +618,8 @@ async function handleChangeRequestResponse(status) {
   }
 }
 
-// ✅ Handle change request deletion
-async function handleDeleteChangeRequest() {
-  const requestId = document.getElementById('crRequestId').value;
+// ✅ Handle change request deletion from table
+async function deleteChangeRequestFromTable(requestId) {
   const token = localStorage.getItem("access_token");
 
   if (!token) {
@@ -634,9 +642,6 @@ async function handleDeleteChangeRequest() {
       return;
     }
 
-    alert('Change request deleted successfully!');
-    document.getElementById('changeRequestModal').classList.add('hidden');
-    
     // Reload change requests table
     loadChangeRequests();
   } catch (err) {
