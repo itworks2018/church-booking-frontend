@@ -487,17 +487,17 @@ function attachModalEventListeners() {
     }
     
     // Confirmation: No button
-    const confirmNo = document.getElementById('confirmNo');
-    if (confirmNo) {
-      confirmNo.addEventListener('click', () => {
+    const confirmChangeNo = document.getElementById('confirmChangeNo');
+    if (confirmChangeNo) {
+      confirmChangeNo.addEventListener('click', () => {
         document.getElementById('confirmUpdateModal').classList.add('hidden');
       });
     }
     
     // Confirmation: Yes button
-    const confirmYes = document.getElementById('confirmYes');
-    if (confirmYes) {
-      confirmYes.addEventListener('click', async () => {
+    const confirmChangeYes = document.getElementById('confirmChangeYes');
+    if (confirmChangeYes) {
+      confirmChangeYes.addEventListener('click', async () => {
         const bookingId = document.getElementById('updateBookingId').value;
         const description = document.getElementById('changeDescription').value.trim();
         const token = localStorage.getItem("access_token");
