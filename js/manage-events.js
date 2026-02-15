@@ -478,7 +478,7 @@ async function openChangeRequestModal(requestId, eventName, description, date) {
     });
     
     if (res.ok) {
-      const bookings = await res.json();
+      const { items: bookings = [] } = await res.json();
       const booking = bookings.find(b => b.event_name === eventName);
       
       if (booking) {
