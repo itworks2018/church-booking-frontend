@@ -172,17 +172,67 @@ function showReviewModal(booking) {
   const modal = document.getElementById("reviewModal");
   const content = document.getElementById("reviewContent");
 
+  // Determine status badge color
+  let statusBg = "bg-yellow-100";
+  let statusColor = "text-yellow-800";
+  if (booking.status === "Approved") {
+    statusBg = "bg-green-100";
+    statusColor = "text-green-800";
+  } else if (booking.status === "Rejected") {
+    statusBg = "bg-red-100";
+    statusColor = "text-red-800";
+  }
+
   content.innerHTML = `
-    <p><strong>Booking ID:</strong> ${escapeHtml(booking.booking_id)}</p>
-    <p><strong>Event Name:</strong> ${escapeHtml(booking.event_name)}</p>
-    <p><strong>Purpose:</strong> ${escapeHtml(booking.purpose)}</p>
-    <p><strong>Attendees:</strong> ${escapeHtml(booking.attendees)}</p>
-    <p><strong>Venue:</strong> ${escapeHtml(booking.venue)}</p>
-    <p><strong>Start:</strong> ${escapeHtml(new Date(booking.start_datetime).toLocaleString())}</p>
-    <p><strong>End:</strong> ${escapeHtml(new Date(booking.end_datetime).toLocaleString())}</p>
-    <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
-    <p><strong>Created At:</strong> ${escapeHtml(new Date(booking.created_at).toLocaleString())}</p>
-    <p><strong>Additional Needs:</strong> ${escapeHtml(booking.additional_needs || "None")}</p>
+    <div class="border-l-4 border-blue-500 pl-4 py-3 mb-4 bg-blue-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Booking ID</p>
+      <p class="font-semibold text-gray-900">${escapeHtml(booking.booking_id)}</p>
+    </div>
+    
+    <div class="border-l-4 border-blue-500 pl-4 py-3 mb-4 bg-blue-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Event Name</p>
+      <p class="font-semibold text-gray-900">${escapeHtml(booking.event_name)}</p>
+    </div>
+    
+    <div class="border-l-4 border-green-500 pl-4 py-3 mb-4 bg-green-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Purpose</p>
+      <p class="text-gray-900">${escapeHtml(booking.purpose)}</p>
+    </div>
+    
+    <div class="border-l-4 border-green-500 pl-4 py-3 mb-4 bg-green-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Attendees</p>
+      <p class="font-semibold text-gray-900">${escapeHtml(booking.attendees)}</p>
+    </div>
+    
+    <div class="border-l-4 border-purple-500 pl-4 py-3 mb-4 bg-purple-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Venue</p>
+      <p class="font-semibold text-gray-900">${escapeHtml(booking.venue)}</p>
+    </div>
+    
+    <div class="border-l-4 border-purple-500 pl-4 py-3 mb-4 bg-purple-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Start Date/Time</p>
+      <p class="text-gray-900">${escapeHtml(new Date(booking.start_datetime).toLocaleString())}</p>
+    </div>
+    
+    <div class="border-l-4 border-purple-500 pl-4 py-3 mb-4 bg-purple-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">End Date/Time</p>
+      <p class="text-gray-900">${escapeHtml(new Date(booking.end_datetime).toLocaleString())}</p>
+    </div>
+    
+    <div class="border-l-4 border-orange-500 pl-4 py-3 mb-4 bg-orange-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Additional Needs</p>
+      <p class="text-gray-900">${escapeHtml(booking.additional_needs || "None")}</p>
+    </div>
+    
+    <div class="border-l-4 border-orange-500 pl-4 py-3 mb-4 bg-orange-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Status</p>
+      <p class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusBg} ${statusColor}">${escapeHtml(booking.status)}</p>
+    </div>
+    
+    <div class="border-l-4 border-orange-500 pl-4 py-3 mb-4 bg-orange-50">
+      <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Created At</p>
+      <p class="text-gray-900">${escapeHtml(new Date(booking.created_at).toLocaleString())}</p>
+    </div>
   `;
 
   modal.classList.remove("hidden");
