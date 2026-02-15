@@ -141,6 +141,17 @@
       </div>
     </div>
     
+    <!-- Current Booking Status -->
+    <div class="bg-green-50 dark:bg-green-900 border-l-4 border-green-500 p-4 mb-6 rounded">
+      <h3 class="font-semibold text-green-900 dark:text-green-200 mb-3">Current Booking Status:</h3>
+      <div class="space-y-2 text-sm dark:text-gray-300">
+        <p><span class="font-semibold">Venue:</span> <span id="crVenue"></span></p>
+        <p><span class="font-semibold">Date/Time:</span> <span id="crBookingDateTime"></span></p>
+        <p><span class="font-semibold">Attendees:</span> <span id="crAttendees"></span></p>
+        <p><span class="font-semibold">Status:</span> <span id="crBookingStatus" class="px-2 py-1 rounded text-xs font-semibold"></span></p>
+      </div>
+    </div>
+    
     <!-- Admin Response Form -->
     <form id="changeRequestForm">
       <input type="hidden" id="crRequestId" />

@@ -381,26 +381,43 @@ async function loadChangeRequests() {
       return;
     }
 
-    // Show only pending requests
-    const pendingRequests = changeRequests.filter(cr => cr.status === "Pending");
-
+    // Show ALL requests (not filtered anymore)
     tbody.innerHTML = "";
-    noRequests.style.display = pendingRequests.length === 0 ? "block" : "none";
+    noRequests.style.display = changeRequests.length === 0 ? "block" : "none";
 
-    pendingRequests.forEach(cr => {
+    changeRequests.forEach(cr => {
+      // Determine status badge styling
+      let statusBgColor = "bg-yellow-100 text-yellow-800";
+      if (cr.status === "Approved") {
+        statusBgColor = "bg-green-100 text-green-800";
+      } else if (cr.status === "Rejected") {
+        statusBgColor = "bg-red-100 text-red-800";
+      }
+      
+      // Only show Review button for pending requests
+      const reviewButton = cr.status === "Pending" 
+        ? `<button class="reviewChangeBtn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition" data-request-id="${cr.id}" data-event-name="${escapeHtml(cr.event_name)}" data-description="${escapeHtml(cr.description)}" data-date="${cr.created_at}">
+              Review
+            </button>`
+        : `<span class="text-gray-500 text-sm">Processed</span>`;
+      
+      // Show admin notes for completed requests
+      const adminNotesDisplay = cr.status !== "Pending" 
+        ? `<div class="text-xs mt-1 p-2 bg-gray-100 rounded">${escapeHtml(cr.admin_notes || "No notes")}</div>`
+        : '';
+      
       const row = `
         <tr class="hover:bg-gray-50 transition">
           <td class="px-6 py-4 text-center">${escapeHtml(cr.event_name)}</td>
           <td class="px-6 py-4 text-center text-sm">${escapeHtml(cr.description)}</td>
           <td class="px-6 py-4 text-center">
-            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">${cr.status}</span>
+            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusBgColor}">${cr.status}</span>
+            ${adminNotesDisplay}
           </td>
           <td class="px-6 py-4 text-center">
-            <button class="reviewChangeBtn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition" data-request-id="${cr.id}" data-event-name="${escapeHtml(cr.event_name)}" data-description="${escapeHtml(cr.description)}" data-date="${cr.created_at}">
-              Review
-            </button>
+            ${reviewButton}
           </td>
-          <td class="px-6 py-4 text-center">${cr.created_at ? new Date(cr.created_at).toLocaleString("en-US", { hour12: true }) : ''}</td>
+          <td class="px-6 py-4 text-center text-sm">${cr.created_at ? new Date(cr.created_at).toLocaleString("en-US", { hour12: true }) : ''}</td>
         </tr>
       `;
       tbody.insertAdjacentHTML("beforeend", row);
@@ -422,7 +439,7 @@ async function loadChangeRequests() {
 }
 
 // ✅ Open change request modal for admin response
-function openChangeRequestModal(requestId, eventName, description, date) {
+async function openChangeRequestModal(requestId, eventName, description, date) {
   const modal = document.getElementById('changeRequestModal');
   
   document.getElementById('crRequestId').value = requestId;
@@ -430,6 +447,44 @@ function openChangeRequestModal(requestId, eventName, description, date) {
   document.getElementById('crDescription').textContent = description;
   document.getElementById('crDate').textContent = new Date(date).toLocaleString("en-US", { hour12: true });
   document.getElementById('adminNotes').value = '';
+  
+  // Fetch booking details to display current status
+  try {
+    const token = localStorage.getItem("access_token");
+    const res = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/all`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    
+    if (res.ok) {
+      const bookings = await res.json();
+      const booking = bookings.find(b => b.event_name === eventName);
+      
+      if (booking) {
+        document.getElementById('crVenue').textContent = booking.venue || 'Not specified';
+        document.getElementById('crBookingDateTime').textContent = booking.start_datetime 
+          ? new Date(booking.start_datetime).toLocaleString("en-US", { hour12: true })
+          : 'Not specified';
+        document.getElementById('crAttendees').textContent = booking.attendees || 'Not specified';
+        
+        // Set booking status with appropriate styling
+        const statusSpan = document.getElementById('crBookingStatus');
+        statusSpan.textContent = booking.status || 'Unknown';
+        statusSpan.className = 'px-2 py-1 rounded text-xs font-semibold ';
+        
+        if (booking.status === 'Approved') {
+          statusSpan.className += 'bg-green-100 text-green-800';
+        } else if (booking.status === 'Pending') {
+          statusSpan.className += 'bg-yellow-100 text-yellow-800';
+        } else if (booking.status === 'Rejected') {
+          statusSpan.className += 'bg-red-100 text-red-800';
+        } else {
+          statusSpan.className += 'bg-gray-100 text-gray-800';
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Error fetching booking details:", err);
+  }
   
   modal.classList.remove('hidden');
 }
@@ -464,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const approveBtn = document.getElementById('approveChangeRequest');
   if (approveBtn) {
     approveBtn.addEventListener('click', () => {
-      handleChangeRequestResponse('Updated');
+      handleChangeRequestResponse('Approved');
     });
   }
 }, { once: false });
@@ -504,7 +559,7 @@ async function handleChangeRequestResponse(status) {
       return;
     }
 
-    alert(`Change request ${status === 'Updated' ? 'approved' : 'rejected'} successfully!`);
+    alert(`Change request ${status === 'Approved' ? 'approved' : 'rejected'} successfully!`);
     document.getElementById('changeRequestModal').classList.add('hidden');
     
     // Reload change requests table
@@ -518,5 +573,8 @@ async function handleChangeRequestResponse(status) {
 // Load change requests on page load
 document.addEventListener('DOMContentLoaded', function() {
   loadChangeRequests();
+  
+  // Refresh change requests every 15 seconds for real-time updates
+  setInterval(loadChangeRequests, 15000);
 }, { once: false });
 
