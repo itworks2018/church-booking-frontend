@@ -439,134 +439,137 @@ async function loadUserChangeRequests() {
 
 // ✅ Setup update request modal event listeners (call from initPage for dynamic content)
 function attachModalEventListeners() {
-  // Cancel button
-  const cancelBtn = document.getElementById('cancelUpdateBtn');
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', () => {
-      document.getElementById('updateRequestModal').classList.add('hidden');
-    });
-  }
-  
-  // Draft button
-  const draftBtn = document.getElementById('draftUpdateBtn');
-  if (draftBtn) {
-    draftBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const bookingId = document.getElementById('updateBookingId').value;
-      const description = document.getElementById('changeDescription').value.trim();
-      
-      if (!description) {
-        alert('Please enter a description for your change request');
-        return;
-      }
-      
-      const draftKey = `updateRequestDraft_${bookingId}`;
-      localStorage.setItem(draftKey, description);
-      alert('Draft saved! You can edit it later when you open the form again.');
-      document.getElementById('updateRequestModal').classList.add('hidden');
-    });
-  }
-  
-  // Submit form
-  const updateForm = document.getElementById('updateRequestForm');
-  if (updateForm) {
-    updateForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const description = document.getElementById('changeDescription').value.trim();
-      
-      if (!description) {
-        alert('Please enter a description for your change request');
-        return;
-      }
-      
-      // Show confirmation modal
-      document.getElementById('confirmUpdateModal').classList.remove('hidden');
-    });
-  }
-  
-  // Confirmation: No button
-  const confirmNo = document.getElementById('confirmNo');
-  if (confirmNo) {
-    confirmNo.addEventListener('click', () => {
-      document.getElementById('confirmUpdateModal').classList.add('hidden');
-    });
-  }
-  
-  // Confirmation: Yes button
-  const confirmYes = document.getElementById('confirmYes');
-  if (confirmYes) {
-    confirmYes.addEventListener('click', async () => {
-      const bookingId = document.getElementById('updateBookingId').value;
-      const description = document.getElementById('changeDescription').value.trim();
-      const token = localStorage.getItem("access_token");
-      
-      if (!token) {
-        alert('You must be logged in to submit a change request');
-        return;
-      }
-      
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/change-requests`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            booking_id: bookingId,
-            description: description
-          })
-        });
+  // Use setTimeout to ensure DOM elements are fully ready
+  setTimeout(() => {
+    // Cancel button
+    const cancelBtn = document.getElementById('cancelUpdateBtn');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        document.getElementById('updateRequestModal').classList.add('hidden');
+      });
+    }
+    
+    // Draft button
+    const draftBtn = document.getElementById('draftUpdateBtn');
+    if (draftBtn) {
+      draftBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const bookingId = document.getElementById('updateBookingId').value;
+        const description = document.getElementById('changeDescription').value.trim();
         
-        if (!res.ok) {
-          const error = await res.json();
-          alert('Failed to submit change request: ' + (error.message || 'Unknown error'));
+        if (!description) {
+          alert('Please enter a description for your change request');
           return;
         }
         
-        // Clear draft
         const draftKey = `updateRequestDraft_${bookingId}`;
-        localStorage.removeItem(draftKey);
-        
-        // Close confirmation and update modals
-        document.getElementById('confirmUpdateModal').classList.add('hidden');
+        localStorage.setItem(draftKey, description);
+        alert('Draft saved! You can edit it later when you open the form again.');
         document.getElementById('updateRequestModal').classList.add('hidden');
+      });
+    }
+    
+    // Submit form
+    const updateForm = document.getElementById('updateRequestForm');
+    if (updateForm) {
+      updateForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const description = document.getElementById('changeDescription').value.trim();
         
-        // Show success modal
-        document.getElementById('updateSuccessModal').classList.remove('hidden');
+        if (!description) {
+          alert('Please enter a description for your change request');
+          return;
+        }
         
-        // Reload change requests
-        loadUserChangeRequests();
-      } catch (err) {
-        console.error("Error submitting change request:", err);
-        alert('Failed to submit change request. Please try again.');
-      }
-    });
-  }
-  
-  // Success modal: Close button
-  const closeSuccessBtn = document.getElementById('closeSuccessBtn');
-  if (closeSuccessBtn) {
-    closeSuccessBtn.addEventListener('click', () => {
-      document.getElementById('updateSuccessModal').classList.add('hidden');
-    });
-  }
-  
-  // Success modal: X button
-  const closeSuccessXBtn = document.getElementById('closeSuccessModal');
-  if (closeSuccessXBtn) {
-    closeSuccessXBtn.addEventListener('click', () => {
-      document.getElementById('updateSuccessModal').classList.add('hidden');
-    });
-  }
-  
-  // Update modal: X button
-  const closeUpdateXBtn = document.getElementById('closeUpdateModal');
-  if (closeUpdateXBtn) {
-    closeUpdateXBtn.addEventListener('click', () => {
-      document.getElementById('updateRequestModal').classList.add('hidden');
-    });
-  }
+        // Show confirmation modal
+        document.getElementById('confirmUpdateModal').classList.remove('hidden');
+      });
+    }
+    
+    // Confirmation: No button
+    const confirmNo = document.getElementById('confirmNo');
+    if (confirmNo) {
+      confirmNo.addEventListener('click', () => {
+        document.getElementById('confirmUpdateModal').classList.add('hidden');
+      });
+    }
+    
+    // Confirmation: Yes button
+    const confirmYes = document.getElementById('confirmYes');
+    if (confirmYes) {
+      confirmYes.addEventListener('click', async () => {
+        const bookingId = document.getElementById('updateBookingId').value;
+        const description = document.getElementById('changeDescription').value.trim();
+        const token = localStorage.getItem("access_token");
+        
+        if (!token) {
+          alert('You must be logged in to submit a change request');
+          return;
+        }
+        
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/change-requests`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              booking_id: bookingId,
+              description: description
+            })
+          });
+          
+          if (!res.ok) {
+            const error = await res.json();
+            alert('Failed to submit change request: ' + (error.message || 'Unknown error'));
+            return;
+          }
+          
+          // Clear draft
+          const draftKey = `updateRequestDraft_${bookingId}`;
+          localStorage.removeItem(draftKey);
+          
+          // Close confirmation and update modals
+          document.getElementById('confirmUpdateModal').classList.add('hidden');
+          document.getElementById('updateRequestModal').classList.add('hidden');
+          
+          // Show success modal
+          document.getElementById('updateSuccessModal').classList.remove('hidden');
+          
+          // Reload change requests
+          loadUserChangeRequests();
+        } catch (err) {
+          console.error("Error submitting change request:", err);
+          alert('Failed to submit change request. Please try again.');
+        }
+      });
+    }
+    
+    // Success modal: Close button
+    const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+    if (closeSuccessBtn) {
+      closeSuccessBtn.addEventListener('click', () => {
+        document.getElementById('updateSuccessModal').classList.add('hidden');
+      });
+    }
+    
+    // Success modal: X button
+    const closeSuccessXBtn = document.getElementById('closeSuccessModal');
+    if (closeSuccessXBtn) {
+      closeSuccessXBtn.addEventListener('click', () => {
+        document.getElementById('updateSuccessModal').classList.add('hidden');
+      });
+    }
+    
+    // Update modal: X button
+    const closeUpdateXBtn = document.getElementById('closeUpdateModal');
+    if (closeUpdateXBtn) {
+      closeUpdateXBtn.addEventListener('click', () => {
+        document.getElementById('updateRequestModal').classList.add('hidden');
+      });
+    }
+  }, 50); // 50ms delay to ensure DOM is ready
 }
 
 // ✅ Show booking error modal
