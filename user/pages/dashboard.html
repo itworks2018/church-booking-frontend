@@ -208,23 +208,125 @@
 </script>
 </div>
 <!-- BOOKING TABLE -->
-<h2 class="text-xl font-semibold mb-4">My Booking Requests</h2>
+<h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">My Booking Requests</h2>
 
-<div class="overflow-x-auto rounded-lg shadow mb-10">
-  <table class="min-w-full text-sm" id="myBookingsTable">
-    <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+<div class="overflow-x-auto rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 mb-10">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
       <tr>
-        <th class="px-4 py-3 text-left font-semibold">Event</th>
-        <th class="px-4 py-3 text-left font-semibold">Venue</th>
-        <th class="px-4 py-3 text-left font-semibold">Start</th>
-        <th class="px-4 py-3 text-left font-semibold">End</th>
-        <th class="px-4 py-3 text-left font-semibold">Status</th>
-        <th class="px-4 py-3 text-left font-semibold">Requested</th>
+        <th class="px-6 py-4 text-center font-bold">Event</th>
+        <th class="px-6 py-4 text-center font-bold">Venue</th>
+        <th class="px-6 py-4 text-center font-bold">Start Date/Time</th>
+        <th class="px-6 py-4 text-center font-bold">End Date/Time</th>
+        <th class="px-6 py-4 text-center font-bold">Status</th>
+        <th class="px-6 py-4 text-center font-bold">Requested</th>
+        <th class="px-6 py-4 text-center font-bold">Action</th>
       </tr>
     </thead>
     <tbody id="myBookingsBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
       <!-- Rows inserted dynamically by dashboard.js -->
     </tbody>
   </table>
+</div>
+
+<!-- CHANGE REQUEST TRACKING TABLE -->
+<h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Change Request Status</h2>
+
+<div class="overflow-x-auto rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 mb-10">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gradient-to-r from-purple-600 to-purple-700 text-white">
+      <tr>
+        <th class="px-6 py-4 text-center font-bold">Event</th>
+        <th class="px-6 py-4 text-center font-bold">Change Request</th>
+        <th class="px-6 py-4 text-center font-bold">Status</th>
+        <th class="px-6 py-4 text-center font-bold">Admin Notes</th>
+        <th class="px-6 py-4 text-center font-bold">Requested Date</th>
+      </tr>
+    </thead>
+    <tbody id="changeRequestsBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+      <!-- Rows inserted dynamically by dashboard.js -->
+    </tbody>
+  </table>
+</div>
+
+<!-- Update Request Modal -->
+<div id="updateRequestModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden overflow-y-auto">
+  <div class="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-2xl w-full p-8 relative my-8">
+    <button id="closeUpdateModal" class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-800 dark:text-gray-400">&times;</button>
+    
+    <h2 class="text-3xl font-bold mb-6 dark:text-gray-200">Update Booking Request</h2>
+    
+    <!-- Current Booking Details Reference -->
+    <div class="bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-500 p-4 mb-6 rounded">
+      <h3 class="font-semibold text-blue-900 dark:text-blue-200 mb-3">Current Booking Details:</h3>
+      <div class="grid grid-cols-2 gap-4 text-sm dark:text-gray-300">
+        <div>
+          <span class="font-semibold">Event:</span>
+          <p id="refEventName"></p>
+        </div>
+        <div>
+          <span class="font-semibold">Venue:</span>
+          <p id="refVenue"></p>
+        </div>
+        <div>
+          <span class="font-semibold">Start:</span>
+          <p id="refStart"></p>
+        </div>
+        <div>
+          <span class="font-semibold">End:</span>
+          <p id="refEnd"></p>
+        </div>
+      </div>
+    </div>
+    
+    <form id="updateRequestForm">
+      <input type="hidden" id="updateBookingId" />
+      
+      <!-- Description Box -->
+      <div class="mb-6">
+        <label for="changeDescription" class="block text-sm font-semibold mb-2 dark:text-gray-300">What changes would you like to request?</label>
+        <textarea 
+          id="changeDescription" 
+          placeholder="Please describe what changes you would like to request (e.g., change venue, extend time, increase attendees, add equipment needs, etc.)" 
+          maxlength="500" 
+          rows="6"
+          class="w-full px-4 py-3 border rounded-lg dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          required>
+        </textarea>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Maximum 500 characters</p>
+      </div>
+      
+      <!-- Buttons -->
+      <div class="flex justify-end gap-3">
+        <button type="button" id="cancelUpdateBtn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition">Cancel</button>
+        <button type="button" id="draftUpdateBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg transition">Draft</button>
+        <button type="submit" id="submitUpdateBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Confirmation Modal for Submit -->
+<div id="confirmUpdateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-md w-full p-8 relative">
+    <h3 class="text-2xl font-bold mb-4 dark:text-gray-200">Confirm Change Request</h3>
+    <p class="text-lg mb-6 dark:text-gray-300">Are you sure you want to submit this request for changes in your booking?</p>
+    <div class="flex justify-end gap-3">
+      <button id="confirmNo" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition">No</button>
+      <button id="confirmYes" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">Yes, Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div id="updateSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-md w-full p-8 relative">
+    <button id="closeSuccessModal" class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-800 dark:text-gray-400">&times;</button>
+    <h3 class="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">Success!</h3>
+    <p class="text-lg mb-6 dark:text-gray-300">Your change request has been submitted to the admin team. They will review and respond to your request soon.</p>
+    <div class="flex justify-end gap-3">
+      <button id="closeSuccessBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">OK</button>
+    </div>
+  </div>
 </div>
 

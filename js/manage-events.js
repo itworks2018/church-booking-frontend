@@ -355,3 +355,168 @@ async function showEventsConfirmationDialog(message) {
     confirmYes.addEventListener("click", handleYes);
   });
 }
+
+// ✅ Load admin's change requests
+async function loadChangeRequests() {
+  try {
+    const token = localStorage.getItem("access_token");
+    const res = await fetch(`${ADMIN_API_BASE_URL}/api/change-requests`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      console.warn("Failed to load change requests:", res.status);
+      return;
+    }
+
+    const changeRequests = await res.json();
+    const tbody = document.getElementById("changeRequestsTable");
+    const noRequests = document.getElementById("noChangeRequests");
+
+    if (!tbody || !noRequests) return;
+
+    if (!Array.isArray(changeRequests) || changeRequests.length === 0) {
+      tbody.innerHTML = "";
+      noRequests.style.display = "block";
+      return;
+    }
+
+    // Show only pending requests
+    const pendingRequests = changeRequests.filter(cr => cr.status === "Pending");
+
+    tbody.innerHTML = "";
+    noRequests.style.display = pendingRequests.length === 0 ? "block" : "none";
+
+    pendingRequests.forEach(cr => {
+      const row = `
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-4 text-center">${escapeHtml(cr.event_name)}</td>
+          <td class="px-6 py-4 text-center text-sm">${escapeHtml(cr.description)}</td>
+          <td class="px-6 py-4 text-center">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">${cr.status}</span>
+          </td>
+          <td class="px-6 py-4 text-center">
+            <button class="reviewChangeBtn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition" data-request-id="${cr.id}" data-event-name="${escapeHtml(cr.event_name)}" data-description="${escapeHtml(cr.description)}" data-date="${cr.created_at}">
+              Review
+            </button>
+          </td>
+          <td class="px-6 py-4 text-center">${cr.created_at ? new Date(cr.created_at).toLocaleString("en-US", { hour12: true }) : ''}</td>
+        </tr>
+      `;
+      tbody.insertAdjacentHTML("beforeend", row);
+    });
+
+    // Attach event listeners to review buttons
+    document.querySelectorAll('.reviewChangeBtn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const requestId = e.target.dataset.requestId;
+        const eventName = e.target.dataset.eventName;
+        const description = e.target.dataset.description;
+        const date = e.target.dataset.date;
+        openChangeRequestModal(requestId, eventName, description, date);
+      });
+    });
+  } catch (err) {
+    console.error("Error loading change requests:", err);
+  }
+}
+
+// ✅ Open change request modal for admin response
+function openChangeRequestModal(requestId, eventName, description, date) {
+  const modal = document.getElementById('changeRequestModal');
+  
+  document.getElementById('crRequestId').value = requestId;
+  document.getElementById('crEventName').textContent = eventName;
+  document.getElementById('crDescription').textContent = description;
+  document.getElementById('crDate').textContent = new Date(date).toLocaleString("en-US", { hour12: true });
+  document.getElementById('adminNotes').value = '';
+  
+  modal.classList.remove('hidden');
+}
+
+// ✅ Setup change request modal event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Close button
+  const closeBtn = document.getElementById('closeChangeRequestModal');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      document.getElementById('changeRequestModal').classList.add('hidden');
+    });
+  }
+
+  // Cancel button
+  const cancelBtn = document.getElementById('cancelChangeRequest');
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      document.getElementById('changeRequestModal').classList.add('hidden');
+    });
+  }
+
+  // Reject button
+  const rejectBtn = document.getElementById('rejectChangeRequest');
+  if (rejectBtn) {
+    rejectBtn.addEventListener('click', () => {
+      handleChangeRequestResponse('Rejected');
+    });
+  }
+
+  // Approve button
+  const approveBtn = document.getElementById('approveChangeRequest');
+  if (approveBtn) {
+    approveBtn.addEventListener('click', () => {
+      handleChangeRequestResponse('Updated');
+    });
+  }
+}, { once: false });
+
+// ✅ Handle change request approval/rejection
+async function handleChangeRequestResponse(status) {
+  const requestId = document.getElementById('crRequestId').value;
+  const adminNotes = document.getElementById('adminNotes').value.trim();
+  const token = localStorage.getItem("access_token");
+
+  if (!adminNotes) {
+    alert('Please add notes explaining your decision');
+    return;
+  }
+
+  if (!token) {
+    alert('You must be logged in');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${ADMIN_API_BASE_URL}/api/change-requests/${requestId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        status: status,
+        admin_notes: adminNotes
+      })
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      alert('Failed to update change request: ' + (error.message || 'Unknown error'));
+      return;
+    }
+
+    alert(`Change request ${status === 'Updated' ? 'approved' : 'rejected'} successfully!`);
+    document.getElementById('changeRequestModal').classList.add('hidden');
+    
+    // Reload change requests table
+    loadChangeRequests();
+  } catch (err) {
+    console.error("Error handling change request:", err);
+    alert('Failed to process change request. Please try again.');
+  }
+}
+
+// Load change requests on page load
+document.addEventListener('DOMContentLoaded', function() {
+  loadChangeRequests();
+}, { once: false });
+

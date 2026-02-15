@@ -49,18 +49,41 @@ async function loadUserBookings() {
     }
     // Only show pending and approved
     data.filter(b => b.status === "Pending" || b.status === "Approved").forEach(b => {
+      const statusBgColor = b.status === "Approved" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800";
       const row = `
-        <tr>
-          <td class="border px-3 py-2">${b.event_name}</td>
-          <td class="border px-3 py-2">${b.venue}</td>
-          <td class="border px-3 py-2">${new Date(b.start_datetime).toLocaleString()}</td>
-          <td class="border px-3 py-2">${new Date(b.end_datetime).toLocaleString()}</td>
-          <td class="border px-3 py-2 capitalize">${b.status}</td>
-          <td class="border px-3 py-2">${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</td>
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+          <td class="px-6 py-4 text-center">${escapeHtml(b.event_name)}</td>
+          <td class="px-6 py-4 text-center">${escapeHtml(b.venue)}</td>
+          <td class="px-6 py-4 text-center">${new Date(b.start_datetime).toLocaleString("en-US", { hour12: true })}</td>
+          <td class="px-6 py-4 text-center">${new Date(b.end_datetime).toLocaleString("en-US", { hour12: true })}</td>
+          <td class="px-6 py-4 text-center">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusBgColor}">${b.status}</span>
+          </td>
+          <td class="px-6 py-4 text-center">${b.created_at ? new Date(b.created_at).toLocaleString("en-US", { hour12: true }) : ''}</td>
+          <td class="px-6 py-4 text-center">
+            <button class="updateRequestBtn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition" data-booking-id="${b.booking_id || b.id}" data-event-name="${escapeHtml(b.event_name)}" data-venue="${escapeHtml(b.venue)}" data-start="${b.start_datetime}" data-end="${b.end_datetime}">
+              Update Request
+            </button>
+          </td>
         </tr>
       `;
       tbody.insertAdjacentHTML("beforeend", row);
     });
+    
+    // Attach event listeners to "Update Request" buttons
+    document.querySelectorAll('.updateRequestBtn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const bookingId = e.target.dataset.bookingId;
+        const eventName = e.target.dataset.eventName;
+        const venue = e.target.dataset.venue;
+        const start = e.target.dataset.start;
+        const end = e.target.dataset.end;
+        openUpdateRequestModal(bookingId, eventName, venue, start, end);
+      });
+    });
+    
+    // Load change requests for display
+    loadUserChangeRequests();
   } catch (err) {
     console.error("Error loading bookings:", err);
   }
@@ -341,6 +364,206 @@ async function loadCalendarEvents() {
     }
   });
 })();
+
+// ✅ Open update request modal with booking details
+function openUpdateRequestModal(bookingId, eventName, venue, startDatetime, endDatetime) {
+  const modal = document.getElementById('updateRequestModal');
+  const form = document.getElementById('updateRequestForm');
+  
+  // Set booking ID in hidden input
+  document.getElementById('updateBookingId').value = bookingId;
+  
+  // Display reference booking details
+  document.getElementById('refEventName').textContent = eventName;
+  document.getElementById('refVenue').textContent = venue;
+  document.getElementById('refStart').textContent = new Date(startDatetime).toLocaleString("en-US", { hour12: true });
+  document.getElementById('refEnd').textContent = new Date(endDatetime).toLocaleString("en-US", { hour12: true });
+  
+  // Load any existing draft from localStorage
+  const draftKey = `updateRequestDraft_${bookingId}`;
+  const savedDraft = localStorage.getItem(draftKey);
+  document.getElementById('changeDescription').value = savedDraft || '';
+  
+  // Show modal
+  modal.classList.remove('hidden');
+}
+
+// ✅ Load user's change requests for display
+async function loadUserChangeRequests() {
+  const token = localStorage.getItem("access_token");
+  if (!token) return;
+  
+  const tbody = document.getElementById("changeRequestsBody");
+  if (!tbody) return;
+  
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/change-requests/my`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    
+    if (!res.ok) {
+      return; // Silently fail if endpoint doesn't exist yet
+    }
+    
+    const changeRequests = await res.json();
+    tbody.innerHTML = "";
+    
+    if (!Array.isArray(changeRequests) || changeRequests.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No change requests yet</td></tr>';
+      return;
+    }
+    
+    changeRequests.forEach(cr => {
+      const statusBgColor = cr.status === "Updated" ? "bg-green-100 text-green-800" : cr.status === "Pending" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800";
+      const row = `
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+          <td class="px-6 py-4 text-center">${escapeHtml(cr.event_name)}</td>
+          <td class="px-6 py-4 text-center text-sm">${escapeHtml(cr.description)}</td>
+          <td class="px-6 py-4 text-center">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusBgColor}">${cr.status}</span>
+          </td>
+          <td class="px-6 py-4 text-center text-sm">${cr.admin_notes ? escapeHtml(cr.admin_notes) : '-'}</td>
+          <td class="px-6 py-4 text-center">${cr.created_at ? new Date(cr.created_at).toLocaleString("en-US", { hour12: true }) : ''}</td>
+        </tr>
+      `;
+      tbody.insertAdjacentHTML("beforeend", row);
+    });
+  } catch (err) {
+    console.error("Error loading change requests:", err);
+  }
+}
+
+// ✅ Setup update request modal event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Cancel button
+  const cancelBtn = document.getElementById('cancelUpdateBtn');
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      document.getElementById('updateRequestModal').classList.add('hidden');
+    });
+  }
+  
+  // Draft button
+  const draftBtn = document.getElementById('draftUpdateBtn');
+  if (draftBtn) {
+    draftBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const bookingId = document.getElementById('updateBookingId').value;
+      const description = document.getElementById('changeDescription').value.trim();
+      
+      if (!description) {
+        alert('Please enter a description for your change request');
+        return;
+      }
+      
+      const draftKey = `updateRequestDraft_${bookingId}`;
+      localStorage.setItem(draftKey, description);
+      alert('Draft saved! You can edit it later when you open the form again.');
+      document.getElementById('updateRequestModal').classList.add('hidden');
+    });
+  }
+  
+  // Submit form
+  const updateForm = document.getElementById('updateRequestForm');
+  if (updateForm) {
+    updateForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const description = document.getElementById('changeDescription').value.trim();
+      
+      if (!description) {
+        alert('Please enter a description for your change request');
+        return;
+      }
+      
+      // Show confirmation modal
+      document.getElementById('confirmUpdateModal').classList.remove('hidden');
+    });
+  }
+  
+  // Confirmation: No button
+  const confirmNo = document.getElementById('confirmNo');
+  if (confirmNo) {
+    confirmNo.addEventListener('click', () => {
+      document.getElementById('confirmUpdateModal').classList.add('hidden');
+    });
+  }
+  
+  // Confirmation: Yes button
+  const confirmYes = document.getElementById('confirmYes');
+  if (confirmYes) {
+    confirmYes.addEventListener('click', async () => {
+      const bookingId = document.getElementById('updateBookingId').value;
+      const description = document.getElementById('changeDescription').value.trim();
+      const token = localStorage.getItem("access_token");
+      
+      if (!token) {
+        alert('You must be logged in to submit a change request');
+        return;
+      }
+      
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/change-requests`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            booking_id: bookingId,
+            description: description
+          })
+        });
+        
+        if (!res.ok) {
+          const error = await res.json();
+          alert('Failed to submit change request: ' + (error.message || 'Unknown error'));
+          return;
+        }
+        
+        // Clear draft
+        const draftKey = `updateRequestDraft_${bookingId}`;
+        localStorage.removeItem(draftKey);
+        
+        // Close confirmation and update modals
+        document.getElementById('confirmUpdateModal').classList.add('hidden');
+        document.getElementById('updateRequestModal').classList.add('hidden');
+        
+        // Show success modal
+        document.getElementById('updateSuccessModal').classList.remove('hidden');
+        
+        // Reload change requests
+        loadUserChangeRequests();
+      } catch (err) {
+        console.error("Error submitting change request:", err);
+        alert('Failed to submit change request. Please try again.');
+      }
+    });
+  }
+  
+  // Success modal: Close button
+  const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+  if (closeSuccessBtn) {
+    closeSuccessBtn.addEventListener('click', () => {
+      document.getElementById('updateSuccessModal').classList.add('hidden');
+    });
+  }
+  
+  // Success modal: X button
+  const closeSuccessXBtn = document.getElementById('closeSuccessModal');
+  if (closeSuccessXBtn) {
+    closeSuccessXBtn.addEventListener('click', () => {
+      document.getElementById('updateSuccessModal').classList.add('hidden');
+    });
+  }
+  
+  // Update modal: X button
+  const closeUpdateXBtn = document.getElementById('closeUpdateModal');
+  if (closeUpdateXBtn) {
+    closeUpdateXBtn.addEventListener('click', () => {
+      document.getElementById('updateRequestModal').classList.add('hidden');
+    });
+  }
+}, { once: false });
 
 // ✅ Show booking error modal
 function showBookingError(message) {

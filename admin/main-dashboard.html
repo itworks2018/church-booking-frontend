@@ -16,6 +16,22 @@
     <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
     <div class="flex items-center space-x-4">
       <span class="text-gray-700">Welcome, <span id="adminName">Admin</span></span>
+      <!-- Notification Bell Icon (NEW) -->
+      <div class="relative">
+        <button id="notificationBell" class="relative text-2xl text-gray-600 hover:text-gray-800 transition" title="Pending change requests">
+          🔔
+          <span id="notificationBadge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">
+            <span id="notificationCount">0</span>
+          </span>
+        </button>
+        <!-- Dropdown tooltip -->
+        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg p-4 border border-gray-200 z-50">
+          <h3 class="font-bold text-gray-800 mb-3">🔔 Pending Change Requests</h3>
+          <div id="notificationList" class="space-y-2 max-h-64 overflow-y-auto">
+            <!-- Notifications will be populated here -->
+          </div>
+        </div>
+      </div>
       <!-- Profile Dropdown -->
       <div class="relative z-50">
         <button id="profileBtn" class="w-10 h-10 rounded-full bg-gray-300"></button>
@@ -271,7 +287,101 @@
     if (typeof loadApprovedEvents === "function") {
       loadApprovedEvents();
     }
+
+    // ✅ Initialize notification bell
+    setupNotificationBell();
   });
+</script>
+
+<!-- ✅ Notification Bell Script (NEW) -->
+<script>
+  // ✅ Setup notification bell with change requests count
+  async function setupNotificationBell() {
+    const notificationBell = document.getElementById('notificationBell');
+    const notificationBadge = document.getElementById('notificationBadge');
+    const notificationCount = document.getElementById('notificationCount');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const notificationList = document.getElementById('notificationList');
+
+    if (!notificationBell) return;
+
+    // Toggle dropdown on bell click
+    notificationBell.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('hidden');
+      if (!notificationDropdown.classList.contains('hidden')) {
+        loadPendingChangeRequests();
+      }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#notificationBell') && !e.target.closest('#notificationDropdown')) {
+        notificationDropdown.classList.add('hidden');
+      }
+    });
+
+    // Load pending change requests for badge
+    async function loadPendingChangeRequests() {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
+
+        const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/change-requests`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) return;
+
+        const changeRequests = await res.json();
+        const pendingRequests = changeRequests.filter(cr => cr.status === "Pending");
+
+        // Update badge
+        if (pendingRequests.length > 0) {
+          notificationBadge.classList.remove('hidden');
+          notificationCount.textContent = pendingRequests.length;
+        } else {
+          notificationBadge.classList.add('hidden');
+        }
+
+        // Update dropdown list
+        notificationList.innerHTML = "";
+        if (pendingRequests.length === 0) {
+          notificationList.innerHTML = '<p class="text-gray-500 text-sm">No pending requests</p>';
+          return;
+        }
+
+        pendingRequests.slice(0, 5).forEach(cr => {
+          const item = document.createElement('div');
+          item.className = 'p-2 bg-yellow-50 border-l-2 border-yellow-400 rounded cursor-pointer hover:bg-yellow-100 transition';
+          item.innerHTML = `<p class="font-semibold text-sm text-gray-800">${cr.event_name}</p><p class="text-xs text-gray-600 mt-1">User: ${cr.description.substring(0, 30)}...</p>`;
+          item.addEventListener('click', () => {
+            // Navigate to manage events page
+            if (typeof loadPage === 'function') {
+              loadPage('manage-events.html');
+            }
+            notificationDropdown.classList.add('hidden');
+          });
+          notificationList.appendChild(item);
+        });
+
+        if (pendingRequests.length > 5) {
+          const moreItem = document.createElement('p');
+          moreItem.className = 'text-xs text-blue-600 mt-3 text-center cursor-pointer hover:underline';
+          moreItem.textContent = `+${pendingRequests.length - 5} more requests`;
+          notificationList.appendChild(moreItem);
+        }
+      } catch (err) {
+        console.error("Error loading notifications:", err);
+      }
+    }
+
+    // Refresh notifications every 30 seconds
+    setInterval(loadPendingChangeRequests, 30000);
+
+    // Initial load
+    loadPendingChangeRequests();
+  }
 </script>
 
   <!-- Footer -->
