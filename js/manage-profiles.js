@@ -1,3 +1,14 @@
+// ✅ Security: HTML escape utility to prevent XSS
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== "string") return String(unsafe || "");
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 // ✅ Load all users
 async function loadProfiles() {
   try {
@@ -28,10 +39,10 @@ async function loadProfiles() {
         const tr = document.createElement("tr");
         tr.className = "border-b";
         tr.innerHTML = `
-          <td class="p-3 border">${user.user_id}</td>
-          <td class="p-3 border">${user.full_name || ""}</td>
-          <td class="p-3 border">${user.email}</td>
-          <td class="p-3 border">${user.role}</td>
+          <td class="p-3 border">${escapeHtml(user.user_id)}</td>
+          <td class="p-3 border">${escapeHtml(user.full_name || "")}</td>
+          <td class="p-3 border">${escapeHtml(user.email)}</td>
+          <td class="p-3 border">${escapeHtml(user.role)}</td>
           <td class="p-3 border">${new Date(user.created_at).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">
             <div class="flex flex-row gap-2 justify-center">

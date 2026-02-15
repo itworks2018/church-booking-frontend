@@ -1,3 +1,14 @@
+// ✅ Security: HTML escape utility to prevent XSS
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== "string") return String(unsafe || "");
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 // ✅ Load and display audit logs
 async function loadAuditLogs() {
   try {
@@ -30,19 +41,19 @@ async function loadAuditLogs() {
         const tr = document.createElement("tr");
         tr.className = "border-b";
         tr.innerHTML = `
-          <td class="p-3">${log.booking_id || "N/A"}</td>
-          <td class="p-3">${log.event_name || "N/A"}</td>
-          <td class="p-3">${log.booker_email || "N/A"}</td>
+          <td class="p-3">${escapeHtml(log.booking_id || "N/A")}</td>
+          <td class="p-3">${escapeHtml(log.event_name || "N/A")}</td>
+          <td class="p-3">${escapeHtml(log.booker_email || "N/A")}</td>
           <td class="p-3">
             <span class="px-3 py-1 rounded text-white text-sm font-semibold ${
               log.action === "Approved" ? "bg-green-600" :
               log.action === "Rejected" ? "bg-red-600" :
               "bg-blue-600"
             }">
-              ${log.action}
+              ${escapeHtml(log.action)}
             </span>
           </td>
-          <td class="p-3">${log.admin_name || "N/A"}</td>
+          <td class="p-3">${escapeHtml(log.admin_name || "N/A")}</td>
           <td class="p-3">${new Date(log.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true })}</td>
         `;
         tbody.appendChild(tr);

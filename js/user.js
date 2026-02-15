@@ -1,5 +1,16 @@
 import { apiRequest, clearAuth, getRole } from './api.js'
 
+// ✅ Security: HTML escape utility to prevent XSS
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== "string") return String(unsafe || "");
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 const logoutBtn = document.getElementById('logout-btn')
 const venueSelect = document.getElementById('venue-select')
 const bookingForm = document.getElementById('booking-form')
@@ -62,15 +73,15 @@ async function loadMyBookings() {
 
       grouped[date].forEach(b => {
         const div = document.createElement('div')
-        div.className = `booking-item status-${b.status}`
+        div.className = `booking-item status-${escapeHtml(b.status)}`
 
         const start = new Date(b.start_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         const end = new Date(b.end_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
         div.innerHTML = `
-          <p><strong>${b.event_name}</strong> (${b.status})</p>
-          <p>${b.venues?.name || 'Venue'} - ${start} to ${end}</p>
-          <p>${b.event_purpose || ''}</p>
+          <p><strong>${escapeHtml(b.event_name)}</strong> (${escapeHtml(b.status)})</p>
+          <p>${escapeHtml(b.venues?.name || 'Venue')} - ${start} to ${end}</p>
+          <p>${escapeHtml(b.event_purpose || '')}</p>
         `
         dateSection.appendChild(div)
       })
@@ -78,7 +89,7 @@ async function loadMyBookings() {
       bookingsList.appendChild(dateSection)
     })
   } catch (err) {
-    bookingsList.innerHTML = `<p class="error">Failed to load bookings: ${err.message}</p>`
+    bookingsList.innerHTML = `<p class="error">Failed to load bookings: ${escapeHtml(err.message)}</p>`
   }
 }
 

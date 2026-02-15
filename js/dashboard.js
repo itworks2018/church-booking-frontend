@@ -1,3 +1,14 @@
+// ✅ Security: HTML escape utility to prevent XSS
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== "string") return String(unsafe || "");
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function initPage() {
   loadUserBookings();
   loadCalendarEvents();
@@ -98,14 +109,14 @@ async function loadCalendarEvents() {
         const modal = document.getElementById('bookingModal');
         const content = document.getElementById('bookingModalContent');
         content.innerHTML = `
-          <div><strong>Event:</strong> ${b.event_name || ''}</div>
-          <div><strong>Venue:</strong> ${b.venue || ''}</div>
-          <div><strong>Status:</strong> <span class="capitalize">${b.status || ''}</span></div>
+          <div><strong>Event:</strong> ${escapeHtml(b.event_name || '')}</div>
+          <div><strong>Venue:</strong> ${escapeHtml(b.venue || '')}</div>
+          <div><strong>Status:</strong> <span class="capitalize">${escapeHtml(b.status || '')}</span></div>
           <div><strong>Start:</strong> ${b.start_datetime ? new Date(b.start_datetime).toLocaleString() : ''}</div>
           <div><strong>End:</strong> ${b.end_datetime ? new Date(b.end_datetime).toLocaleString() : ''}</div>
-          <div><strong>Purpose:</strong> ${b.purpose || ''}</div>
-          <div><strong>Attendees:</strong> ${b.attendees || ''}</div>
-          <div><strong>Additional Needs:</strong> ${b.additional_needs || ''}</div>
+          <div><strong>Purpose:</strong> ${escapeHtml(b.purpose || '')}</div>
+          <div><strong>Attendees:</strong> ${escapeHtml(b.attendees || '')}</div>
+          <div><strong>Additional Needs:</strong> ${escapeHtml(b.additional_needs || '')}</div>
           <div><strong>Requested At:</strong> ${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</div>
         `;
         modal.classList.remove('hidden');
@@ -290,8 +301,8 @@ function showBookingError(message) {
   
   // Check if message contains available slots (multi-line format)
   if (message.includes('\n')) {
-    // Use pre-formatted text for multi-line messages
-    errorMessageEl.innerHTML = `<pre style="white-space: pre-wrap; text-align: left; font-family: inherit; font-size: 0.95rem; line-height: 1.4;">${message}</pre>`;
+    // Use pre-formatted text for multi-line messages (escaped for XSS prevention)
+    errorMessageEl.innerHTML = `<pre style="white-space: pre-wrap; text-align: left; font-family: inherit; font-size: 0.95rem; line-height: 1.4;">${escapeHtml(message)}</pre>`;
   } else {
     // Customize message for venue conflict (single line)
     let displayMessage = message;

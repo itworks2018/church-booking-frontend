@@ -2,6 +2,17 @@
 
 window.API_BASE_URL = window.API_BASE_URL || "https://church-booking-backend.onrender.com";
 
+// ✅ Security: HTML escape utility to prevent XSS
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== "string") return String(unsafe || "");
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 // Convert AM/PM to ISO
 function convertToLocal(dateStr, timeStr) {
   const [time, modifier] = timeStr.split(" ");
@@ -158,11 +169,11 @@ async function loadUserBookings() {
     data.forEach(b => {
       const row = `
         <tr>
-          <td class="border px-3 py-2">${b.event_name}</td>
-          <td class="border px-3 py-2">${b.venue}</td>
+          <td class="border px-3 py-2">${escapeHtml(b.event_name)}</td>
+          <td class="border px-3 py-2">${escapeHtml(b.venue)}</td>
           <td class="border px-3 py-2">${new Date(b.start_datetime).toLocaleString()}</td>
           <td class="border px-3 py-2">${new Date(b.end_datetime).toLocaleString()}</td>
-          <td class="border px-3 py-2 capitalize">${b.status}</td>
+          <td class="border px-3 py-2 capitalize">${escapeHtml(b.status)}</td>
           <td class="border px-3 py-2">${b.created_at ? new Date(b.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }) : ''}</td>
         </tr>
       `;

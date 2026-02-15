@@ -1,3 +1,14 @@
+// ✅ Security: HTML escape utility to prevent XSS
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== "string") return String(unsafe || "");
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 async function loadApprovedEvents() {
   try {
     const token = localStorage.getItem("access_token");
@@ -29,16 +40,16 @@ async function loadApprovedEvents() {
         const tr = document.createElement("tr");
         tr.className = "border-b";
         tr.innerHTML = `
-          <td class="p-3 border">${item.booking_id || ""}</td>
-          <td class="p-3 border">${item.user_id || item.user_email || ""}</td>
-          <td class="p-3 border">${item.event_name || ""}</td>
-          <td class="p-3 border">${item.purpose || ""}</td>
-          <td class="p-3 border">${item.attendees || ""}</td>
-          <td class="p-3 border">${item.venue || ""}</td>
+          <td class="p-3 border">${escapeHtml(item.booking_id || "")}</td>
+          <td class="p-3 border">${escapeHtml(item.user_id || item.user_email || "")}</td>
+          <td class="p-3 border">${escapeHtml(item.event_name || "")}</td>
+          <td class="p-3 border">${escapeHtml(item.purpose || "")}</td>
+          <td class="p-3 border">${escapeHtml(item.attendees || "")}</td>
+          <td class="p-3 border">${escapeHtml(item.venue || "")}</td>
           <td class="p-3 border">${new Date(item.start_datetime).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">${new Date(item.end_datetime).toLocaleString("en-US", { hour12: true })}</td>
-          <td class="p-3 border">${item.additional_needs || "None"}</td>
-          <td class="p-3 border">${item.status || ""}</td>
+          <td class="p-3 border">${escapeHtml(item.additional_needs || "None")}</td>
+          <td class="p-3 border">${escapeHtml(item.status || "")}</td>
           <td class="p-3 border">${new Date(item.created_at).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">
             <div class="flex flex-row gap-2 justify-center">
