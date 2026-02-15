@@ -1,3 +1,6 @@
+// ✅ Backend API URL
+const API_BASE_URL = "https://church-booking-backend.onrender.com";
+
 // ✅ Security: HTML escape utility to prevent XSS
 function escapeHtml(unsafe) {
   if (typeof unsafe !== "string") return String(unsafe || "");
@@ -12,6 +15,7 @@ function escapeHtml(unsafe) {
 function initPage() {
   loadUserBookings();
   loadCalendarEvents();
+  attachModalEventListeners();
 }
 
 // Booking Table Fetcher
@@ -433,8 +437,8 @@ async function loadUserChangeRequests() {
   }
 }
 
-// ✅ Setup update request modal event listeners
-document.addEventListener('DOMContentLoaded', function() {
+// ✅ Setup update request modal event listeners (call from initPage for dynamic content)
+function attachModalEventListeners() {
   // Cancel button
   const cancelBtn = document.getElementById('cancelUpdateBtn');
   if (cancelBtn) {
@@ -563,7 +567,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('updateRequestModal').classList.add('hidden');
     });
   }
-}, { once: false });
+}
 
 // ✅ Show booking error modal
 function showBookingError(message) {
