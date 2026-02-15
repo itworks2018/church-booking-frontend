@@ -440,6 +440,9 @@ async function loadChangeRequests() {
 
 // ✅ Open change request modal for admin response
 async function openChangeRequestModal(requestId, eventName, description, date) {
+  // Attach listeners first time modal is opened
+  setupChangeRequestModalListeners();
+  
   const modal = document.getElementById('changeRequestModal');
   
   document.getElementById('crRequestId').value = requestId;
@@ -508,8 +511,11 @@ async function openChangeRequestModal(requestId, eventName, description, date) {
   modal.classList.remove('hidden');
 }
 
-// ✅ Setup change request modal event listeners
-document.addEventListener('DOMContentLoaded', function() {
+// ✅ Setup change request modal event listeners (called after modal is rendered)
+let modalListenersAttached = false;
+function setupChangeRequestModalListeners() {
+  if (modalListenersAttached) return; // Only attach once
+  
   // Close button
   const closeBtn = document.getElementById('closeChangeRequestModal');
   if (closeBtn) {
@@ -541,7 +547,9 @@ document.addEventListener('DOMContentLoaded', function() {
       handleChangeRequestResponse('Approved');
     });
   }
-}, { once: false });
+  
+  modalListenersAttached = true;
+}
 
 // ✅ Handle change request approval/rejection
 async function handleChangeRequestResponse(status) {
