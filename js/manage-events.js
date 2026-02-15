@@ -360,7 +360,7 @@ async function showEventsConfirmationDialog(message) {
 async function loadChangeRequests() {
   try {
     const token = localStorage.getItem("access_token");
-    const res = await fetch(`${ADMIN_API_BASE_URL}/api/change-requests`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/change-requests`, {
       headers: { "Authorization": `Bearer ${token}` }
     });
 
@@ -451,7 +451,7 @@ async function openChangeRequestModal(requestId, eventName, description, date) {
   // Fetch booking details to display current status
   try {
     const token = localStorage.getItem("access_token");
-    const res = await fetch(`${ADMIN_API_BASE_URL}/api/bookings/all`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/all`, {
       headers: { "Authorization": `Bearer ${token}` }
     });
     
@@ -461,6 +461,25 @@ async function openChangeRequestModal(requestId, eventName, description, date) {
       
       if (booking) {
         document.getElementById('crVenue').textContent = booking.venue || 'Not specified';
+        
+        // Set booking ID with copy-to-clipboard functionality
+        const bookingIdLink = document.getElementById('crBookingId');
+        if (booking.booking_id) {
+          bookingIdLink.textContent = booking.booking_id;
+          bookingIdLink.onclick = (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(booking.booking_id);
+            // Visual feedback
+            const originalText = bookingIdLink.textContent;
+            bookingIdLink.textContent = '✅ Copied!';
+            setTimeout(() => {
+              bookingIdLink.textContent = originalText;
+            }, 2000);
+          };
+        } else {
+          bookingIdLink.textContent = 'Not specified';
+        }
+        
         document.getElementById('crBookingDateTime').textContent = booking.start_datetime 
           ? new Date(booking.start_datetime).toLocaleString("en-US", { hour12: true })
           : 'Not specified';
@@ -541,7 +560,7 @@ async function handleChangeRequestResponse(status) {
   }
 
   try {
-    const res = await fetch(`${ADMIN_API_BASE_URL}/api/change-requests/${requestId}`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/change-requests/${requestId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
