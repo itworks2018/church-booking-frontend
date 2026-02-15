@@ -547,7 +547,7 @@ function attachModalEventListeners() {
     }
     
     // Success modal: Close button
-    const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+    const closeSuccessBtn = document.getElementById('closeChangeSuccessBtn');
     if (closeSuccessBtn) {
       closeSuccessBtn.addEventListener('click', () => {
         document.getElementById('updateSuccessModal').classList.add('hidden');
@@ -555,7 +555,7 @@ function attachModalEventListeners() {
     }
     
     // Success modal: X button
-    const closeSuccessXBtn = document.getElementById('closeSuccessModal');
+    const closeSuccessXBtn = document.getElementById('closeChangeSuccessModal');
     if (closeSuccessXBtn) {
       closeSuccessXBtn.addEventListener('click', () => {
         document.getElementById('updateSuccessModal').classList.add('hidden');
