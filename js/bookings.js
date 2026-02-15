@@ -49,6 +49,30 @@ async function handleBookingSubmit(e) {
     return;
   }
 
+  // Check booking limit (max 2 per rolling 7 days)
+  try {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    const res = await fetch(`${API_BASE_URL}/api/bookings?checkLimit=true`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    
+    if (res.ok) {
+      const bookings = await res.json();
+      const recentBookings = bookings.filter(b => new Date(b.created_at) >= sevenDaysAgo).length;
+      
+      if (recentBookings >= 2) {
+        showLimitModal("You have reached the maximum request for this week. Please inform the CCF Sandoval events team if additional request is needed (Subject for approval)");
+        btn.disabled = false;
+        btn.textContent = "Submit Booking";
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn("Could not verify booking limit, proceeding anyway");
+  }
+
   const event_name = document.getElementById("event_name").value.trim();
   const purpose = document.getElementById("purpose").value.trim();
   const attendees = Number(document.getElementById("attendees").value);
@@ -183,4 +207,25 @@ async function loadUserBookings() {
   } catch (err) {
     console.error("Error loading bookings:", err);
   }
+}
+
+// ✅ Show limit exceeded modal dialog
+function showLimitModal(message) {
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+  modal.innerHTML = `
+    <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8 mx-4">
+      <h3 class="text-2xl font-bold mb-4 text-red-600">⚠️ Request Limit Reached</h3>
+      <p class="text-gray-700 mb-6 text-base">${escapeHtml(message)}</p>
+      <button id="closeLimitModal" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition font-semibold">
+        Close
+      </button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  document.getElementById('closeLimitModal').addEventListener('click', () => {
+    modal.remove();
+    location.reload();
+  });
 }

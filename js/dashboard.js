@@ -506,6 +506,25 @@ function attachModalEventListeners() {
           alert('You must be logged in to submit a change request');
           return;
         }
+
+        // Check if user already has a change request for this booking
+        try {
+          const checkRes = await fetch(`${API_BASE_URL}/api/change-requests/my`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          
+          if (checkRes.ok) {
+            const changeRequests = await checkRes.json();
+            const existingRequest = changeRequests.find(cr => cr.booking_id === bookingId);
+            
+            if (existingRequest) {
+              showChangeRequestLimitModal("You have reached the limit for changing booking update request. For further assistance, please reach out to CCF Sandoval Events team for the request (Subject for approval)");
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn("Could not verify change request limit, proceeding anyway");
+        }
         
         try {
           const res = await fetch(`${API_BASE_URL}/api/change-requests`, {
@@ -619,6 +638,27 @@ function showBookingSuccess() {
   });
   if (closeXBtn) closeXBtn.addEventListener('click', () => {
     successModal.classList.add('hidden');
+  });
+}
+
+// ✅ Show change request limit exceeded modal dialog
+function showChangeRequestLimitModal(message) {
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+  modal.innerHTML = `
+    <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8 mx-4">
+      <h3 class="text-2xl font-bold mb-4 text-red-600">⚠️ Request Limit Reached</h3>
+      <p class="text-gray-700 mb-6 text-base">${escapeHtml(message)}</p>
+      <button id="closeChangeRequestLimitModal" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition font-semibold">
+        Close
+      </button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  document.getElementById('closeChangeRequestLimitModal').addEventListener('click', () => {
+    modal.remove();
+    location.reload();
   });
 }
 
