@@ -12,7 +12,7 @@ function escapeHtml(unsafe) {
 async function loadApprovedEvents() {
   try {
     const token = localStorage.getItem("access_token");
-    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/approved/list`, {
+    const res = await fetch(`${window.ADMIN_API_BASE_URL}/api/bookings/all`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
