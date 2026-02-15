@@ -109,63 +109,15 @@ async function loadCalendarEvents() {
         const modal = document.getElementById('bookingModal');
         const content = document.getElementById('bookingModalContent');
         content.innerHTML = `
-          <div class="space-y-5">
-            <!-- Event Details Section -->
-            <div class="border-l-4 border-blue-500 pl-4">
-              <div class="grid grid-cols-2 gap-6">
-                <div>
-                  <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Event</label>
-                  <p class="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-2">${escapeHtml(b.event_name || '')}</p>
-                </div>
-                <div>
-                  <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Venue</label>
-                  <p class="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-2">${escapeHtml(b.venue || '')}</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Purpose & Details Section -->
-            <div class="border-l-4 border-green-500 pl-4">
-              <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Purpose</label>
-                <p class="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-2">${escapeHtml(b.purpose || '')}</p>
-              </div>
-              <div class="mt-5">
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Attendees</label>
-                <p class="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-2">${escapeHtml(b.attendees || '')}</p>
-              </div>
-            </div>
-
-            <!-- Date/Time Section -->
-            <div class="border-l-4 border-purple-500 pl-4">
-              <div class="grid grid-cols-2 gap-6">
-                <div>
-                  <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Start Date/Time</label>
-                  <p class="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-2">${b.start_datetime ? new Date(b.start_datetime).toLocaleString() : ''}</p>
-                </div>
-                <div>
-                  <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">End Date/Time</label>
-                  <p class="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-2">${b.end_datetime ? new Date(b.end_datetime).toLocaleString() : ''}</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Additional Info Section -->
-            <div class="border-l-4 border-orange-500 pl-4">
-              <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Additional Needs</label>
-                <p class="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-2">${escapeHtml(b.additional_needs || '')}</p>
-              </div>
-              <div class="mt-5">
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Requested At</label>
-                <p class="text-lg text-gray-900 dark:text-gray-100 font-semibold mt-2">${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</p>
-              </div>
-              <div class="mt-5">
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Status</label>
-                <span class="inline-block mt-2 px-4 py-2 rounded font-semibold text-sm ${b.status === "Approved" ? "bg-green-100 text-green-800" : b.status === "Pending" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}">${escapeHtml(b.status || '')}</span>
-              </div>
-            </div>
-          </div>
+          <div><strong>Event:</strong> ${escapeHtml(b.event_name || '')}</div>
+          <div><strong>Venue:</strong> ${escapeHtml(b.venue || '')}</div>
+          <div><strong>Status:</strong> <span class="capitalize">${escapeHtml(b.status || '')}</span></div>
+          <div><strong>Start:</strong> ${b.start_datetime ? new Date(b.start_datetime).toLocaleString() : ''}</div>
+          <div><strong>End:</strong> ${b.end_datetime ? new Date(b.end_datetime).toLocaleString() : ''}</div>
+          <div><strong>Purpose:</strong> ${escapeHtml(b.purpose || '')}</div>
+          <div><strong>Attendees:</strong> ${escapeHtml(b.attendees || '')}</div>
+          <div><strong>Additional Needs:</strong> ${escapeHtml(b.additional_needs || '')}</div>
+          <div><strong>Requested At:</strong> ${b.created_at ? new Date(b.created_at).toLocaleString() : ''}</div>
         `;
         modal.classList.remove('hidden');
       }
