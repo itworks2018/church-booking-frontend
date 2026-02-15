@@ -259,14 +259,59 @@ function showEventModal(booking) {
   const content = document.getElementById("eventContent");
 
   content.innerHTML = `
-    <p><strong>Event:</strong> ${booking.event_name}</p>
-    <p><strong>Venue:</strong> ${booking.venue}</p>
-    <p><strong>Purpose:</strong> ${booking.purpose}</p>
-    <p><strong>Attendees:</strong> ${booking.attendees}</p>
-    <p><strong>Start:</strong> ${new Date(booking.start_datetime).toLocaleString("en-US", { hour12: true })}</p>
-    <p><strong>End:</strong> ${new Date(booking.end_datetime).toLocaleString("en-US", { hour12: true })}</p>
-    <p><strong>Additional Needs:</strong> ${booking.additional_needs || "None"}</p>
-    <p><strong>Status:</strong> ${booking.status}</p>
+    <div class="space-y-5">
+      <!-- Event Details Section -->
+      <div class="border-l-4 border-blue-500 pl-4">
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Event</label>
+            <p class="text-lg text-gray-900 font-semibold mt-2">${booking.event_name}</p>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Venue</label>
+            <p class="text-lg text-gray-900 font-semibold mt-2">${booking.venue}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Purpose & Details Section -->
+      <div class="border-l-4 border-green-500 pl-4">
+        <div>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Purpose</label>
+          <p class="text-lg text-gray-900 font-semibold mt-2">${booking.purpose}</p>
+        </div>
+        <div class="mt-5">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Attendees</label>
+          <p class="text-lg text-gray-900 font-semibold mt-2">${booking.attendees}</p>
+        </div>
+      </div>
+
+      <!-- Date/Time Section -->
+      <div class="border-l-4 border-purple-500 pl-4">
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Start Date/Time</label>
+            <p class="text-lg text-gray-900 font-semibold mt-2">${new Date(booking.start_datetime).toLocaleString("en-US", { hour12: true })}</p>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">End Date/Time</label>
+            <p class="text-lg text-gray-900 font-semibold mt-2">${new Date(booking.end_datetime).toLocaleString("en-US", { hour12: true })}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Info Section -->
+      <div class="border-l-4 border-orange-500 pl-4">
+        <div>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Additional Needs</label>
+          <p class="text-lg text-gray-900 font-semibold mt-2">${booking.additional_needs || "None"}</p>
+        </div>
+        <div class="mt-5">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Status</label>
+          <span class="inline-block mt-2 px-4 py-2 rounded font-semibold text-sm ${booking.status === "Approved" ? "bg-green-100 text-green-800" : booking.status === "Pending" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}">${booking.status}</span>
+        </div>
+      </div>
+    </div>
   `;
 
   modal.classList.remove("hidden");
