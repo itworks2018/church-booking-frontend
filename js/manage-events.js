@@ -9,6 +9,84 @@ function escapeHtml(unsafe) {
     .replace(/'/g, "&#039;");
 }
 
+// ✅ Modal Focus Trap Utility
+let activeModalEvents = null;
+let previousActiveElementEvents = null;
+
+function setupModalFocusTrapEvents(modal) {
+  if (!modal) return;
+  modal.addEventListener("keydown", function modalKeyHandler(e) {
+    if (e.key === "Escape") {
+      modal.classList.add("hidden");
+      activeModalEvents = null;
+      if (previousActiveElementEvents) previousActiveElementEvents.focus();
+    }
+    if (e.key !== "Tab") return;
+    const focusableElements = modal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusableElements.length === 0) return;
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    }
+  });
+}
+
+function openModalWithFocusTrapEvents(modal) {
+  if (!modal) return;
+  previousActiveElementEvents = document.activeElement;
+  activeModalEvents = modal;
+  modal.classList.remove("hidden");
+  const focusableElements = modal.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+  if (focusableElements.length > 0) {
+    focusableElements[0].focus();
+  }
+}
+
+function closeModalWithFocusRestoreEvents(modal) {
+  if (!modal) return;
+  modal.classList.add("hidden");
+  activeModalEvents = null;
+  if (previousActiveElementEvents) previousActiveElementEvents.focus();
+}
+
+// ✅ Form validation for edit event modal
+function validateEditEventForm(form) {
+  let isValid = true;
+  const requiredFields = ['event_name', 'purpose', 'attendees', 'venue', 'start_datetime', 'end_datetime', 'additional_needs'];
+  
+  requiredFields.forEach(fieldName => {
+    const field = form.elements[fieldName];
+    const errorMsg = field.parentElement.querySelector('.error-message');
+    if (!field.value.trim()) {
+      field.setAttribute('aria-invalid', 'true');
+      field.style.borderColor = '#dc2626';
+      field.style.borderWidth = '2px';
+      if (errorMsg) errorMsg.style.display = 'block';
+      isValid = false;
+    } else {
+      field.removeAttribute('aria-invalid');
+      field.style.borderColor = '';
+      field.style.borderWidth = '';
+      if (errorMsg) errorMsg.style.display = 'none';
+    }
+  });
+  
+  return isValid;
+}
+
 async function loadApprovedEvents() {
   try {
     const token = localStorage.getItem("access_token");
@@ -26,8 +104,23 @@ async function loadApprovedEvents() {
       return; // ✅ prevents null.innerHTML error
     }
 
-
-    // Pagination logic
+    // Show empty state if no items
+    if (items.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="12" class="text-center py-8">
+            <div role="status" aria-live="polite" class="text-gray-500 dark:text-gray-400">
+              <p class="text-lg font-semibold">No events to display</p>
+              <p class="text-sm">Create a new event to get started.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      document.getElementById("eventsPagination").style.display = "none";
+      return;
+    }
+    
+    document.getElementById("eventsPagination").style.display = "flex";
     const pageSize = 10;
     let currentPage = 1;
     let totalPages = Math.ceil(items.length / pageSize);
@@ -53,9 +146,9 @@ async function loadApprovedEvents() {
           <td class="p-3 border">${new Date(item.created_at).toLocaleString("en-US", { hour12: true })}</td>
           <td class="p-3 border">
             <div class="flex flex-row gap-2 justify-center">
-              <button class="view-btn px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-lg" data-id="${item.booking_id || ""}" title="View">👁️</button>
-              <button class="edit-btn px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-lg" data-id="${item.booking_id || ""}" title="Edit">✏️</button>
-              <button class="delete-btn px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition text-lg" data-id="${item.booking_id || ""}" title="Delete">🗑️</button>
+              <button class="view-btn px-3 py-2 min-h-[44px] min-w-[44px] bg-blue-500 text-white rounded hover:bg-blue-600 transition text-lg flex items-center justify-center" data-id="${item.booking_id || ""}" title="View" aria-label="View details for ${escapeHtml(item.event_name)}">👁️</button>
+              <button class="edit-btn px-3 py-2 min-h-[44px] min-w-[44px] bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-lg flex items-center justify-center" data-id="${item.booking_id || ""}" title="Edit" aria-label="Edit booking for ${escapeHtml(item.event_name)}">✏️</button>
+              <button class="delete-btn px-3 py-2 min-h-[44px] min-w-[44px] bg-red-500 text-white rounded hover:bg-red-600 transition text-lg flex items-center justify-center" data-id="${item.booking_id || ""}" title="Delete" aria-label="Delete booking for ${escapeHtml(item.event_name)}">🗑️</button>
             </div>
           </td>
         `;
@@ -84,19 +177,38 @@ async function loadApprovedEvents() {
             form.elements["start_datetime"].value = booking.start_datetime.slice(0,16);
             form.elements["end_datetime"].value = booking.end_datetime.slice(0,16);
             form.elements["additional_needs"].value = booking.additional_needs || "";
-            modal.classList.remove("hidden");
-            modal.classList.add("flex");
+            
+            // Add real-time error clearing
+            ['event_name', 'purpose', 'attendees', 'venue', 'start_datetime', 'end_datetime', 'additional_needs'].forEach(fieldName => {
+              const field = form.elements[fieldName];
+              field.addEventListener('input', () => {
+                if (field.value.trim()) {
+                  field.removeAttribute('aria-invalid');
+                  field.style.borderColor = '';
+                  field.style.borderWidth = '';
+                  const errorMsg = field.parentElement.querySelector('.error-message');
+                  if (errorMsg) errorMsg.style.display = 'none';
+                }
+              });
+            });
+            
+            setupModalFocusTrapEvents(modal);
+            openModalWithFocusTrapEvents(modal);
             document.getElementById("cancelEdit").onclick = () => {
-              modal.classList.add("hidden");
-              modal.classList.remove("flex");
+              closeModalWithFocusRestoreEvents(modal);
             };
             form.onsubmit = async (ev) => {
               ev.preventDefault();
+              // Validate form fields
+              const isValid = validateEditEventForm(form);
+              if (!isValid) {
+                alert('Please fill in all required fields');
+                return;
+              }
               const confirmed = await showEventsConfirmationDialog("Are you sure you want to edit this event?");
               if (!confirmed) return;
               await updateEvent(id, new FormData(form));
-              modal.classList.add("hidden");
-              modal.classList.remove("flex");
+              closeModalWithFocusRestoreEvents(modal);
               loadApprovedEvents();
             };
           }
@@ -124,9 +236,13 @@ async function loadApprovedEvents() {
           btn.type = "button";
           const isActive = i === currentPage;
           btn.className = isActive 
-            ? "px-3 py-2 bg-blue-600 text-white rounded font-semibold transition"
-            : "px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition";
+            ? "px-3 py-2 min-h-[44px] min-w-[44px] bg-blue-600 text-white rounded font-semibold transition flex items-center justify-center"
+            : "px-3 py-2 min-h-[44px] min-w-[44px] bg-gray-700 hover:bg-gray-600 text-white rounded transition flex items-center justify-center";
           btn.textContent = i;
+          if (isActive) {
+            btn.setAttribute("aria-current", "page");
+          }
+          btn.setAttribute("aria-label", `Go to page ${i}`);
           btn.onclick = () => {
             currentPage = i;
             renderTablePage(currentPage);
@@ -314,12 +430,11 @@ function showEventModal(booking) {
     </div>
   `;
 
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
+  setupModalFocusTrapEvents(modal);
+  openModalWithFocusTrapEvents(modal);
 
   document.getElementById("closeEvent").onclick = () => {
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
+    closeModalWithFocusRestoreEvents(modal);
   };
 }
 
@@ -332,7 +447,8 @@ async function showEventsConfirmationDialog(message) {
     const confirmYes = document.getElementById("eventsConfirmYes");
 
     messageEl.textContent = message;
-    dialog.classList.remove("hidden");
+    setupModalFocusTrapEvents(dialog);
+    openModalWithFocusTrapEvents(dialog);
 
     function cleanup() {
       confirmNo.removeEventListener("click", handleNo);
@@ -341,13 +457,13 @@ async function showEventsConfirmationDialog(message) {
 
     function handleNo() {
       cleanup();
-      dialog.classList.add("hidden");
+      closeModalWithFocusRestoreEvents(dialog);
       resolve(false);
     }
 
     function handleYes() {
       cleanup();
-      dialog.classList.add("hidden");
+      closeModalWithFocusRestoreEvents(dialog);
       resolve(true);
     }
 
@@ -396,13 +512,13 @@ async function loadChangeRequests() {
       
       // Only show Review button for pending requests
       const reviewButton = cr.status === "Pending" 
-        ? `<button class="reviewChangeBtn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition" data-request-id="${cr.id}" data-event-name="${escapeHtml(cr.event_name)}" data-description="${escapeHtml(cr.description)}" data-date="${cr.created_at}">
+        ? `<button class="reviewChangeBtn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 min-h-[44px] rounded-lg transition font-semibold" data-request-id="${cr.id}" data-event-name="${escapeHtml(cr.event_name)}" data-description="${escapeHtml(cr.description)}" data-date="${cr.created_at}" aria-label="Review change request for ${escapeHtml(cr.event_name)}">
               Review
             </button>`
         : `<span class="text-gray-500 text-sm">Processed</span>`;
       
       // Delete button (trash icon) for all requests
-      const deleteButton = `<button class="deleteChangeBtn text-red-600 hover:text-red-800 text-xl font-bold transition" data-request-id="${cr.id}" data-event-name="${escapeHtml(cr.event_name)}" title="Delete this change request">
+      const deleteButton = `<button class="deleteChangeBtn min-h-[44px] min-w-[44px] text-red-600 hover:text-red-800 text-xl font-bold transition flex items-center justify-center" data-request-id="${cr.id}" data-event-name="${escapeHtml(cr.event_name)}" title="Delete" aria-label="Delete change request for ${escapeHtml(cr.event_name)}">
               🗑️
             </button>`;
       
@@ -527,7 +643,8 @@ async function openChangeRequestModal(requestId, eventName, description, date) {
     console.error("Error fetching booking details:", err);
   }
   
-  modal.classList.remove('hidden');
+  setupModalFocusTrapEvents(modal);
+  openModalWithFocusTrapEvents(modal);
 }
 
 // ✅ Setup change request modal event listeners (called after modal is rendered)
@@ -537,11 +654,12 @@ if (typeof window.modalListenersAttached === 'undefined') {
 function setupChangeRequestModalListeners() {
   if (window.modalListenersAttached) return; // Only attach once
   
+  const modal = document.getElementById('changeRequestModal');
   // Close button
   const closeBtn = document.getElementById('closeChangeRequestModal');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-      document.getElementById('changeRequestModal').classList.add('hidden');
+      closeModalWithFocusRestoreEvents(modal);
     });
   }
 
@@ -549,7 +667,7 @@ function setupChangeRequestModalListeners() {
   const cancelBtn = document.getElementById('cancelChangeRequest');
   if (cancelBtn) {
     cancelBtn.addEventListener('click', () => {
-      document.getElementById('changeRequestModal').classList.add('hidden');
+      closeModalWithFocusRestoreEvents(modal);
     });
   }
 
@@ -608,7 +726,8 @@ async function handleChangeRequestResponse(status) {
     }
 
     alert(`Change request ${status === 'Approved' ? 'approved' : 'rejected'} successfully!`);
-    document.getElementById('changeRequestModal').classList.add('hidden');
+    const modal = document.getElementById('changeRequestModal');
+    closeModalWithFocusRestoreEvents(modal);
     
     // Reload change requests table
     loadChangeRequests();

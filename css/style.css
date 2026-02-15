@@ -46,6 +46,94 @@ body {
 }
 
 /* =========================
+   GLOBAL FOCUS STATES (WCAG 2.1 AA)
+   ========================= */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: #dc2626;
+  border-width: 2px;
+}
+
+/* ========================= 
+   MODAL RESPONSIVE WIDTHS (WCAG COMPLIANCE)
+   ========================= */
+/* Large modals (review, event details) - 900px default */
+.modal-lg {
+  width: 900px;
+}
+@media (max-width: 1024px) {
+  .modal-lg {
+    width: 85vw;
+    max-width: 900px;
+  }
+}
+@media (max-width: 768px) {
+  .modal-lg {
+    width: 90vw;
+    max-width: 600px;
+  }
+}
+@media (max-width: 640px) {
+  .modal-lg {
+    width: 95vw;
+    max-width: 95vw;
+  }
+}
+
+/* Medium modals (edit event) - 700px default */
+.modal-md {
+  width: 700px;
+}
+@media (max-width: 1024px) {
+  .modal-md {
+    width: 85vw;
+    max-width: 700px;
+  }
+}
+@media (max-width: 768px) {
+  .modal-md {
+    width: 90vw;
+    max-width: 500px;
+  }
+}
+@media (max-width: 640px) {
+  .modal-md {
+    width: 95vw;
+    max-width: 95vw;
+  }
+}
+
+/* Small modals (dialogs, change request) - responsive */
+.modal-sm {
+  max-width: 500px;
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .modal-sm {
+    width: 90vw;
+  }
+}
+@media (max-width: 640px) {
+  .modal-sm {
+    width: 95vw;
+  }
+}
+
+/* =========================
    SIDEBAR TOGGLE
    ========================= */
 .sidebar-toggle {

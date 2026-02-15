@@ -1,6 +1,7 @@
 <div class="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
-  <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-12 w-full max-w-2xl">
-    <h2 class="text-3xl font-extrabold text-center mb-8 dark:text-gray-200">Book a Venue (Admin)</h2>
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:px-4 focus:py-3 focus:bg-blue-600 focus:text-white focus:rounded">Skip to main content</a>
+  <div id="main-content" class="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-12 w-full max-w-2xl">
+    <h1 class="text-3xl font-extrabold text-center mb-8 dark:text-gray-200">Book a Venue (Admin)</h1>
     <form id="adminBookingForm" class="space-y-6">
       <label for="event_name" class="sr-only">Event Name</label>
       <input type="text" id="event_name" name="event_name" placeholder="Event Name" maxlength="100" class="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:text-gray-200" required />
@@ -67,5 +68,6 @@
       <button id="adminSubmitBtn" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition-all duration-150 w-full">Submit Event</button>
     </form>
   </div>
+</div>
 </div>
 <script src="../js/admin-bookings.js"></script>

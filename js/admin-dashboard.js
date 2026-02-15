@@ -9,6 +9,59 @@ function escapeHtml(unsafe) {
     .replace(/'/g, "&#039;");
 }
 
+// ✅ Modal Focus Trap Utility
+let activeModal = null;
+let previousActiveElement = null;
+
+function setupModalFocusTrap(modal) {
+  if (!modal) return;
+  modal.addEventListener("keydown", function modalKeyHandler(e) {
+    if (e.key === "Escape") {
+      modal.classList.add("hidden");
+      activeModal = null;
+      if (previousActiveElement) previousActiveElement.focus();
+    }
+    if (e.key !== "Tab") return;
+    const focusableElements = modal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusableElements.length === 0) return;
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    }
+  });
+}
+
+function openModalWithFocusTrap(modal) {
+  if (!modal) return;
+  previousActiveElement = document.activeElement;
+  activeModal = modal;
+  modal.classList.remove("hidden");
+  const focusableElements = modal.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+  if (focusableElements.length > 0) {
+    focusableElements[0].focus();
+  }
+}
+
+function closeModalWithFocusRestore(modal) {
+  if (!modal) return;
+  modal.classList.add("hidden");
+  activeModal = null;
+  if (previousActiveElement) previousActiveElement.focus();
+}
+
 // Admin Dashboard Initialization Script
 async function initAdminDashboard() {
   try {
@@ -33,6 +86,22 @@ function populatePendingTable(items) {
   try {
     const tbody = document.getElementById("pendingTable");
     if (!tbody || !items || !Array.isArray(items)) return;
+    
+    // Show empty state if no items
+    if (items.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="10" class="text-center py-8">
+            <div role="status" aria-live="polite" class="text-gray-500 dark:text-gray-400">
+              <p class="text-lg font-semibold">No pending bookings found</p>
+              <p class="text-sm">All booking requests have been reviewed.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+    
     tbody.innerHTML = "";
 
     // Pagination logic
@@ -59,9 +128,9 @@ function populatePendingTable(items) {
           <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
           <td class="p-3">
             <div class="flex flex-row gap-2 justify-center">
-              <button class="review-btn px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-lg" data-id="${item.booking_id}" title="Review">👁️</button>
-              <button class="approve-btn px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition text-lg" data-id="${item.booking_id}" title="Approve">✅</button>
-              <button class="reject-btn px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition text-lg" data-id="${item.booking_id}" title="Reject">❌</button>
+              <button class="review-btn px-3 py-2 min-h-[44px] min-w-[44px] bg-blue-500 text-white rounded hover:bg-blue-600 transition text-lg flex items-center justify-center" data-id="${item.booking_id}" title="Review" aria-label="Review booking details for ${escapeHtml(item.event_name)}">👁️</button>
+              <button class="approve-btn px-3 py-2 min-h-[44px] min-w-[44px] bg-green-500 text-white rounded hover:bg-green-600 transition text-lg flex items-center justify-center" data-id="${item.booking_id}" title="Approve" aria-label="Approve booking for ${escapeHtml(item.event_name)}">✅</button>
+              <button class="reject-btn px-3 py-2 min-h-[44px] min-w-[44px] bg-red-500 text-white rounded hover:bg-red-600 transition text-lg flex items-center justify-center" data-id="${item.booking_id}" title="Reject" aria-label="Reject booking for ${escapeHtml(item.event_name)}">❌</button>
             </div>
           </td>
         `;
@@ -132,9 +201,13 @@ function populatePendingTable(items) {
           btn.type = "button";
           const isActive = i === currentPage;
           btn.className = isActive 
-            ? "px-3 py-2 bg-blue-600 text-white rounded font-semibold transition"
-            : "px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition";
+            ? "px-3 py-2 min-h-[44px] min-w-[44px] bg-blue-600 text-white rounded font-semibold transition flex items-center justify-center"
+            : "px-3 py-2 min-h-[44px] min-w-[44px] bg-gray-700 hover:bg-gray-600 text-white rounded transition flex items-center justify-center";
           btn.textContent = i;
+          if (isActive) {
+            btn.setAttribute("aria-current", "page");
+          }
+          btn.setAttribute("aria-label", `Go to page ${i}`);
           btn.onclick = () => {
             currentPage = i;
             renderTablePage(currentPage);
@@ -235,12 +308,11 @@ function showReviewModal(booking) {
     </div>
   `;
 
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
+  setupModalFocusTrap(modal);
+  openModalWithFocusTrap(modal);
 
   document.getElementById("closeReview").onclick = () => {
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
+    closeModalWithFocusRestore(modal);
   };
 }
 
@@ -526,12 +598,11 @@ if (calendarEl && window.FullCalendar) {
         </div>
       `;
 
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
+      setupModalFocusTrap(modal);
+      openModalWithFocusTrap(modal);
 
       document.getElementById("closeEvent").onclick = () => {
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
+        closeModalWithFocusRestore(modal);
       };
     }
   }); // ✅ closes FullCalendar config

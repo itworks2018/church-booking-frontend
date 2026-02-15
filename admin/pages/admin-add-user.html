@@ -35,8 +35,10 @@
 <body class="bg-cover bg-center bg-no-repeat min-h-screen flex flex-col admin-add-bg">
   <div class="flex-grow flex items-center justify-center py-12">
     <div class="glass-box shadow-xl rounded-lg p-12 w-full max-w-2xl admin-add-user-box">
+      <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:px-4 focus:py-3 focus:bg-blue-600 focus:text-white focus:rounded">Skip to main content</a>
+      <div id="main-content">
       <h1 class="text-3xl font-extrabold text-center mb-2 admin-add-user-title">Add User Form</h1>
-      <h2 class="text-xl font-bold text-center mb-6 admin-add-user-title">Add User (Admin)</h2>
+      <h2 class="text-xl font-bold text-center mb-6 admin-add-user-title">Admin User Management</h2>
       <p id="errorMessage" class="text-red-300 text-sm mb-2"></p>
       <form id="signupForm" class="space-y-4">
         <label for="full_name" class="sr-only">Full Name</label>
@@ -87,6 +89,8 @@
       </p>
     </div>
   </div>
+  </div>
+  <!-- End main-content -->
   <script src="../../js/admin-add-user.js" defer></script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 <!-- Dashboard Overview Content -->
-<h2 class="text-2xl font-bold mb-6 dark:text-white">Dashboard Overview</h2>
+<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:px-4 focus:py-3 focus:bg-blue-600 focus:text-white focus:rounded">Skip to main content</a>
+<div id="main-content">
+<h1 class="text-2xl font-bold mb-6 dark:text-white">Dashboard Overview</h1>
 
 <!-- Metrics -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -22,21 +24,21 @@
 </div>
 
 <!-- Pending Requests Table -->
-<h3 class="text-xl font-bold mb-4 dark:text-white">Pending Booking Requests</h3>
-<div class="overflow-auto rounded-lg shadow mb-10">
+<h2 class="text-xl font-bold mb-4 dark:text-white">Pending Booking Requests</h2>
+<div role="region" aria-live="polite" aria-label="Pending booking requests table" class="overflow-x-auto rounded-lg shadow mb-10">
   <table class="w-full text-left border-collapse">
     <thead>
       <tr class="bg-gray-200 dark:bg-gray-800 dark:text-white">
-        <th class="p-3">Booking ID</th>
-        <th class="p-3">Event Name</th>
-        <th class="p-3">Purpose</th>
-        <th class="p-3">Attendees</th>
-        <th class="p-3">Venue</th>
-        <th class="p-3">Start</th>
-        <th class="p-3">End</th>
-        <th class="p-3">Status</th>
-        <th class="p-3">Created At</th>
-        <th class="p-3">Actions</th>
+        <th class="p-3" scope="col">Booking ID</th>
+        <th class="p-3" scope="col">Event Name</th>
+        <th class="p-3" scope="col">Purpose</th>
+        <th class="p-3" scope="col">Attendees</th>
+        <th class="p-3" scope="col">Venue</th>
+        <th class="p-3" scope="col">Start</th>
+        <th class="p-3" scope="col">End</th>
+        <th class="p-3" scope="col">Status</th>
+        <th class="p-3" scope="col">Created At</th>
+        <th class="p-3" scope="col">Actions</th>
       </tr>
     </thead>
     <tbody id="pendingTable">
@@ -46,17 +48,17 @@
 </div>
 
 <!-- Pagination for Admin Booking Table -->
-<nav id="adminBookingsPagination" class="flex items-center justify-center gap-2 my-6 px-4 py-3 bg-gray-800 dark:bg-gray-900 rounded-lg hidden">
-  <button type="button" id="adminBookingsPrev" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">&lt;</button>
+<nav id="adminBookingsPagination" class="flex items-center justify-center gap-2 my-6 px-4 py-3 bg-gray-800 dark:bg-gray-900 rounded-lg hidden" aria-label="Booking table pagination">
+  <button type="button" id="adminBookingsPrev" class="px-4 py-2 min-h-[44px] min-w-[44px] bg-gray-700 hover:bg-gray-600 text-white rounded transition" aria-label="Go to previous page">Previous</button>
   <div class="flex items-center gap-1" id="adminBookingsPages">
     <!-- Page buttons inserted dynamically -->
   </div>
-  <button type="button" id="adminBookingsNext" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">&gt;</button>
+  <button type="button" id="adminBookingsNext" class="px-4 py-2 min-h-[44px] min-w-[44px] bg-gray-700 hover:bg-gray-600 text-white rounded transition" aria-label="Go to next page">Next</button>
 </nav>
 
 <!-- Calendar Section -->
 <div class="my-10">
-  <h3 class="text-xl font-bold mb-4 dark:text-white">Venue Calendar</h3>
+  <h2 class="text-xl font-bold mb-4 dark:text-white">Venue Calendar</h2>
   
   <!-- Create Venue Reservation Button -->
   <div class="mb-4">
@@ -154,25 +156,28 @@
     </div>
   </div>
 </div>
+</div>
+<!-- End main-content -->
 
+<!-- Modals section -->
 <!-- Review Modal -->
-    <div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-lg w-[900px] max-w-full p-10 overflow-y-auto">
-        <h3 class="text-3xl font-bold mb-8">Booking Details</h3>
+    <div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+      <div class="bg-white rounded-lg shadow-lg modal-lg max-w-full p-10 overflow-y-auto">
+        <h3 id="reviewModalTitle" class="text-3xl font-bold mb-8">Booking Details</h3>
         <div id="reviewContent" class="space-y-6"></div>
         <div class="mt-10 flex justify-end">
-          <button id="closeReview" class="bg-gray-600 text-white px-6 py-3 rounded text-lg hover:bg-gray-700">Close</button>
+          <button id="closeReview" class="bg-gray-600 text-white px-6 py-3 rounded text-lg hover:bg-gray-700" aria-label="Close booking details modal">Close</button>
         </div>
       </div>
     </div>
 
 <!-- Event Details Modal -->
-    <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-lg w-[900px] max-w-full p-10 overflow-y-auto">
-    <h3 class="text-3xl font-bold mb-8">Event Details</h3>
+    <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
+      <div class="bg-white rounded-lg shadow-lg modal-lg max-w-full p-10 overflow-y-auto">
+    <h3 id="eventModalTitle" class="text-3xl font-bold mb-8">Event Details</h3>
     <div id="eventContent" class="space-y-5 text-lg text-gray-800"></div>
     <div class="mt-10 flex justify-end">
-      <button id="closeEvent" class="bg-gray-600 text-white px-6 py-3 rounded text-lg hover:bg-gray-700">
+      <button id="closeEvent" class="bg-gray-600 text-white px-6 py-3 rounded text-lg hover:bg-gray-700" aria-label="Close event details modal">
         Close
       </button>
     </div>
