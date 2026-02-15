@@ -59,6 +59,7 @@
       <nav class="mt-6 w-full px-6 space-y-3">
         <button onclick="loadPage('dashboard.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Dashboard</button>
         <button onclick="loadPage('manage-events.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Manage Events</button>
+        <button onclick="loadPage('manage-change-requests.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">🔔 Change Requests</button>
         <button onclick="loadPage('profiles.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Profile</button>
         <button onclick="loadPage('logs.html')" class="w-full text-left p-2 rounded text-gray-200 hover:bg-gray-800 hover:text-white">Logs</button>
         <button disabled class="w-full text-left p-2 rounded bg-gray-700 text-gray-500 cursor-not-allowed">More features soon</button>
@@ -217,6 +218,24 @@
           script.id = "adminAddUserScript";
           document.body.appendChild(script);
         }
+
+        // ✅ Manage Change Requests block
+        if (page === "manage-change-requests.html") {
+          const oldScript = document.getElementById("changeRequestsScript");
+          if (oldScript) oldScript.remove();
+
+          const script = document.createElement("script");
+          script.src = "/js/admin-change-requests.js";
+          script.id = "changeRequestsScript";
+
+          script.onload = () => {
+            if (typeof loadChangeRequests === "function") {
+              loadChangeRequests();
+            }
+          };
+
+          document.body.appendChild(script);
+        }
       })
       .catch(() => {
         document.getElementById("contentArea").innerHTML =
@@ -353,12 +372,17 @@
 
         pendingRequests.slice(0, 5).forEach(cr => {
           const item = document.createElement('div');
-          item.className = 'p-2 bg-yellow-50 border-l-2 border-yellow-400 rounded cursor-pointer hover:bg-yellow-100 transition';
-          item.innerHTML = `<p class="font-semibold text-sm text-gray-800">${cr.event_name}</p><p class="text-xs text-gray-600 mt-1">User: ${cr.description.substring(0, 30)}...</p>`;
+          item.className = 'p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded cursor-pointer hover:bg-yellow-100 transition mb-2';
+          const truncatedDesc = cr.description.substring(0, 50) + (cr.description.length > 50 ? '...' : '');
+          item.innerHTML = `
+            <p class="font-semibold text-sm text-gray-800">${cr.event_name}</p>
+            <p class="text-xs text-gray-600 mt-1">Request: ${truncatedDesc}</p>
+            <p class="text-xs text-gray-500 mt-1">Status: <span class="font-semibold text-yellow-600">Pending</span></p>
+          `;
           item.addEventListener('click', () => {
-            // Navigate to manage events page
+            // Navigate to manage change requests page
             if (typeof loadPage === 'function') {
-              loadPage('manage-events.html');
+              loadPage('manage-change-requests.html');
             }
             notificationDropdown.classList.add('hidden');
           });
