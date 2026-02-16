@@ -15,6 +15,10 @@ function escapeHtml(unsafe) {
 }
 
 function initPage() {
+  // Guard flag: prevent duplicate initialization from multiple calls
+  if (window._dashboardPageInit) return;
+  window._dashboardPageInit = true;
+  
   loadUserBookings();
   loadCalendarEvents();
   attachModalEventListeners();
