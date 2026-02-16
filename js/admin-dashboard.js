@@ -609,13 +609,16 @@ if (calendarEl && window.FullCalendar) {
 
   calendar.render();
 } // ✅ closes the if block
+
+  // Setup admin create venue modal after DOM elements are available
+  setupAdminCreateVenueModal();
   } catch (err) {
     console.error("Dashboard fetch error:", err);
   }
 } // ✅ closes initAdminDashboard function
 
 // === Admin Create Venue Reservation Modal Logic ===
-(function setupAdminCreateVenueModal() {
+function setupAdminCreateVenueModal() {
   const modal = document.getElementById('adminCreateVenueModal');
   const form = document.getElementById('adminCreateVenueForm');
   const createVenueBtn = document.getElementById('adminCreateVenueBtn');
@@ -757,7 +760,7 @@ if (calendarEl && window.FullCalendar) {
       confirmationDialog.classList.add('hidden');
     }
   });
-})();
+}
 
 // === Session Timeout (5 min inactivity) ===
 (function setupSessionTimeout() {
