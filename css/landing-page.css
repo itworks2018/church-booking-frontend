@@ -1,0 +1,257 @@
+/* ✅ LANDING PAGE PROFESSIONAL STYLING */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --primary-dark: #1a2e5e;
+  --accent-gold: #d97706;
+  --accent-light: #fef3c7;
+  --secondary-light: #dbeafe;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --bg-white: #ffffff;
+  --bg-gray: #f9fafb;
+}
+
+/* ✅ GLOBAL STYLES */
+body {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  color: var(--text-dark);
+  line-height: 1.6;
+  background-color: var(--bg-white);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Crimson Text', 'Playfair Display', serif;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+/* ✅ ENHANCED NAVBAR */
+nav {
+  background-color: #1f2937;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+nav a {
+  transition: color 0.3s ease;
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: var(--accent-gold);
+}
+
+nav .text-brand-blue {
+  color: var(--secondary-light);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+}
+
+/* ✅ HERO SECTION */
+.hero-bg {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.hero-bg h1 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.5px;
+}
+
+@media (max-width: 768px) {
+  .hero-bg h1 {
+    font-size: 2rem;
+  }
+}
+
+/* ✅ CTA BUTTONS */
+.bg-amber-600 {
+  background-color: var(--accent-gold);
+}
+
+.bg-amber-600:hover {
+  background-color: #b45309;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(217, 119, 6, 0.3);
+}
+
+.bg-blue-900 {
+  background-color: var(--primary-blue);
+}
+
+.bg-blue-900:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(30, 58, 138, 0.3);
+}
+
+/* ✅ WHY CHOOSE US SECTION */
+.bg-white {
+  background-color: var(--bg-white);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  transition: all 0.3s ease;
+  border-top: 4px solid transparent;
+}
+
+.bg-white:hover {
+  box-shadow: 0 12px 16px rgba(0, 0, 0, 0.1);
+  border-top-color: var(--accent-gold);
+}
+
+.bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+.bg-amber-100 {
+  background-color: #fef3c7;
+}
+
+.text-blue-900 {
+  color: var(--primary-blue);
+}
+
+.text-amber-900 {
+  color: #78350f;
+}
+
+/* ✅ SECTION SPACING */
+section {
+  scroll-behavior: smooth;
+}
+
+section h2,
+section h3 {
+  color: var(--primary-blue);
+  margin-bottom: 1.5rem;
+}
+
+/* ✅ VENUE CARDS */
+.bg-gray-50 {
+  background-color: #f9fafb;
+}
+
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--in-config));
+}
+
+.text-amber-600 {
+  color: #d97706;
+  font-weight: 600;
+}
+
+/* ✅ FOOTER ENHANCEMENT */
+footer {
+  background-color: #111827;
+  color: #d1d5db;
+  margin-top: auto;
+}
+
+footer h3 {
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+footer a {
+  color: #d1d5db;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: var(--accent-gold);
+}
+
+footer .border-t {
+  border-color: #1f2937;
+}
+
+/* ✅ GRADIENTS */
+.bg-gradient-to-b {
+  background-image: linear-gradient(to bottom, var(--gradient-stops));
+}
+
+.from-black\/60 {
+  --tw-gradient-from: rgba(0, 0, 0, 0.6) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(0, 0, 0, 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+/* ✅ RESPONSIVE ADJUSTMENTS */
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.75rem !important;
+  }
+  
+  h3 {
+    font-size: 1.25rem !important;
+  }
+  
+  section {
+    padding: 2.5rem 1rem !important;
+  }
+  
+  .grid {
+    gap: 1rem !important;
+  }
+}
+
+/* ✅ ACCESSIBILITY */
+button, a {
+  outline-offset: 2px;
+}
+
+button:focus, 
+a:focus {
+  outline: 2px solid var(--primary-blue);
+}
+
+/* ✅ TRANSITIONS */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* ✅ SHADOW EFFECTS */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.hover\:shadow-xl:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ✅ CUSTOM ANIMATIONS */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+section {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+section:nth-child(n+2) {
+  animation-delay: 0.1s;
+}
