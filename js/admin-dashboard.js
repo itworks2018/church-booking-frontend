@@ -619,6 +619,10 @@ if (calendarEl && window.FullCalendar) {
 
 // === Admin Create Venue Reservation Modal Logic ===
 function setupAdminCreateVenueModal() {
+  // Guard against multiple initializations - prevent duplicate event listeners
+  if (window._adminModalSetup) return;
+  window._adminModalSetup = true;
+
   const modal = document.getElementById('adminCreateVenueModal');
   const form = document.getElementById('adminCreateVenueForm');
   const createVenueBtn = document.getElementById('adminCreateVenueBtn');
@@ -708,14 +712,36 @@ function setupAdminCreateVenueModal() {
       return;
     }
 
+    // Capture and validate all form fields
+    const eventName = document.getElementById('acv_event_name').value.trim();
+    const purpose = document.getElementById('acv_purpose').value.trim();
+    const attendeesValue = document.getElementById('acv_attendees').value.trim();
+    const venue = document.getElementById('acv_venue').value.trim();
+    const startDateTime = document.getElementById('acv_start_datetime').value.trim();
+    const endDateTime = document.getElementById('acv_end_datetime').value.trim();
+    const additionalNeeds = document.getElementById('acv_additional_needs').value.trim();
+
+    // Validate all required fields are populated
+    if (!eventName || !purpose || !attendeesValue || !venue || !startDateTime || !endDateTime) {
+      alert('Please fill in all required fields (Event Name, Purpose, Attendees, Venue, Start Date/Time, End Date/Time).');
+      return;
+    }
+
+    // Validate attendees is a valid positive number
+    const attendees = parseInt(attendeesValue);
+    if (isNaN(attendees) || attendees < 1) {
+      alert('Attendees must be a valid number greater than 0.');
+      return;
+    }
+
     const formData = {
-      event_name: document.getElementById('acv_event_name').value,
-      purpose: document.getElementById('acv_purpose').value,
-      attendees: parseInt(document.getElementById('acv_attendees').value),
-      venue: document.getElementById('acv_venue').value,
-      start_datetime: document.getElementById('acv_start_datetime').value,
-      end_datetime: document.getElementById('acv_end_datetime').value,
-      additional_needs: document.getElementById('acv_additional_needs').value
+      event_name: eventName,
+      purpose: purpose,
+      attendees: attendees,
+      venue: venue,
+      start_datetime: startDateTime,
+      end_datetime: endDateTime,
+      additional_needs: additionalNeeds
     };
 
     try {
