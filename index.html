@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Church Booking</title>
+  <title>CCF Sandoval Events - Professional Venue Booking</title>
   <!-- Tailwind + Flowbite -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-<body class="bg-blue-100 text-gray-800 font-main">
+<body class="bg-white text-gray-800 font-main">
   <!-- ✅ RESPONSIVE PROFESSIONAL NAVBAR -->
   <nav class="w-full bg-gray-900 text-gray-100 shadow-lg font-main">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -18,14 +18,14 @@
       <div id="navLinks" class="hidden md:flex items-center space-x-10 text-xl md:text-2xl font-bold">
         <a href="/index.html" class="hover:text-blue-400 transition">Home</a>
         <a href="#ministries" class="hover:text-blue-400 transition">Ministries</a>
-        <a href="/login.html" class="hover:text-blue-400 transition">Venue</a>
+        <a href="/login.html" class="hover:text-blue-400 transition">Book Venue</a>
       </div>
     </div>
     <!-- Mobile Menu -->
     <div id="mobileNav" class="md:hidden hidden px-4 pb-4 bg-gray-900 text-xl font-bold font-main">
       <a href="/index.html" class="block py-2 hover:text-blue-400 transition">Home</a>
       <a href="#ministries" class="block py-2 hover:text-blue-400 transition">Ministries</a>
-      <a href="/login.html" class="block py-2 hover:text-blue-400 transition">Venue</a>
+      <a href="/login.html" class="block py-2 hover:text-blue-400 transition">Book Venue</a>
     </div>
   </nav>
   <script>
@@ -49,12 +49,44 @@
       .then(html => document.getElementById("hero").innerHTML = html);
   </script>
 
+  <!-- ✅ WHY CHOOSE US SECTION -->
+  <div id="whyChooseUs"></div>
+  <script>
+    fetch("components/why-choose-us.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("whyChooseUs").innerHTML = html);
+  </script>
+
+  <!-- ✅ VENUES SHOWCASE -->
+  <div id="venuesShowcase"></div>
+  <script>
+    fetch("components/venues-showcase.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("venuesShowcase").innerHTML = html);
+  </script>
+
+  <!-- ✅ BOOKING CALL-TO-ACTION -->
+  <div id="bookingCta"></div>
+  <script>
+    fetch("components/booking-cta.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("bookingCta").innerHTML = html);
+  </script>
+
   <!-- ✅ MINISTRIES SLIDER -->
   <div id="ministries"></div>
   <script>
     fetch("components/ministries.html")
       .then(res => res.text())
       .then(html => document.getElementById("ministries").innerHTML = html);
+  </script>
+
+  <!-- ✅ CHURCH VALUES SECTION -->
+  <div id="values"></div>
+  <script>
+    fetch("components/values.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("values").innerHTML = html);
   </script>
 
   <!-- ✅ FOOTER -->
