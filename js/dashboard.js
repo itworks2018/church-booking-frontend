@@ -66,12 +66,12 @@ async function loadUserBookings() {
         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
           <td class="px-6 py-4 text-center">${escapeHtml(b.event_name)}</td>
           <td class="px-6 py-4 text-center">${escapeHtml(b.venue)}</td>
-          <td class="px-6 py-4 text-center">${new Date(b.start_datetime).toLocaleString("en-US", { hour12: true })}</td>
-          <td class="px-6 py-4 text-center">${new Date(b.end_datetime).toLocaleString("en-US", { hour12: true })}</td>
+          <td class="px-6 py-4 text-center">${new Date(b.start_datetime).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true })}</td>
+          <td class="px-6 py-4 text-center">${new Date(b.end_datetime).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true })}</td>
           <td class="px-6 py-4 text-center">
             <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusBgColor}">${b.status}</span>
           </td>
-          <td class="px-6 py-4 text-center">${b.created_at ? new Date(b.created_at).toLocaleString("en-US", { hour12: true }) : ''}</td>
+          <td class="px-6 py-4 text-center">${b.created_at ? new Date(b.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }) : ''}</td>
           <td class="px-6 py-4 text-center">
             <button class="updateRequestBtn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition" data-booking-id="${b.booking_id || b.id}" data-event-name="${escapeHtml(b.event_name)}" data-venue="${escapeHtml(b.venue)}" data-start="${b.start_datetime}" data-end="${b.end_datetime}">
               Update Request

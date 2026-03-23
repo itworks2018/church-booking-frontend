@@ -122,8 +122,8 @@ function populatePendingTable(items) {
           <td class="p-3">${escapeHtml(item.purpose || "")}</td>
           <td class="p-3">${escapeHtml(item.attendees || "")}</td>
           <td class="p-3">${escapeHtml(item.venue || "")}</td>
-          <td class="p-3">${escapeHtml(new Date(item.start_datetime).toLocaleString())}</td>
-          <td class="p-3">${escapeHtml(new Date(item.end_datetime).toLocaleString())}</td>
+          <td class="p-3">${escapeHtml(new Date(item.start_datetime).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
+          <td class="p-3">${escapeHtml(new Date(item.end_datetime).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
           <td class="p-3">${escapeHtml(item.status || "")}</td>
           <td class="p-3">${escapeHtml(new Date(item.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</td>
           <td class="p-3">
@@ -284,12 +284,12 @@ function showReviewModal(booking) {
     
     <div class="border-l-4 border-purple-500 pl-4 py-3 mb-4 bg-purple-50">
       <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Start Date/Time</p>
-      <p class="text-gray-900">${escapeHtml(new Date(booking.start_datetime).toLocaleString())}</p>
+      <p class="text-gray-900">${escapeHtml(new Date(booking.start_datetime).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</p>
     </div>
     
     <div class="border-l-4 border-purple-500 pl-4 py-3 mb-4 bg-purple-50">
       <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">End Date/Time</p>
-      <p class="text-gray-900">${escapeHtml(new Date(booking.end_datetime).toLocaleString())}</p>
+      <p class="text-gray-900">${escapeHtml(new Date(booking.end_datetime).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</p>
     </div>
     
     <div class="border-l-4 border-orange-500 pl-4 py-3 mb-4 bg-orange-50">
@@ -304,7 +304,7 @@ function showReviewModal(booking) {
     
     <div class="border-l-4 border-orange-500 pl-4 py-3 mb-4 bg-orange-50">
       <p class="text-xs text-gray-600 uppercase tracking-wide mb-1">Created At</p>
-      <p class="text-gray-900">${escapeHtml(new Date(booking.created_at).toLocaleString())}</p>
+      <p class="text-gray-900">${escapeHtml(new Date(booking.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }))}</p>
     </div>
   `;
 
@@ -571,11 +571,11 @@ if (calendarEl && window.FullCalendar) {
             <div class="grid grid-cols-2 gap-6">
               <div>
                 <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Start Date/Time</label>
-                <p class="text-lg text-gray-900 font-semibold mt-2">${new Date(info.event.start).toLocaleString("en-US", { hour12: true })}</p>
+                <p class="text-lg text-gray-900 font-semibold mt-2">${new Date(info.event.start).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true })}</p>
               </div>
               <div>
                 <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">End Date/Time</label>
-                <p class="text-lg text-gray-900 font-semibold mt-2">${info.event.end ? new Date(info.event.end).toLocaleString("en-US", { hour12: true }) : "N/A"}</p>
+                <p class="text-lg text-gray-900 font-semibold mt-2">${info.event.end ? new Date(info.event.end).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true }) : "N/A"}</p>
               </div>
             </div>
           </div>
@@ -588,7 +588,7 @@ if (calendarEl && window.FullCalendar) {
             </div>
             <div class="mt-5">
               <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Created At</label>
-              <p class="text-lg text-gray-900 font-semibold mt-2">${new Date(booking.created_at).toLocaleString("en-US", { hour12: true })}</p>
+              <p class="text-lg text-gray-900 font-semibold mt-2">${new Date(booking.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true })}</p>
             </div>
             <div class="mt-5">
               <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Status</label>
