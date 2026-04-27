@@ -1,0 +1,58 @@
+<!-- ✅ PUBLIC EVENTS CALENDAR SECTION -->
+<div class="w-full bg-white py-12">
+  <div class="max-w-7xl mx-auto px-4">
+    
+    <!-- Header with Logo + Date/Time -->
+    <div class="flex justify-between items-center mb-8 pb-6 border-b-2 border-gray-200">
+      <!-- Left: Logo + Title -->
+      <div class="flex items-center gap-4">
+        <img src="assets/carouselSlides/CCF Sandoval 2.jpg" alt="CCF Sandoval" class="h-16 w-16 rounded-full object-cover shadow-md" />
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">CCF Sandoval Events</h1>
+          <p class="text-sm text-gray-500">View all approved events</p>
+        </div>
+      </div>
+      
+      <!-- Right: Date/Time -->
+      <div class="text-right">
+        <p class="text-2xl font-bold text-gray-800" id="currentDate"></p>
+        <p class="text-lg text-gray-600" id="currentTime"></p>
+        <p class="text-sm text-gray-500" id="currentDay"></p>
+      </div>
+    </div>
+
+    <!-- Calendar Controls (View Buttons) -->
+    <div class="flex gap-2 mb-6 flex-wrap">
+      <button id="monthViewBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">Month</button>
+      <button id="weekViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">Week</button>
+      <button id="dayViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">Day</button>
+      <button id="listViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">List</button>
+    </div>
+
+    <!-- FullCalendar Container -->
+    <div id="calendar" class="bg-white rounded-lg shadow-lg p-4"></div>
+
+  </div>
+</div>
+
+<!-- Event Details Modal -->
+<div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+    <div class="p-6">
+      <div class="flex justify-between items-start mb-4">
+        <h2 id="modalTitle" class="text-3xl font-bold text-gray-800"></h2>
+        <button id="closeModal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+      </div>
+      
+      <div id="modalContent" class="space-y-4 text-gray-700">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+
+      <div class="mt-6 flex gap-2">
+        <button id="closeModalBtn" class="w-full bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/public-calendar.js" defer></script>

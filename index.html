@@ -50,6 +50,14 @@
     });
   </script>
 
+  <!-- ✅ PUBLIC EVENTS CALENDAR -->
+  <div id="publicCalendar"></div>
+  <script>
+    fetch("components/public-calendar.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("publicCalendar").innerHTML = html);
+  </script>
+
   <!-- ✅ HERO BANNER -->
   <div id="hero"></div>
   <script>
