@@ -3,123 +3,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CCF Sandoval Events - Venue Booking</title>
+  <title>CCF Sandoval Events - Public Calendar</title>
   <!-- Tailwind + Flowbite -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="css/landing-page.css" />
 </head>
-<body class="bg-blue-100 text-gray-800 font-main">
-  <!-- ✅ RESPONSIVE PROFESSIONAL NAVBAR -->
-  <nav class="w-full bg-gray-900 text-gray-100 shadow-lg font-main">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <span class="text-3xl md:text-4xl font-bold tracking-wide font-main text-brand-blue normal-case">CCF Sandoval Events</span>
-      <button id="navToggle" class="md:hidden text-3xl text-gray-300 focus:outline-none" aria-label="Open Menu">&#9776;</button>
-      <div id="navLinks" class="hidden md:flex items-center space-x-4 text-lg md:text-xl font-bold">
-        <a href="/index.html" class="hover:text-blue-400 transition">Home</a>
-        <span class="text-gray-500">|</span>
-        <a href="#community" class="hover:text-blue-400 transition">Community</a>
-        <span class="text-gray-500">|</span>
-        <a href="#church-story" class="hover:text-blue-400 transition">Who we are</a>
-        <span class="text-gray-500">|</span>
-        <a href="#ministries" class="hover:text-blue-400 transition">Ministry</a>
-        <a href="/login.html" class="ml-6 bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-full font-bold transition">Venue</a>
+<body class="bg-gray-100 text-gray-800 font-main">
+  
+  <!-- ✅ HEADER WITH LOGO + DATE/TIME -->
+  <header class="w-full bg-white shadow-md py-6 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center">
+        <!-- Left: Logo + Title -->
+        <div class="flex items-center gap-4">
+          <img src="assets/carouselSlides/CCF Sandoval 2.jpg" alt="CCF Sandoval" class="h-16 w-16 rounded-full object-cover shadow-md" />
+          <div>
+            <h1 class="text-3xl font-bold text-gray-800">CCF Sandoval Events</h1>
+            <p class="text-sm text-gray-500">View all approved events</p>
+          </div>
+        </div>
+        
+        <!-- Right: Date/Time -->
+        <div class="text-right">
+          <p class="text-2xl font-bold text-gray-800" id="currentDate"></p>
+          <p class="text-lg text-gray-600" id="currentTime"></p>
+          <p class="text-sm text-gray-500" id="currentDay"></p>
+        </div>
       </div>
     </div>
-    <!-- Mobile Menu -->
-    <div id="mobileNav" class="md:hidden hidden px-4 pb-4 bg-gray-900 text-lg font-bold font-main">
-      <a href="#community" class="block py-2 hover:text-blue-400 transition">Community</a>
-      <a href="#church-story" class="block py-2 hover:text-blue-400 transition">Who we are</a>
-      <a href="#ministries" class="block py-2 hover:text-blue-400 transition">Ministry</a>
-      <a href="/login.html" class="block py-2 bg-teal-500 hover:bg-teal-600 text-white px-4 rounded-full font-bold transition inline-block">Venue</a>
+  </header>
+
+  <!-- ✅ MAIN CALENDAR SECTION -->
+  <main class="w-full bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      
+      <!-- Calendar Controls (View Buttons) -->
+      <div class="flex gap-2 mb-8 flex-wrap">
+        <button id="monthViewBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">Month</button>
+        <button id="weekViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">Week</button>
+        <button id="dayViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">Day</button>
+        <button id="listViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">List</button>
+      </div>
+
+      <!-- FullCalendar Container -->
+      <div id="calendar" class="bg-white rounded-lg shadow-lg p-4"></div>
+
     </div>
-  </nav>
-  <script>
-    // Responsive navbar toggle
-    document.addEventListener('DOMContentLoaded', function() {
-      const navToggle = document.getElementById('navToggle');
-      const mobileNav = document.getElementById('mobileNav');
-      if (navToggle && mobileNav) {
-        navToggle.addEventListener('click', function() {
-          mobileNav.classList.toggle('hidden');
-        });
-      }
-    });
-  </script>
+  </main>
 
-  <!-- ✅ PUBLIC EVENTS CALENDAR -->
-  <div id="publicCalendar"></div>
-  <script>
-    fetch("components/public-calendar.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("publicCalendar").innerHTML = html);
-  </script>
+  <!-- ✅ EVENT DETAILS MODAL -->
+  <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+          <h2 id="modalTitle" class="text-3xl font-bold text-gray-800"></h2>
+          <button id="closeModal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+        </div>
+        
+        <div id="modalContent" class="space-y-4 text-gray-700">
+          <!-- Dynamic content will be inserted here -->
+        </div>
 
-  <!-- ✅ HERO BANNER -->
-  <div id="hero"></div>
-  <script>
-    fetch("components/hero.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("hero").innerHTML = html);
-  </script>
-
-  <!-- ✅ WHY CHOOSE US SECTION -->
-  <div id="whyChooseUs"></div>
-  <script>
-    fetch("components/why-choose-us.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("whyChooseUs").innerHTML = html);
-  </script>
-
-  <!-- ✅ BOOKING CTA STRIP #1 -->
-  <div id="bookingCta1"></div>
-  <script>
-    fetch("components/booking-cta-strip.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("bookingCta1").innerHTML = html);
-  </script>
-
-  <!-- ✅ VENUES SHOWCASE SECTION -->
-  <div id="venuesShowcase"></div>
-  <script>
-    fetch("components/venues-showcase.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("venuesShowcase").innerHTML = html);
-  </script>
-
-  <!-- ✅ CHURCH STORY SECTION -->
-  <div id="churchStory"></div>
-  <script>
-    fetch("components/church-story.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("churchStory").innerHTML = html);
-  </script>
-
-  <!-- ✅ MINISTRIES SLIDER -->
-  <div id="ministries"></div>
-  <script>
-    fetch("components/ministries.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("ministries").innerHTML = html);
-  </script>
-
-  <!-- ✅ BOOKING CTA STRIP #2 -->
-  <div id="bookingCta2"></div>
-  <script>
-    fetch("components/booking-cta-strip.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("bookingCta2").innerHTML = html);
-  </script>
+        <div class="mt-6 flex gap-2">
+          <button id="closeModalBtn" class="w-full bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ✅ FOOTER -->
-  <div id="footer"></div>
-  <script>
-    fetch("components/footer.html")
-      .then(res => res.text())
-      .then(html => document.getElementById("footer").innerHTML = html);
-  </script>
+  <footer class="bg-gray-900 text-gray-400 py-8 mt-16">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center flex-wrap gap-4">
+      <p class="text-center text-sm">© 2025 CCF Sandoval. All rights reserved.</p>
+      <a href="https://www.facebook.com/search/top?q=ccf%20sandoval" target="_blank" class="hover:text-white transition" aria-label="Facebook">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <!-- ✅ Calendar Logic -->
+  <script src="js/public-calendar.js" defer></script>
+
 </body>
 </html>
