@@ -1,8 +1,9 @@
-// Public Calendar - Display Approved Events
+// Public Calendar - Display Approved Events Only
+// This is a read-only public calendar for viewing approved church events
 
 const API_BASE_URL = "https://church-booking-backend.onrender.com";
 
-// Initialize FullCalendar when DOM is ready
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
   initializeDateTimeDisplay();
   await initializeCalendar();
@@ -13,19 +14,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 function initializeDateTimeDisplay() {
   const now = new Date();
   
-  // Update date (e.g., "April 27, 2026")
-  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  // Update date (e.g., "April 27")
+  const dateOptions = { month: 'short', day: 'numeric' };
   document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
-  
-  // Update time (e.g., "2:30 PM")
-  const timeOptions = { hour: '2-digit', minute: '2-digit' };
-  document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', timeOptions);
   
   // Update day (e.g., "Monday")
   const dayOptions = { weekday: 'long' };
   document.getElementById('currentDay').textContent = now.toLocaleDateString('en-US', dayOptions);
+  
+  // Update time (e.g., "2:30 PM")
+  const timeOptions = { hour: '2-digit', minute: '2-digit' };
+  document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', timeOptions);
 
-  // Update every minute
+  // Update time every minute
   setInterval(() => {
     const updated = new Date();
     const timeOpts = { hour: '2-digit', minute: '2-digit' };
@@ -43,7 +44,6 @@ async function initializeCalendar() {
     CSS.href = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css';
     document.head.appendChild(CSS);
 
-    // Wait for CSS to load
     setTimeout(async () => {
       const events = await fetchApprovedEvents();
       createCalendar(events);
@@ -52,7 +52,7 @@ async function initializeCalendar() {
   document.head.appendChild(script);
 }
 
-// Fetch approved events from backend
+// Fetch only approved events from backend
 async function fetchApprovedEvents() {
   try {
     const res = await fetch(`${API_BASE_URL}/api/bookings`);
@@ -64,7 +64,7 @@ async function fetchApprovedEvents() {
     const data = await res.json();
     const bookings = Array.isArray(data.items) ? data.items : data;
 
-    // Filter only approved bookings and format for FullCalendar
+    // Filter ONLY approved bookings
     return bookings
       .filter(booking => booking.status && booking.status.toLowerCase() === 'approved')
       .map(booking => ({
@@ -72,12 +72,15 @@ async function fetchApprovedEvents() {
         title: booking.event_name || 'Event',
         start: booking.start_date,
         end: booking.end_date,
+        backgroundColor: '#3b82f6',
+        borderColor: '#2563eb',
         extendedProps: {
           purpose: booking.purpose,
           attendees: booking.attendees,
           venue: booking.venue,
           description: booking.description,
           contact: booking.contact_number,
+          status: booking.status,
           fullData: booking
         }
       }));
@@ -94,23 +97,27 @@ function createCalendar(events) {
     initialView: 'dayGridMonth',
     initialDate: new Date(),
     events: events,
-    headerToolbar: false, // We'll use custom buttons
+    headerToolbar: false,
     height: 'auto',
     contentHeight: 'auto',
     eventClick: handleEventClick,
     eventDisplay: 'block',
-    eventClassNames: 'bg-blue-500 border-blue-600 hover:bg-blue-600 cursor-pointer',
+    eventClassNames: 'cursor-pointer transition hover:shadow-lg',
     dayCellClassNames: 'hover:bg-blue-50',
     dayMaxEventRows: 3,
-    moreLinkClick: 'popover'
+    moreLinkClick: 'popover',
+    datesSet: function() {
+      document.querySelectorAll('.fc-event').forEach(el => {
+        el.style.backgroundColor = '#3b82f6';
+        el.style.borderColor = '#2563eb';
+      });
+    }
   });
 
   calendar.render();
-
-  // Store calendar instance for view changes
   window.currentCalendar = calendar;
 
-  // Setup view change buttons
+  // View change handlers
   document.getElementById('monthViewBtn').addEventListener('click', () => {
     calendar.changeView('dayGridMonth');
     updateViewButtons('month');
@@ -138,9 +145,9 @@ function updateViewButtons(activeView) {
   buttons.forEach(btnId => {
     const btn = document.getElementById(btnId);
     if (btnId === activeView + 'ViewBtn') {
-      btn.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition';
+      btn.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md';
     } else {
-      btn.className = 'px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition';
+      btn.className = 'px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition';
     }
   });
 }
@@ -149,55 +156,123 @@ function updateViewButtons(activeView) {
 function handleEventClick(info) {
   const event = info.event;
   const extendedProps = event.extendedProps;
-  const fullData = extendedProps.fullData;
 
-  // Populate modal
+  // Set title
   document.getElementById('modalTitle').textContent = event.title;
 
+  // Format dates
+  const startDate = new Date(event.start);
+  const endDate = event.end ? new Date(event.end) : null;
+  
+  const dateDisplay = startDate.toLocaleString('en-US', { 
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  const endDateDisplay = endDate ? endDate.toLocaleString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }) : null;
+
+  // Create content HTML
   const contentHtml = `
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Left Column -->
       <div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Event Details</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b-2 border-blue-300">Date & Venue</h3>
         
-        <div class="mb-4">
-          <p class="text-sm text-gray-500 font-semibold">Date & Time</p>
-          <p class="text-base">${new Date(event.start).toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' })}</p>
-          ${event.end ? `<p class="text-sm text-gray-600">to ${new Date(event.end).toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' })}</p>` : ''}
+        <div class="mb-5">
+          <p class="text-xs uppercase tracking-wide font-bold text-gray-500 mb-1">Start Date & Time</p>
+          <p class="text-base font-medium text-gray-900">${dateDisplay}</p>
         </div>
 
-        <div class="mb-4">
-          <p class="text-sm text-gray-500 font-semibold">Venue</p>
-          <p class="text-base">${extendedProps.venue || 'N/A'}</p>
+        ${endDateDisplay ? `
+          <div class="mb-5">
+            <p class="text-xs uppercase tracking-wide font-bold text-gray-500 mb-1">End Date & Time</p>
+            <p class="text-base font-medium text-gray-900">${endDateDisplay}</p>
+          </div>
+        ` : ''}
+
+        <div class="mb-5">
+          <p class="text-xs uppercase tracking-wide font-bold text-gray-500 mb-1">Venue</p>
+          <p class="text-base font-medium text-gray-900">${extendedProps.venue || 'Not specified'}</p>
         </div>
 
-        <div class="mb-4">
-          <p class="text-sm text-gray-500 font-semibold">Expected Attendees</p>
-          <p class="text-base">${extendedProps.attendees || 'N/A'}</p>
+        <div class="mb-5">
+          <p class="text-xs uppercase tracking-wide font-bold text-gray-500 mb-1">Expected Attendees</p>
+          <p class="text-base font-medium text-gray-900">${extendedProps.attendees || 'Not specified'}</p>
         </div>
 
-        <div class="mb-4">
-          <p class="text-sm text-gray-500 font-semibold">Contact Number</p>
-          <p class="text-base">${extendedProps.contact || 'N/A'}</p>
+        <div class="mb-5">
+          <p class="text-xs uppercase tracking-wide font-bold text-gray-500 mb-1">Contact Number</p>
+          <p class="text-base font-medium text-gray-900">${extendedProps.contact || 'Not provided'}</p>
         </div>
       </div>
 
       <!-- Right Column -->
       <div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Purpose & Description</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b-2 border-green-300">Event Details</h3>
         
-        <div class="mb-4">
-          <p class="text-sm text-gray-500 font-semibold">Purpose</p>
-          <p class="text-base">${extendedProps.purpose || 'N/A'}</p>
+        <div class="mb-5">
+          <p class="text-xs uppercase tracking-wide font-bold text-gray-500 mb-1">Event Purpose</p>
+          <p class="text-base font-medium text-gray-900">${extendedProps.purpose || 'Not specified'}</p>
         </div>
 
-        <div class="mb-4">
-          <p class="text-sm text-gray-500 font-semibold">Description</p>
-          <p class="text-base">${extendedProps.description || 'No description provided'}</p>
+        <div class="mb-5">
+          <p class="text-xs uppercase tracking-wide font-bold text-gray-500 mb-1">Description</p>
+          <p class="text-base text-gray-700 leading-relaxed">${extendedProps.description || 'No additional description provided'}</p>
         </div>
 
-        <div class="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-          <p class="text-sm font-semibold text-green-700">✓ This event is approved</p>
+        <div class="mt-8 p-4 bg-green-50 rounded-lg border-2 border-green-200">
+          <p class="text-sm font-bold text-green-700 flex items-center gap-2">
+            <span class="text-lg">✓</span> This event has been approved
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('modalContent').innerHTML = contentHtml;
+
+  // Show modal
+  const modal = document.getElementById('eventModal');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+// Setup modal close handlers
+function setupEventModalHandlers() {
+  const modal = document.getElementById('eventModal');
+  const closeBtn = document.getElementById('closeModal');
+  const closeBtnBottom = document.getElementById('closeModalBtn');
+
+  closeBtn.addEventListener('click', closeModal);
+  closeBtnBottom.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+      closeModal();
+    }
+  });
+}
+
+function closeModal() {
+  const modal = document.getElementById('eventModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
         </div>
       </div>
     </div>

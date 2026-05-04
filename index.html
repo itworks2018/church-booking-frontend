@@ -3,85 +3,178 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CCF Sandoval Events - Public Calendar</title>
+  <title>CCF Sandoval - Events Calendar</title>
   <!-- Tailwind + Flowbite -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .fc { font-family: 'Poppins', sans-serif; }
+    .fc .fc-button-primary { background-color: #2563eb; border-color: #2563eb; }
+    .fc .fc-button-primary:hover { background-color: #1d4ed8; }
+    .fc .fc-button-primary.fc-button-active { background-color: #1e40af; }
+    .fc .fc-event { background-color: #3b82f6; border-color: #2563eb; }
+    .fc .fc-event:hover { background-color: #2563eb; }
+    .fc .fc-daygrid-day.fc-day-today { background-color: #f0f9ff; }
+    .fc-h-event { background-color: #3b82f6 !important; }
+    .approved-badge { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-main">
-  
-  <!-- ✅ HEADER WITH LOGO + DATE/TIME -->
-  <header class="w-full bg-white shadow-md py-6 sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex justify-between items-center">
-        <!-- Left: Logo + Title -->
-        <div class="flex items-center gap-4">
-          <img src="assets/carouselSlides/CCF Sandoval 2.jpg" alt="CCF Sandoval" class="h-16 w-16 rounded-full object-cover shadow-md" />
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+
+  <!-- ✅ NAVIGATION BAR -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3">
+          <img src="assets/carouselSlides/CCF Sandoval 2.jpg" alt="CCF Sandoval" class="h-12 w-12 rounded-full object-cover shadow-md" />
           <div>
-            <h1 class="text-3xl font-bold text-gray-800">CCF Sandoval Events</h1>
-            <p class="text-sm text-gray-500">View all approved events</p>
+            <h1 class="text-2xl font-bold text-gray-900">CCF Sandoval</h1>
+            <p class="text-xs text-gray-500">Events & Calendar</p>
           </div>
         </div>
-        
-        <!-- Right: Date/Time -->
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-3">
+          <a href="login.html" class="px-4 py-2 text-gray-700 hover:text-gray-900 font-semibold transition">Login</a>
+          <a href="signup.html" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md">Book Now</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ✅ HEADER SECTION -->
+  <header class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div>
+          <h2 class="text-4xl font-bold text-gray-900 mb-2">Event Calendar</h2>
+          <p class="text-gray-600 text-lg">View all approved church events and activities</p>
+        </div>
         <div class="text-right">
-          <p class="text-2xl font-bold text-gray-800" id="currentDate"></p>
-          <p class="text-lg text-gray-600" id="currentTime"></p>
-          <p class="text-sm text-gray-500" id="currentDay"></p>
+          <p class="text-3xl font-bold text-blue-600" id="currentDate"></p>
+          <p class="text-gray-600 mt-1" id="currentDay"></p>
+          <p class="text-sm text-gray-500 mt-1" id="currentTime"></p>
         </div>
       </div>
     </div>
   </header>
 
   <!-- ✅ MAIN CALENDAR SECTION -->
-  <main class="w-full bg-white py-12">
-    <div class="max-w-7xl mx-auto px-4">
-      
-      <!-- Calendar Controls (View Buttons) -->
-      <div class="flex gap-2 mb-8 flex-wrap">
-        <button id="monthViewBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">Month</button>
-        <button id="weekViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">Week</button>
-        <button id="dayViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">Day</button>
-        <button id="listViewBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">List</button>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Calendar Controls -->
+    <div class="mb-8">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900">Select View</h3>
+          <p class="text-gray-600 text-sm">Choose how you want to view the calendar</p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button id="monthViewBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md">Month</button>
+          <button id="weekViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">Week</button>
+          <button id="dayViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">Day</button>
+          <button id="listViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">Schedule</button>
+        </div>
       </div>
 
       <!-- FullCalendar Container -->
-      <div id="calendar" class="bg-white rounded-lg shadow-lg p-4"></div>
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div id="calendar" class="calendar-container"></div>
+      </div>
+    </div>
 
+    <!-- Info Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-2xl">📅</span>
+          <h4 class="font-semibold text-gray-900">Latest Events</h4>
+        </div>
+        <p class="text-gray-600 text-sm">Stay updated with the latest approved church events and schedules</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-2xl">✓</span>
+          <h4 class="font-semibold text-gray-900">Verified Events</h4>
+        </div>
+        <p class="text-gray-600 text-sm">Only approved and confirmed events are displayed on this calendar</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-600">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-2xl">📝</span>
+          <h4 class="font-semibold text-gray-900">Book a Venue</h4>
+        </div>
+        <p class="text-gray-600 text-sm">Have an event? Login or sign up to request your venue booking</p>
+      </div>
     </div>
   </main>
 
   <!-- ✅ EVENT DETAILS MODAL -->
-  <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
-      <div class="p-6">
-        <div class="flex justify-between items-start mb-4">
-          <h2 id="modalTitle" class="text-3xl font-bold text-gray-800"></h2>
-          <button id="closeModal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
-        </div>
-        
-        <div id="modalContent" class="space-y-4 text-gray-700">
-          <!-- Dynamic content will be inserted here -->
+  <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-screen overflow-y-auto">
+      <div class="p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <span class="approved-badge text-white text-xs px-3 py-1 rounded-full font-semibold inline-block mb-2">✓ APPROVED</span>
+            <h2 id="modalTitle" class="text-3xl font-bold text-gray-900 mt-2"></h2>
+          </div>
+          <button id="closeModal" class="text-gray-400 hover:text-gray-700 text-3xl w-10 h-10 flex items-center justify-center">&times;</button>
         </div>
 
-        <div class="mt-6 flex gap-2">
-          <button id="closeModalBtn" class="w-full bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition">Close</button>
+        <!-- Content -->
+        <div id="modalContent" class="space-y-6">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <a href="login.html" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition text-center">Login to Book</a>
+          <a href="signup.html" class="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition text-center">Create Account</a>
+          <button id="closeModalBtn" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">Close</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ✅ FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 py-8 mt-16">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center flex-wrap gap-4">
-      <p class="text-center text-sm">© 2025 CCF Sandoval. All rights reserved.</p>
-      <a href="https://www.facebook.com/search/top?q=ccf%20sandoval" target="_blank" class="hover:text-white transition" aria-label="Facebook">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-        </svg>
-      </a>
+  <footer class="bg-gray-900 text-gray-300 py-12 mt-16 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <!-- Col 1: About -->
+        <div>
+          <h5 class="font-bold text-white mb-4">About CCF Sandoval</h5>
+          <p class="text-sm text-gray-400">Community Chapel & Fellowship Sandoval - Serving with love, faith, and dedication since 2010.</p>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div>
+          <h5 class="font-bold text-white mb-4">Quick Links</h5>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Events</a></li>
+            <li><a href="login.html" class="text-gray-400 hover:text-white transition">Login</a></li>
+            <li><a href="signup.html" class="text-gray-400 hover:text-white transition">Sign Up</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Contact & Social -->
+        <div>
+          <h5 class="font-bold text-white mb-4">Follow Us</h5>
+          <div class="flex gap-4">
+            <a href="https://www.facebook.com/search/top?q=ccf%20sandoval" target="_blank" class="text-gray-400 hover:text-blue-400 transition" aria-label="Facebook">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 pt-8">
+        <p class="text-center text-sm text-gray-500">© 2025 CCF Sandoval. All rights reserved. | Public Calendar View</p>
+      </div>
     </div>
   </footer>
 
