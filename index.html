@@ -20,6 +20,8 @@
     .fc .fc-daygrid-day.fc-day-today { background-color: #f0f9ff; }
     .fc-h-event { background-color: #3b82f6 !important; }
     .approved-badge { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .calendar-container { height: 100%; width: 100%; }
+    .fc { height: 100%; }
   </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
@@ -83,9 +85,9 @@
     </div>
 
     <!-- FullCalendar Container - Full Width -->
-    <div class="bg-white shadow-lg p-6 border-t border-b border-gray-200 min-h-screen">
-      <div class="max-w-7xl mx-auto">
-        <div id="calendar" class="calendar-container"></div>
+    <div class="bg-white shadow-lg p-6 border-t border-b border-gray-200 min-h-screen flex flex-col">
+      <div class="max-w-7xl mx-auto w-full flex-1">
+        <div id="calendar" class="calendar-container h-full w-full"></div>
       </div>
     </div>
   </main>
