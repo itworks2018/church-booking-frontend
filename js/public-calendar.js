@@ -1,12 +1,13 @@
 // Public Calendar - Display Approved Events Only
-// This is a read-only public calendar for viewing approved church events
-
 const API_BASE_URL = "https://church-booking-backend.onrender.com";
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', async () => {
+let calendarInstance = null;
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM Content Loaded');
   initializeDateTimeDisplay();
-  await initializeCalendar();
+  loadFullCalendarAndInit();
   setupEventModalHandlers();
 });
 
@@ -14,15 +15,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 function initializeDateTimeDisplay() {
   const now = new Date();
   
-  // Update date (e.g., "April 27")
   const dateOptions = { month: 'short', day: 'numeric' };
   document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
   
-  // Update day (e.g., "Monday")
   const dayOptions = { weekday: 'long' };
   document.getElementById('currentDay').textContent = now.toLocaleDateString('en-US', dayOptions);
   
-  // Update time (e.g., "2:30 PM")
   const timeOptions = { hour: '2-digit', minute: '2-digit' };
   document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', timeOptions);
 
@@ -34,38 +32,61 @@ function initializeDateTimeDisplay() {
   }, 60000);
 }
 
-// Initialize FullCalendar
-async function initializeCalendar() {
+// Load FullCalendar library and initialize
+function loadFullCalendarAndInit() {
+  // Load FullCalendar CSS
+  const cssLink = document.createElement('link');
+  cssLink.rel = 'stylesheet';
+  cssLink.href = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css';
+  document.head.appendChild(cssLink);
+
+  // Load FullCalendar JS
   const script = document.createElement('script');
   script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js';
-  script.onload = async () => {
-    const CSS = document.createElement('link');
-    CSS.rel = 'stylesheet';
-    CSS.href = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css';
-    document.head.appendChild(CSS);
-
-    setTimeout(async () => {
-      const events = await fetchApprovedEvents();
-      createCalendar(events);
-    }, 500);
+  script.async = true;
+  
+  script.onload = function() {
+    console.log('FullCalendar script loaded');
+    initializeCalendar();
   };
-  document.head.appendChild(script);
+
+  script.onerror = function() {
+    console.error('Failed to load FullCalendar');
+  };
+
+  document.body.appendChild(script);
 }
 
-// Fetch only approved events from backend
+// Initialize calendar with events
+async function initializeCalendar() {
+  try {
+    console.log('Initializing calendar...');
+    const events = await fetchApprovedEvents();
+    console.log('Events fetched:', events.length);
+    createCalendar(events);
+  } catch (error) {
+    console.error('Error initializing calendar:', error);
+  }
+}
+
+// Fetch approved events from backend
 async function fetchApprovedEvents() {
   try {
+    console.log('Fetching events from:', API_BASE_URL);
     const res = await fetch(`${API_BASE_URL}/api/bookings`);
+    
     if (!res.ok) {
-      console.error('Failed to fetch bookings');
+      console.warn('API response not ok, returning empty array');
       return [];
     }
 
     const data = await res.json();
-    const bookings = Array.isArray(data.items) ? data.items : data;
+    const bookings = Array.isArray(data.items) ? data.items : Array.isArray(data) ? data : [];
+    
+    console.log('Total bookings received:', bookings.length);
 
-    // Filter ONLY approved bookings
-    return bookings
+    // Filter only approved bookings
+    const approvedEvents = bookings
       .filter(booking => booking.status && booking.status.toLowerCase() === 'approved')
       .map(booking => ({
         id: booking.id,
@@ -80,33 +101,48 @@ async function fetchApprovedEvents() {
           venue: booking.venue,
           description: booking.description,
           contact: booking.contact_number,
-          status: booking.status,
-          fullData: booking
+          status: booking.status
         }
       }));
+
+    console.log('Approved events:', approvedEvents.length);
+    return approvedEvents;
   } catch (err) {
     console.error('Error fetching events:', err);
     return [];
   }
 }
 
-// Create and configure FullCalendar
+// Create and render calendar
 function createCalendar(events) {
   const calendarEl = document.getElementById('calendar');
-  const calendar = new FullCalendar.Calendar(calendarEl, {
+  
+  if (!calendarEl) {
+    console.error('Calendar element not found');
+    return;
+  }
+
+  if (!window.FullCalendar) {
+    console.error('FullCalendar not available');
+    return;
+  }
+
+  console.log('Creating calendar with', events.length, 'events');
+
+  calendarInstance = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     initialDate: new Date(),
-    events: events,
     headerToolbar: false,
     height: 'auto',
     contentHeight: 'auto',
+    events: events,
     eventClick: handleEventClick,
     eventDisplay: 'block',
-    eventClassNames: 'cursor-pointer transition hover:shadow-lg',
     dayCellClassNames: 'hover:bg-blue-50',
     dayMaxEventRows: 3,
     moreLinkClick: 'popover',
     datesSet: function() {
+      // Re-style events after render
       document.querySelectorAll('.fc-event').forEach(el => {
         el.style.backgroundColor = '#3b82f6';
         el.style.borderColor = '#2563eb';
@@ -114,53 +150,78 @@ function createCalendar(events) {
     }
   });
 
-  calendar.render();
-  window.currentCalendar = calendar;
+  try {
+    calendarInstance.render();
+    console.log('Calendar rendered successfully');
+  } catch (error) {
+    console.error('Error rendering calendar:', error);
+  }
 
-  // View change handlers
-  document.getElementById('monthViewBtn').addEventListener('click', () => {
-    calendar.changeView('dayGridMonth');
+  // Setup view change buttons
+  setupViewButtons();
+}
+
+// Setup calendar view buttons
+function setupViewButtons() {
+  const monthBtn = document.getElementById('monthViewBtn');
+  const weekBtn = document.getElementById('weekViewBtn');
+  const dayBtn = document.getElementById('dayViewBtn');
+  const listBtn = document.getElementById('listViewBtn');
+
+  if (!calendarInstance) {
+    console.warn('Calendar instance not available for button setup');
+    return;
+  }
+
+  monthBtn.addEventListener('click', () => {
+    calendarInstance.changeView('dayGridMonth');
     updateViewButtons('month');
   });
 
-  document.getElementById('weekViewBtn').addEventListener('click', () => {
-    calendar.changeView('timeGridWeek');
+  weekBtn.addEventListener('click', () => {
+    calendarInstance.changeView('timeGridWeek');
     updateViewButtons('week');
   });
 
-  document.getElementById('dayViewBtn').addEventListener('click', () => {
-    calendar.changeView('timeGridDay');
+  dayBtn.addEventListener('click', () => {
+    calendarInstance.changeView('timeGridDay');
     updateViewButtons('day');
   });
 
-  document.getElementById('listViewBtn').addEventListener('click', () => {
-    calendar.changeView('listMonth');
+  listBtn.addEventListener('click', () => {
+    calendarInstance.changeView('listMonth');
     updateViewButtons('list');
   });
+
+  console.log('View buttons setup complete');
 }
 
 // Update view button styles
 function updateViewButtons(activeView) {
-  const buttons = ['monthViewBtn', 'weekViewBtn', 'dayViewBtn', 'listViewBtn'];
-  buttons.forEach(btnId => {
-    const btn = document.getElementById(btnId);
-    if (btnId === activeView + 'ViewBtn') {
-      btn.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md';
+  const buttons = [
+    { id: 'monthViewBtn', name: 'month' },
+    { id: 'weekViewBtn', name: 'week' },
+    { id: 'dayViewBtn', name: 'day' },
+    { id: 'listViewBtn', name: 'list' }
+  ];
+
+  buttons.forEach(btn => {
+    const element = document.getElementById(btn.id);
+    if (btn.name === activeView) {
+      element.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md';
     } else {
-      btn.className = 'px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition';
+      element.className = 'px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition';
     }
   });
 }
 
-// Handle event click - show details modal
+// Handle event click
 function handleEventClick(info) {
   const event = info.event;
   const extendedProps = event.extendedProps;
 
-  // Set title
   document.getElementById('modalTitle').textContent = event.title;
 
-  // Format dates
   const startDate = new Date(event.start);
   const endDate = event.end ? new Date(event.end) : null;
   
@@ -179,10 +240,8 @@ function handleEventClick(info) {
     minute: '2-digit'
   }) : null;
 
-  // Create content HTML
   const contentHtml = `
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Left Column -->
       <div>
         <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b-2 border-blue-300">Date & Venue</h3>
         
@@ -214,7 +273,6 @@ function handleEventClick(info) {
         </div>
       </div>
 
-      <!-- Right Column -->
       <div>
         <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b-2 border-green-300">Event Details</h3>
         
@@ -238,18 +296,21 @@ function handleEventClick(info) {
   `;
 
   document.getElementById('modalContent').innerHTML = contentHtml;
-
-  // Show modal
   const modal = document.getElementById('eventModal');
   modal.classList.remove('hidden');
   modal.classList.add('flex');
 }
 
-// Setup modal close handlers
+// Setup modal handlers
 function setupEventModalHandlers() {
   const modal = document.getElementById('eventModal');
   const closeBtn = document.getElementById('closeModal');
   const closeBtnBottom = document.getElementById('closeModalBtn');
+
+  if (!closeBtn || !closeBtnBottom) {
+    console.warn('Modal elements not found');
+    return;
+  }
 
   closeBtn.addEventListener('click', closeModal);
   closeBtnBottom.addEventListener('click', closeModal);
@@ -260,7 +321,6 @@ function setupEventModalHandlers() {
     }
   });
 
-  // Close on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
       closeModal();
