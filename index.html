@@ -63,24 +63,28 @@
   </header>
 
   <!-- ✅ MAIN CALENDAR SECTION -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Calendar Controls -->
-    <div class="mb-8">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h3 class="text-xl font-semibold text-gray-900">Select View</h3>
-          <p class="text-gray-600 text-sm">Choose how you want to view the calendar</p>
-        </div>
-        <div class="flex gap-2 flex-wrap">
-          <button id="monthViewBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md">Month</button>
-          <button id="weekViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">Week</button>
-          <button id="dayViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">Day</button>
-          <button id="listViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">List</button>
+  <main class="w-full px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto">
+      <!-- Calendar Controls -->
+      <div class="mb-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900">Select View</h3>
+            <p class="text-gray-600 text-sm">Choose how you want to view the calendar</p>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <button id="monthViewBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md">Month</button>
+            <button id="weekViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">Week</button>
+            <button id="dayViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">Day</button>
+            <button id="listViewBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition">List</button>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- FullCalendar Container -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+    <!-- FullCalendar Container - Full Width -->
+    <div class="bg-white shadow-lg p-6 border-t border-b border-gray-200 min-h-screen">
+      <div class="max-w-7xl mx-auto">
         <div id="calendar" class="calendar-container"></div>
       </div>
     </div>
