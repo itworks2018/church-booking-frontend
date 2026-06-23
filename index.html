@@ -66,13 +66,12 @@
 
     /* Main Calendar Container */
     .calendar-wrapper {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
+      width: 100%;
+      margin: 0;
+      padding: 40px;
       flex: 1;
       display: flex;
       flex-direction: column;
-      width: 100%;
     }
 
     /* Calendar Header with Controls */
@@ -183,41 +182,96 @@
       display: flex;
       flex-direction: column;
       padding: 30px;
-      font-size: 18px;
       color: #333;
-      line-height: 1.8;
+      overflow-y: auto;
     }
 
     .day-view.hidden {
       display: none;
     }
 
-    .day-view-content {
-      flex: 1;
+    .day-view-header {
+      margin-bottom: 30px;
     }
 
     .day-view-date {
       font-size: 24px;
       font-weight: 900;
-      margin-bottom: 20px;
       color: #0891b2;
-    }
-
-    .day-view-events {
-      margin-top: 20px;
-    }
-
-    .day-view-event {
-      background: #f3f4f6;
-      padding: 15px;
       margin-bottom: 10px;
-      border-left: 4px solid #0891b2;
+    }
+
+    .day-view-timeline {
+      display: flex;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .timeline-hours {
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+      min-width: 80px;
+      padding-right: 20px;
+      border-right: 2px solid #ddd;
+    }
+
+    .timeline-hour {
+      font-size: 12px;
+      font-weight: 700;
+      color: #666;
+      height: 60px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .timeline-events {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    .timeline-slot {
+      height: 60px;
+      position: relative;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .timeline-slot:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-event {
+      position: absolute;
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      color: white;
+      padding: 10px;
       border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      min-width: 200px;
+      border-left: 4px solid #0e7490;
+    }
+
+    .timeline-event-time {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .timeline-event-title {
+      font-weight: 700;
+      margin-top: 3px;
     }
 
     .day-view-no-events {
+      text-align: center;
       color: #999;
       font-style: italic;
+      padding: 40px;
+      font-size: 16px;
     }
 
     /* List View Styles */
@@ -457,11 +511,12 @@
 
     <!-- Day View -->
     <div class="day-view hidden" id="dayView">
-      <div class="day-view-content">
+      <div class="day-view-header">
         <div class="day-view-date" id="dayViewDate"></div>
-        <div class="day-view-events" id="dayViewEvents">
-          <div class="day-view-no-events">No events scheduled for this day.</div>
-        </div>
+      </div>
+      <div class="day-view-timeline" id="dayViewTimeline">
+        <div class="timeline-hours" id="timelineHours"></div>
+        <div class="timeline-events" id="timelineEvents"></div>
       </div>
     </div>
 
@@ -600,15 +655,79 @@
       const dateDisplay = `${dayNames[currentDate.getDay()]}, ${monthNames[currentDate.getMonth()]} ${day}, ${year}`;
       document.getElementById('dayViewDate').textContent = dateDisplay;
 
-      const events = mockEvents[dateKey] || [];
-      const eventsDiv = document.getElementById('dayViewEvents');
+      // Generate timeline (6 AM to 10 PM)
+      const timelineHours = document.getElementById('timelineHours');
+      const timelineEvents = document.getElementById('timelineEvents');
+      
+      timelineHours.innerHTML = '';
+      timelineEvents.innerHTML = '';
 
+      const startHour = 6;
+      const endHour = 22; // 10 PM
+
+      // Create hour slots
+      for (let hour = startHour; hour < endHour; hour++) {
+        const hourDiv = document.createElement('div');
+        hourDiv.className = 'timeline-hour';
+        const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+        const period = hour >= 12 ? 'PM' : 'AM';
+        hourDiv.textContent = `${displayHour}:00 ${period}`;
+        timelineHours.appendChild(hourDiv);
+
+        const slotDiv = document.createElement('div');
+        slotDiv.className = 'timeline-slot';
+        timelineEvents.appendChild(slotDiv);
+      }
+
+      // Parse and place events
+      const events = mockEvents[dateKey] || [];
+      
       if (events.length === 0) {
-        eventsDiv.innerHTML = '<div class="day-view-no-events">No events scheduled for this day.</div>';
+        timelineEvents.innerHTML = '<div class="day-view-no-events">No events scheduled for this day.</div>';
+        timelineHours.innerHTML = '';
       } else {
-        eventsDiv.innerHTML = '<div class="day-view-events">' +
-          events.map(event => `<div class="day-view-event">${event}</div>`).join('') +
-          '</div>';
+        const eventElements = [];
+        
+        events.forEach(event => {
+          const match = event.match(/(.+?)\s*-\s*(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+          if (match) {
+            const [, title, hours, minutes, period] = match;
+            let hour = parseInt(hours);
+            const min = parseInt(minutes);
+            
+            if (period.toUpperCase() === 'PM' && hour !== 12) {
+              hour += 12;
+            } else if (period.toUpperCase() === 'AM' && hour === 12) {
+              hour = 0;
+            }
+
+            eventElements.push({
+              title: title.trim(),
+              time: `${hours}:${String(min).padStart(2, '0')} ${period}`,
+              hour: hour,
+              minutes: min
+            });
+          }
+        });
+
+        // Add events to timeline
+        eventElements.forEach(evt => {
+          if (evt.hour >= startHour && evt.hour < endHour) {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'timeline-event';
+            
+            const slotIndex = evt.hour - startHour;
+            const topPosition = (slotIndex * 60) + (evt.minutes);
+            
+            eventDiv.style.top = topPosition + 'px';
+            eventDiv.innerHTML = `
+              <div class="timeline-event-time">${evt.time}</div>
+              <div class="timeline-event-title">${evt.title}</div>
+            `;
+            
+            timelineEvents.appendChild(eventDiv);
+          }
+        });
       }
     }
 
