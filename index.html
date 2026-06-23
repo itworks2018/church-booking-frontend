@@ -75,7 +75,7 @@
       display: flex;
       flex-direction: column;
       min-height: 0;
-      overflow-y: auto;
+      overflow: hidden;
     }
 
     /* Calendar Header with Controls */
@@ -172,7 +172,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      min-height: 300px;
+      overflow: hidden;
     }
 
     .calendar-grid.hidden {
@@ -369,6 +369,7 @@
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       flex: 1;
+      overflow: hidden;
     }
 
     .calendar-day {
@@ -443,6 +444,7 @@
     @media (max-width: 1024px) {
       .calendar-wrapper {
         padding: 12px 15px;
+        overflow: hidden;
       }
 
       .calendar-header {
