@@ -75,6 +75,7 @@
       display: flex;
       flex-direction: column;
       min-height: 0;
+      overflow-y: auto;
     }
 
     /* Calendar Header with Controls */
@@ -171,6 +172,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      min-height: 300px;
     }
 
     .calendar-grid.hidden {
@@ -374,7 +376,8 @@
       border-right: 1px solid #ddd;
       border-bottom: 1px solid #ddd;
       padding: 6px;
-      min-height: 60px;
+      min-height: 70px;
+      min-width: 70px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -437,6 +440,26 @@
     }
 
     /* Responsive Design */
+    @media (max-width: 1024px) {
+      .calendar-wrapper {
+        padding: 12px 15px;
+      }
+
+      .calendar-header {
+        padding: 10px 15px;
+      }
+
+      .calendar-day {
+        min-height: 65px;
+        min-width: 65px;
+        padding: 5px;
+      }
+
+      .day-number {
+        font-size: 11px;
+      }
+    }
+
     @media (max-width: 768px) {
       .header {
         flex-direction: column;
@@ -448,10 +471,16 @@
         font-size: 18px;
       }
 
+      .calendar-wrapper {
+        padding: 10px 12px;
+        overflow-y: auto;
+      }
+
       .calendar-header {
         flex-direction: column;
         gap: 8px;
-        padding: 10px 15px;
+        padding: 10px 12px;
+        flex-shrink: 0;
       }
 
       .month-navigation {
@@ -468,12 +497,13 @@
       }
 
       .calendar-day {
-        min-height: 50px;
+        min-height: 55px;
+        min-width: 55px;
         padding: 4px;
       }
 
       .day-number {
-        font-size: 10px;
+        font-size: 9px;
       }
 
       .view-controls {
@@ -485,10 +515,6 @@
       .view-btn {
         padding: 6px 12px;
         font-size: 10px;
-      }
-
-      .calendar-wrapper {
-        padding: 10px 12px;
       }
 
       .day-view {
@@ -562,6 +588,149 @@
       .event-item-time {
         font-size: 9px;
         margin-top: 2px;
+      }
+
+      .day-header-cell {
+        padding: 8px;
+        font-size: 10px;
+      }
+
+      .calendar-grid {
+        min-height: 280px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 8px 10px;
+      }
+
+      .header h1 {
+        font-size: 14px;
+        letter-spacing: 0px;
+      }
+
+      .manage-btn {
+        padding: 6px 12px;
+        font-size: 10px;
+      }
+
+      .calendar-wrapper {
+        padding: 8px 10px;
+      }
+
+      .calendar-header {
+        padding: 8px 10px;
+        gap: 6px;
+      }
+
+      .month-navigation {
+        font-size: 11px;
+        gap: 6px;
+      }
+
+      .nav-arrow {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
+
+      .current-day {
+        font-size: 12px;
+      }
+
+      .current-time {
+        font-size: 9px;
+      }
+
+      .view-btn {
+        padding: 5px 10px;
+        font-size: 9px;
+      }
+
+      .calendar-day {
+        min-height: 45px;
+        min-width: 45px;
+        padding: 3px;
+      }
+
+      .day-number {
+        font-size: 8px;
+      }
+
+      .day-header-cell {
+        padding: 6px 2px;
+        font-size: 9px;
+      }
+
+      .calendar-grid {
+        min-height: 250px;
+      }
+
+      .day-view {
+        padding: 8px 10px;
+      }
+
+      .day-view-date {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .timeline-hours {
+        min-width: 50px;
+        padding-right: 6px;
+        gap: 25px;
+      }
+
+      .timeline-hour {
+        font-size: 8px;
+        height: 25px;
+      }
+
+      .timeline-events {
+        gap: 25px;
+      }
+
+      .timeline-slot {
+        height: 25px;
+      }
+
+      .timeline-event {
+        font-size: 8px;
+        padding: 3px 5px;
+        min-width: 120px;
+      }
+
+      .list-view {
+        padding: 8px 10px;
+      }
+
+      .list-view-title {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .event-item {
+        padding: 6px;
+        margin-bottom: 6px;
+      }
+
+      .event-item-date {
+        font-size: 9px;
+      }
+
+      .event-item-title {
+        font-size: 10px;
+        margin-top: 2px;
+      }
+
+      .event-item-time {
+        font-size: 8px;
+      }
+
+      .footer {
+        padding: 8px;
+        font-size: 10px;
       }
     }
   </style>
