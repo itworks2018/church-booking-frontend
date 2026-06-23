@@ -16,6 +16,9 @@
     body {
       font-family: 'Roboto', sans-serif;
       background-color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     /* Header Section */
@@ -66,6 +69,10 @@
       max-width: 1200px;
       margin: 40px auto;
       padding: 0 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
     }
 
     /* Calendar Header with Controls */
@@ -158,6 +165,114 @@
       background: white;
       border: 3px solid #333;
       border-top: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .calendar-grid.hidden {
+      display: none;
+    }
+
+    /* Day View Styles */
+    .day-view {
+      background: white;
+      border: 3px solid #333;
+      border-top: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 30px;
+      font-size: 18px;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    .day-view.hidden {
+      display: none;
+    }
+
+    .day-view-content {
+      flex: 1;
+    }
+
+    .day-view-date {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      color: #0891b2;
+    }
+
+    .day-view-events {
+      margin-top: 20px;
+    }
+
+    .day-view-event {
+      background: #f3f4f6;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-left: 4px solid #0891b2;
+      border-radius: 4px;
+    }
+
+    .day-view-no-events {
+      color: #999;
+      font-style: italic;
+    }
+
+    /* List View Styles */
+    .list-view {
+      background: white;
+      border: 3px solid #333;
+      border-top: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .list-view.hidden {
+      display: none;
+    }
+
+    .list-view-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #0891b2;
+      margin-bottom: 20px;
+    }
+
+    .event-item {
+      background: #f3f4f6;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #0891b2;
+      border-radius: 4px;
+    }
+
+    .event-item-date {
+      font-weight: 700;
+      color: #0891b2;
+    }
+
+    .event-item-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 5px;
+    }
+
+    .event-item-time {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .list-view-no-events {
+      text-align: center;
+      color: #999;
+      font-style: italic;
+      margin-top: 40px;
     }
 
     .day-header {
@@ -165,6 +280,7 @@
       grid-template-columns: repeat(7, 1fr);
       background: #f3f4f6;
       border-bottom: 2px solid #333;
+      flex-shrink: 0;
     }
 
     .day-header-cell {
@@ -183,6 +299,7 @@
     .calendar-days {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
+      flex: 1;
     }
 
     .calendar-day {
@@ -245,10 +362,10 @@
       color: white;
       text-align: center;
       padding: 20px;
-      margin-top: 40px;
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.5px;
+      margin-top: auto;
     }
 
     /* Responsive Design */
@@ -322,7 +439,7 @@
     </div>
 
     <!-- Calendar Grid -->
-    <div class="calendar-grid">
+    <div class="calendar-grid" id="calendarGrid">
       <div class="day-header">
         <div class="day-header-cell">SUN</div>
         <div class="day-header-cell">MON</div>
@@ -337,6 +454,24 @@
         <!-- Calendar days will be populated by JavaScript -->
       </div>
     </div>
+
+    <!-- Day View -->
+    <div class="day-view hidden" id="dayView">
+      <div class="day-view-content">
+        <div class="day-view-date" id="dayViewDate"></div>
+        <div class="day-view-events" id="dayViewEvents">
+          <div class="day-view-no-events">No events scheduled for this day.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- List View -->
+    <div class="list-view hidden" id="listView">
+      <div class="list-view-title">All Upcoming Events</div>
+      <div id="listViewEvents">
+        <div class="list-view-no-events">No events scheduled.</div>
+      </div>
+    </div>
   </div>
 
   <!-- ✅ FOOTER -->
@@ -348,6 +483,15 @@
   <script>
     let currentDate = new Date(2026, 5, 23); // June 23, 2026
     let currentView = 'month';
+
+    // Mock events data - in real app, this would come from backend
+    const mockEvents = {
+      '2026-6-5': ['Church Service - 10:00 AM', 'Prayer Meeting - 7:00 PM'],
+      '2026-6-12': ['Youth Group Activity - 6:00 PM'],
+      '2026-6-15': ['Community Outreach - 9:00 AM'],
+      '2026-6-23': ['Main Service - 11:00 AM', 'Bible Study - 6:00 PM'],
+      '2026-6-28': ['Special Event - 5:00 PM']
+    };
 
     function generateCalendar() {
       const year = currentDate.getFullYear();
@@ -422,27 +566,111 @@
       
       const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
       document.getElementById('currentDay').textContent = dayNames[selected.getDay()];
+
+      // If in day view, update it
+      if (currentView === 'day') {
+        updateDayView();
+      }
+    }
+
+    function formatTime(hours, minutes) {
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+      const displayMinutes = String(minutes).padStart(2, '0');
+      return `${displayHours}:${displayMinutes} ${period}`;
+    }
+
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      document.getElementById('currentTime').textContent = formatTime(hours, minutes);
+    }
+
+    function updateDayView() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1;
+      const day = currentDate.getDate();
+      const dateKey = `${year}-${month}-${day}`;
+
+      const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                         'July', 'August', 'September', 'October', 'November', 'December'];
+
+      const dateDisplay = `${dayNames[currentDate.getDay()]}, ${monthNames[currentDate.getMonth()]} ${day}, ${year}`;
+      document.getElementById('dayViewDate').textContent = dateDisplay;
+
+      const events = mockEvents[dateKey] || [];
+      const eventsDiv = document.getElementById('dayViewEvents');
+
+      if (events.length === 0) {
+        eventsDiv.innerHTML = '<div class="day-view-no-events">No events scheduled for this day.</div>';
+      } else {
+        eventsDiv.innerHTML = '<div class="day-view-events">' +
+          events.map(event => `<div class="day-view-event">${event}</div>`).join('') +
+          '</div>';
+      }
+    }
+
+    function updateListView() {
+      const allEvents = [];
+
+      // Flatten all events from the mock data
+      for (let dateKey in mockEvents) {
+        const [year, month, day] = dateKey.split('-').map(Number);
+        const events = mockEvents[dateKey];
+        events.forEach(event => {
+          allEvents.push({
+            date: new Date(year, month - 1, day),
+            event: event
+          });
+        });
+      }
+
+      // Sort by date
+      allEvents.sort((a, b) => a.date - b.date);
+
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                         'July', 'August', 'September', 'October', 'November', 'December'];
+
+      const listDiv = document.getElementById('listViewEvents');
+      if (allEvents.length === 0) {
+        listDiv.innerHTML = '<div class="list-view-no-events">No events scheduled.</div>';
+      } else {
+        listDiv.innerHTML = allEvents.map(item => {
+          const dateStr = `${monthNames[item.date.getMonth()]} ${item.date.getDate()}, ${item.date.getFullYear()}`;
+          return `
+            <div class="event-item">
+              <div class="event-item-date">${dateStr}</div>
+              <div class="event-item-title">${item.event}</div>
+            </div>
+          `;
+        }).join('');
+      }
     }
 
     function setView(view) {
       currentView = view;
+
       // Update button active states
       document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
 
-      if (view === 'list') {
-        alert('List view coming soon!');
-      } else if (view === 'day') {
-        alert('Day view coming soon!');
-      }
-    }
+      // Hide all views
+      document.getElementById('calendarGrid').classList.add('hidden');
+      document.getElementById('dayView').classList.add('hidden');
+      document.getElementById('listView').classList.add('hidden');
 
-    // Update current time every minute
-    function updateTime() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+      // Show selected view
+      if (view === 'month') {
+        document.getElementById('calendarGrid').classList.remove('hidden');
+      } else if (view === 'day') {
+        document.getElementById('dayView').classList.remove('hidden');
+        updateDayView();
+      } else if (view === 'list') {
+        document.getElementById('listView').classList.remove('hidden');
+        updateListView();
+      }
     }
 
     // Initialize calendar on page load
