@@ -25,32 +25,33 @@
     /* Header Section */
     .header {
       background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
-      padding: 30px 40px;
+      padding: 15px 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
     }
 
     .header h1 {
       color: white;
-      font-size: 32px;
+      font-size: 26px;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
 
     .manage-btn {
       background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
       color: white;
       border: none;
-      padding: 12px 30px;
+      padding: 8px 20px;
       border-radius: 50px;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
     }
@@ -69,30 +70,32 @@
     .calendar-wrapper {
       width: 100%;
       margin: 0;
-      padding: 40px;
+      padding: 15px 20px;
       flex: 1;
       display: flex;
       flex-direction: column;
+      min-height: 0;
     }
 
     /* Calendar Header with Controls */
     .calendar-header {
       background: linear-gradient(to right, #fcd34d 0%, #fbbf24 100%);
       border: 3px solid #333;
-      padding: 20px 30px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0;
       border-bottom: none;
+      flex-shrink: 0;
     }
 
     .month-navigation {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 12px;
       font-weight: 900;
-      font-size: 20px;
+      font-size: 16px;
       color: #333;
     }
 
@@ -123,13 +126,13 @@
     }
 
     .current-day {
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 900;
       color: #333;
     }
 
     .current-time {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       color: #666;
       margin-top: 2px;
@@ -144,9 +147,9 @@
       background: #333;
       color: #fcd34d;
       border: none;
-      padding: 10px 20px;
+      padding: 8px 16px;
       font-weight: 700;
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
       transition: all 0.3s ease;
       border-radius: 4px;
@@ -182,9 +185,10 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 30px;
+      padding: 15px 20px;
       color: #333;
       overflow: hidden;
+      min-height: 0;
     }
 
     .day-view.hidden {
@@ -192,11 +196,12 @@
     }
 
     .day-view-header {
-      margin-bottom: 30px;
+      margin-bottom: 15px;
+      flex-shrink: 0;
     }
 
     .day-view-date {
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 900;
       color: #0891b2;
       margin-bottom: 10px;
@@ -212,17 +217,17 @@
     .timeline-hours {
       display: flex;
       flex-direction: column;
-      gap: 60px;
-      min-width: 80px;
-      padding-right: 20px;
+      gap: 40px;
+      min-width: 65px;
+      padding-right: 12px;
       border-right: 2px solid #ddd;
     }
 
     .timeline-hour {
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 700;
       color: #666;
-      height: 60px;
+      height: 40px;
       display: flex;
       align-items: flex-start;
     }
@@ -232,12 +237,13 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      gap: 60px;
+      gap: 40px;
       overflow: hidden;
+      min-height: 0;
     }
 
     .timeline-slot {
-      height: 60px;
+      height: 40px;
       position: relative;
       border-bottom: 1px solid #e0e0e0;
     }
@@ -250,13 +256,13 @@
       position: absolute;
       background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
       color: white;
-      padding: 10px;
-      border-radius: 4px;
-      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 3px;
+      font-size: 11px;
       font-weight: 600;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      min-width: 200px;
-      border-left: 4px solid #0e7490;
+      min-width: 160px;
+      border-left: 3px solid #0e7490;
     }
 
     .timeline-event-time {
@@ -285,8 +291,9 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 30px;
-      overflow: hidden;
+      padding: 15px 20px;
+      overflow: auto;
+      min-height: 0;
     }
 
     .list-view.hidden {
@@ -294,35 +301,38 @@
     }
 
     .list-view-title {
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 900;
       color: #0891b2;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+      flex-shrink: 0;
     }
 
     .event-item {
       background: #f3f4f6;
-      padding: 15px;
-      margin-bottom: 15px;
+      padding: 10px;
+      margin-bottom: 10px;
       border-left: 4px solid #0891b2;
-      border-radius: 4px;
+      border-radius: 3px;
+      flex-shrink: 0;
     }
 
     .event-item-date {
       font-weight: 700;
       color: #0891b2;
+      font-size: 12px;
     }
 
     .event-item-title {
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 700;
-      margin-top: 5px;
+      margin-top: 3px;
     }
 
     .event-item-time {
-      font-size: 14px;
+      font-size: 11px;
       color: #666;
-      margin-top: 5px;
+      margin-top: 3px;
     }
 
     .list-view-no-events {
@@ -341,10 +351,10 @@
     }
 
     .day-header-cell {
-      padding: 15px;
+      padding: 10px;
       text-align: center;
       font-weight: 900;
-      font-size: 14px;
+      font-size: 12px;
       color: #333;
       border-right: 1px solid #ddd;
     }
@@ -363,8 +373,8 @@
       aspect-ratio: 1;
       border-right: 1px solid #ddd;
       border-bottom: 1px solid #ddd;
-      padding: 10px;
-      min-height: 100px;
+      padding: 6px;
+      min-height: 60px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -389,7 +399,7 @@
 
     .day-number {
       font-weight: 700;
-      font-size: 16px;
+      font-size: 12px;
       color: #333;
     }
 
@@ -418,49 +428,140 @@
       background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
       color: white;
       text-align: center;
-      padding: 20px;
-      font-size: 13px;
+      padding: 10px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.5px;
       margin-top: auto;
+      flex-shrink: 0;
     }
 
     /* Responsive Design */
     @media (max-width: 768px) {
       .header {
         flex-direction: column;
-        gap: 20px;
-        padding: 20px;
+        gap: 10px;
+        padding: 10px 15px;
+      }
+
+      .header h1 {
+        font-size: 18px;
       }
 
       .calendar-header {
         flex-direction: column;
-        gap: 15px;
-        padding: 15px;
+        gap: 8px;
+        padding: 10px 15px;
       }
 
       .month-navigation {
-        font-size: 16px;
-        gap: 10px;
+        font-size: 13px;
+        gap: 8px;
+      }
+
+      .current-day {
+        font-size: 14px;
+      }
+
+      .current-time {
+        font-size: 10px;
       }
 
       .calendar-day {
-        min-height: 80px;
-        font-size: 12px;
+        min-height: 50px;
+        padding: 4px;
       }
 
       .day-number {
-        font-size: 14px;
+        font-size: 10px;
       }
 
       .view-controls {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 6px;
       }
 
       .view-btn {
-        padding: 8px 15px;
+        padding: 6px 12px;
+        font-size: 10px;
+      }
+
+      .calendar-wrapper {
+        padding: 10px 12px;
+      }
+
+      .day-view {
+        padding: 10px 12px;
+      }
+
+      .list-view {
+        padding: 10px 12px;
+      }
+
+      .day-view-header {
+        margin-bottom: 10px;
+      }
+
+      .day-view-date {
+        font-size: 14px;
+      }
+
+      .timeline-hours {
+        min-width: 55px;
+        padding-right: 8px;
+        gap: 30px;
+      }
+
+      .timeline-hour {
+        font-size: 9px;
+        height: 30px;
+      }
+
+      .timeline-events {
+        gap: 30px;
+      }
+
+      .timeline-slot {
+        height: 30px;
+      }
+
+      .timeline-event {
+        font-size: 9px;
+        padding: 4px 6px;
+        min-width: 140px;
+      }
+
+      .timeline-event-time {
+        font-size: 8px;
+      }
+
+      .timeline-event-title {
+        margin-top: 2px;
+      }
+
+      .list-view-title {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      .event-item {
+        padding: 8px;
+        margin-bottom: 8px;
+      }
+
+      .event-item-date {
+        font-size: 10px;
+      }
+
+      .event-item-title {
         font-size: 11px;
+        margin-top: 2px;
+      }
+
+      .event-item-time {
+        font-size: 9px;
+        margin-top: 2px;
       }
     }
   </style>
@@ -667,6 +768,7 @@
 
       const startHour = 6;
       const endHour = 22; // 10 PM
+      const slotHeight = 40; // Height of each hour slot in pixels
 
       // Create hour slots
       for (let hour = startHour; hour < endHour; hour++) {
@@ -720,7 +822,7 @@
             eventDiv.className = 'timeline-event';
             
             const slotIndex = evt.hour - startHour;
-            const topPosition = (slotIndex * 60) + (evt.minutes);
+            const topPosition = (slotIndex * slotHeight) + (evt.minutes * slotHeight / 60);
             
             eventDiv.style.top = topPosition + 'px';
             eventDiv.innerHTML = `
