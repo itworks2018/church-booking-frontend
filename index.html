@@ -431,6 +431,127 @@
       margin-right: 3px;
     }
 
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #0891b2;
+      padding-bottom: 15px;
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #0891b2;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #666;
+      transition: all 0.2s ease;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: #0891b2;
+      transform: scale(1.2);
+    }
+
+    .modal-events {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-event {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid #0e7490;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-event-time {
+      font-size: 12px;
+      opacity: 0.9;
+      font-weight: 600;
+    }
+
+    .modal-event-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .modal-no-events {
+      text-align: center;
+      color: #999;
+      font-style: italic;
+      padding: 40px 20px;
+      font-size: 16px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
     /* Footer */
     .footer {
       background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
@@ -739,7 +860,9 @@
         padding: 8px;
         font-size: 10px;
       }
-    }
+
+      .modal-content {
+        width: 95%;\n      }\n\n      .modal-title {\n        font-size: 16px;\n      }\n\n      .modal-event {\n        padding: 12px;\n      }\n\n      .modal-event-title {\n        font-size: 14px;\n      }\n    }
   </style>
 </head>
 <body>
@@ -786,6 +909,17 @@
 
       <div class="calendar-days" id="calendarDays">
         <!-- Calendar days will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Day Events Modal -->
+    <div class="modal" id="dayEventsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title" id="modalDate"></div>
+          <button class="modal-close" onclick="closeDayEventsModal()">&times;</button>
+        </div>
+        <div class="modal-events" id="modalEvents"></div>
       </div>
     </div>
 
@@ -869,7 +1003,7 @@
         }
 
         dayDiv.innerHTML = `<div class="day-number">${day}</div>`;
-        dayDiv.onclick = () => selectDay(year, month, day);
+        dayDiv.onclick = () => showDayEventsModal(year, month, day);
         calendarDaysDiv.appendChild(dayDiv);
       }
 
@@ -907,6 +1041,51 @@
         updateDayView();
       }
     }
+
+    function showDayEventsModal(year, month, day) {
+      const dateKey = `${year}-${month + 1}-${day}`;
+      const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                         'July', 'August', 'September', 'October', 'November', 'December'];
+      
+      const selectedDate = new Date(year, month, day);
+      const dateDisplay = `${dayNames[selectedDate.getDay()]}, ${monthNames[month]} ${day}, ${year}`;
+      document.getElementById('modalDate').textContent = dateDisplay;
+
+      const events = mockEvents[dateKey] || [];
+      const modalEvents = document.getElementById('modalEvents');
+
+      if (events.length === 0) {
+        modalEvents.innerHTML = '<div class="modal-no-events">No events scheduled for this day.</div>';
+      } else {
+        modalEvents.innerHTML = events.map(event => {
+          const match = event.match(/(.+?)\s*-\s*(.+)/);
+          const title = match ? match[1].trim() : event;
+          const time = match ? match[2].trim() : '';
+          
+          return `
+            <div class="modal-event">
+              ${time ? `<div class="modal-event-time">${time}</div>` : ''}
+              <div class="modal-event-title">${title}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('dayEventsModal').classList.add('show');
+    }
+
+    function closeDayEventsModal() {
+      document.getElementById('dayEventsModal').classList.remove('show');
+    }
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', (event) => {
+      const modal = document.getElementById('dayEventsModal');
+      if (event.target === modal) {
+        closeDayEventsModal();
+      }
+    });
 
     function formatTime(hours, minutes) {
       const period = hours >= 12 ? 'PM' : 'AM';
