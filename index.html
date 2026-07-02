@@ -524,6 +524,12 @@
       margin-top: 8px;
     }
 
+    .modal-event-meta {
+      font-size: 12px;
+      margin-top: 6px;
+      opacity: 0.9;
+    }
+
     .modal-no-events {
       text-align: center;
       color: #999;
@@ -950,32 +956,91 @@
 
   <!-- ✅ Calendar Logic -->
   <script>
-    let currentDate = new Date(2026, 5, 23); // June 23, 2026
+    let currentDate = new Date();
     let currentView = 'month';
+    let approvedEvents = [];
 
-    // Mock events data - in real app, this would come from backend
-    const mockEvents = {
-      '2026-6-5': ['Church Service - 10:00 AM', 'Prayer Meeting - 7:00 PM'],
-      '2026-6-12': ['Youth Group Activity - 6:00 PM'],
-      '2026-6-15': ['Community Outreach - 9:00 AM'],
-      '2026-6-23': ['Main Service - 11:00 AM', 'Bible Study - 6:00 PM'],
-      '2026-6-28': ['Special Event - 5:00 PM']
-    };
+    const API_BASE_URL = 'https://church-booking-backend.onrender.com';
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatTime(hours, minutes) {
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+      const displayMinutes = String(minutes).padStart(2, '0');
+      return `${displayHours}:${displayMinutes} ${period}`;
+    }
+
+    function formatEventDateTime(dateValue, options = {}) {
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) {
+        return 'TBD';
+      }
+
+      return date.toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        ...options
+      });
+    }
+
+    function getDateKey(date) {
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      return `${year}-${month}-${day}`;
+    }
+
+    function getEventsForDate(date) {
+      const dateKey = getDateKey(date);
+      return approvedEvents.filter(event => getDateKey(new Date(event.start)) === dateKey);
+    }
+
+    async function loadApprovedSchedule() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/bookings/public/approved`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        approvedEvents = Array.isArray(data.items) ? data.items.map(booking => ({
+          id: booking.id,
+          title: booking.event_name || 'Approved Event',
+          start: booking.start_datetime,
+          end: booking.end_datetime,
+          venue: booking.venue || 'Not specified',
+          purpose: booking.purpose || 'Not specified',
+          attendees: booking.attendees || 'Not specified',
+          additionalNeeds: booking.additional_needs || 'None noted'
+        })) : [];
+      } catch (error) {
+        console.error('Unable to load approved schedule:', error);
+        approvedEvents = [];
+      }
+    }
 
     function generateCalendar() {
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth();
 
-      // Update month/year display
       const monthNames = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
                          'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
       document.getElementById('monthYear').textContent = `${monthNames[month]} ${year}`;
 
-      // Update current day and time
       const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
       document.getElementById('currentDay').textContent = dayNames[currentDate.getDay()];
 
-      // Get first day of month and number of days
       const firstDay = new Date(year, month, 1).getDay();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       const daysInPrevMonth = new Date(year, month, 0).getDate();
@@ -983,7 +1048,6 @@
       const calendarDaysDiv = document.getElementById('calendarDays');
       calendarDaysDiv.innerHTML = '';
 
-      // Previous month days
       for (let i = firstDay - 1; i >= 0; i--) {
         const dayDiv = document.createElement('div');
         dayDiv.className = 'calendar-day other-month';
@@ -991,25 +1055,28 @@
         calendarDaysDiv.appendChild(dayDiv);
       }
 
-      // Current month days
       for (let day = 1; day <= daysInMonth; day++) {
         const dayDiv = document.createElement('div');
         dayDiv.className = 'calendar-day';
 
-        // Highlight today
         const today = new Date();
         if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
           dayDiv.classList.add('today');
         }
 
-        dayDiv.innerHTML = `<div class="day-number">${day}</div>`;
+        const dateForDay = new Date(year, month, day);
+        const dayEvents = getEventsForDate(dateForDay);
+        const eventsMarkup = dayEvents.length > 0
+          ? `<div class="day-events"><span class="event-dot"></span>${dayEvents.length} event${dayEvents.length > 1 ? 's' : ''}</div>`
+          : '';
+
+        dayDiv.innerHTML = `<div class="day-number">${day}</div>${eventsMarkup}`;
         dayDiv.onclick = () => showDayEventsModal(year, month, day);
         calendarDaysDiv.appendChild(dayDiv);
       }
 
-      // Next month days
       const totalCells = calendarDaysDiv.children.length;
-      const remainingCells = 42 - totalCells; // 6 rows × 7 days
+      const remainingCells = 42 - totalCells;
       for (let day = 1; day <= remainingCells; day++) {
         const dayDiv = document.createElement('div');
         dayDiv.className = 'calendar-day other-month';
@@ -1032,41 +1099,41 @@
       const selected = new Date(year, month, day);
       currentDate = selected;
       generateCalendar();
-      
+
       const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
       document.getElementById('currentDay').textContent = dayNames[selected.getDay()];
 
-      // If in day view, update it
       if (currentView === 'day') {
         updateDayView();
       }
     }
 
     function showDayEventsModal(year, month, day) {
-      const dateKey = `${year}-${month + 1}-${day}`;
+      const selectedDate = new Date(year, month, day);
       const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                          'July', 'August', 'September', 'October', 'November', 'December'];
-      
-      const selectedDate = new Date(year, month, day);
+
       const dateDisplay = `${dayNames[selectedDate.getDay()]}, ${monthNames[month]} ${day}, ${year}`;
       document.getElementById('modalDate').textContent = dateDisplay;
 
-      const events = mockEvents[dateKey] || [];
+      const events = getEventsForDate(selectedDate);
       const modalEvents = document.getElementById('modalEvents');
 
       if (events.length === 0) {
-        modalEvents.innerHTML = '<div class="modal-no-events">No events scheduled for this day.</div>';
+        modalEvents.innerHTML = '<div class="modal-no-events">No approved events scheduled for this day.</div>';
       } else {
         modalEvents.innerHTML = events.map(event => {
-          const match = event.match(/(.+?)\s*-\s*(.+)/);
-          const title = match ? match[1].trim() : event;
-          const time = match ? match[2].trim() : '';
-          
+          const startTime = formatEventDateTime(event.start, { hour: 'numeric', minute: '2-digit' });
+          const endTime = formatEventDateTime(event.end, { hour: 'numeric', minute: '2-digit' });
+
           return `
             <div class="modal-event">
-              ${time ? `<div class="modal-event-time">${time}</div>` : ''}
-              <div class="modal-event-title">${title}</div>
+              <div class="modal-event-time">${escapeHtml(startTime)} - ${escapeHtml(endTime)}</div>
+              <div class="modal-event-title">${escapeHtml(event.title)}</div>
+              <div class="modal-event-meta">Venue: ${escapeHtml(event.venue)}</div>
+              <div class="modal-event-meta">Purpose: ${escapeHtml(event.purpose)}</div>
+              <div class="modal-event-meta">Attendees: ${escapeHtml(event.attendees)}</div>
             </div>
           `;
         }).join('');
@@ -1079,20 +1146,12 @@
       document.getElementById('dayEventsModal').classList.remove('show');
     }
 
-    // Close modal when clicking outside of it
     window.addEventListener('click', (event) => {
       const modal = document.getElementById('dayEventsModal');
       if (event.target === modal) {
         closeDayEventsModal();
       }
     });
-
-    function formatTime(hours, minutes) {
-      const period = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 || 12;
-      const displayMinutes = String(minutes).padStart(2, '0');
-      return `${displayHours}:${displayMinutes} ${period}`;
-    }
 
     function updateTime() {
       const now = new Date();
@@ -1102,145 +1161,68 @@
     }
 
     function updateDayView() {
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth() + 1;
-      const day = currentDate.getDate();
-      const dateKey = `${year}-${month}-${day}`;
-
       const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                          'July', 'August', 'September', 'October', 'November', 'December'];
 
-      const dateDisplay = `${dayNames[currentDate.getDay()]}, ${monthNames[currentDate.getMonth()]} ${day}, ${year}`;
+      const dateDisplay = `${dayNames[currentDate.getDay()]}, ${monthNames[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
       document.getElementById('dayViewDate').textContent = dateDisplay;
 
-      // Generate timeline (6 AM to 10 PM)
       const timelineHours = document.getElementById('timelineHours');
       const timelineEvents = document.getElementById('timelineEvents');
-      
       timelineHours.innerHTML = '';
       timelineEvents.innerHTML = '';
 
-      const startHour = 6;
-      const endHour = 22; // 10 PM
-      const slotHeight = 40; // Height of each hour slot in pixels
-
-      // Create hour slots
-      for (let hour = startHour; hour < endHour; hour++) {
-        const hourDiv = document.createElement('div');
-        hourDiv.className = 'timeline-hour';
-        const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
-        const period = hour >= 12 ? 'PM' : 'AM';
-        hourDiv.textContent = `${displayHour}:00 ${period}`;
-        timelineHours.appendChild(hourDiv);
-
-        const slotDiv = document.createElement('div');
-        slotDiv.className = 'timeline-slot';
-        timelineEvents.appendChild(slotDiv);
-      }
-
-      // Parse and place events
-      const events = mockEvents[dateKey] || [];
-      
+      const events = getEventsForDate(currentDate);
       if (events.length === 0) {
-        timelineEvents.innerHTML = '<div class="day-view-no-events">No events scheduled for this day.</div>';
-        timelineHours.innerHTML = '';
-      } else {
-        const eventElements = [];
-        
-        events.forEach(event => {
-          const match = event.match(/(.+?)\s*-\s*(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-          if (match) {
-            const [, title, hours, minutes, period] = match;
-            let hour = parseInt(hours);
-            const min = parseInt(minutes);
-            
-            if (period.toUpperCase() === 'PM' && hour !== 12) {
-              hour += 12;
-            } else if (period.toUpperCase() === 'AM' && hour === 12) {
-              hour = 0;
-            }
-
-            eventElements.push({
-              title: title.trim(),
-              time: `${hours}:${String(min).padStart(2, '0')} ${period}`,
-              hour: hour,
-              minutes: min
-            });
-          }
-        });
-
-        // Add events to timeline
-        eventElements.forEach(evt => {
-          if (evt.hour >= startHour && evt.hour < endHour) {
-            const eventDiv = document.createElement('div');
-            eventDiv.className = 'timeline-event';
-            
-            const slotIndex = evt.hour - startHour;
-            const topPosition = (slotIndex * slotHeight) + (evt.minutes * slotHeight / 60);
-            
-            eventDiv.style.top = topPosition + 'px';
-            eventDiv.innerHTML = `
-              <div class="timeline-event-time">${evt.time}</div>
-              <div class="timeline-event-title">${evt.title}</div>
-            `;
-            
-            timelineEvents.appendChild(eventDiv);
-          }
-        });
+        timelineEvents.innerHTML = '<div class="day-view-no-events">No approved events scheduled for this day.</div>';
+        return;
       }
+
+      timelineEvents.innerHTML = events.map(event => `
+        <div class="event-item">
+          <div class="event-item-date">${escapeHtml(formatEventDateTime(event.start, { hour: 'numeric', minute: '2-digit' }))} - ${escapeHtml(formatEventDateTime(event.end, { hour: 'numeric', minute: '2-digit' }))}</div>
+          <div class="event-item-title">${escapeHtml(event.title)}</div>
+          <div class="event-item-time">${escapeHtml(event.venue)} • ${escapeHtml(event.purpose)}</div>
+        </div>
+      `).join('');
     }
 
     function updateListView() {
-      const allEvents = [];
-
-      // Flatten all events from the mock data
-      for (let dateKey in mockEvents) {
-        const [year, month, day] = dateKey.split('-').map(Number);
-        const events = mockEvents[dateKey];
-        events.forEach(event => {
-          allEvents.push({
-            date: new Date(year, month - 1, day),
-            event: event
-          });
-        });
-      }
-
-      // Sort by date
-      allEvents.sort((a, b) => a.date - b.date);
-
+      const allEvents = approvedEvents.slice().sort((a, b) => new Date(a.start) - new Date(b.start));
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                          'July', 'August', 'September', 'October', 'November', 'December'];
 
       const listDiv = document.getElementById('listViewEvents');
       if (allEvents.length === 0) {
-        listDiv.innerHTML = '<div class="list-view-no-events">No events scheduled.</div>';
+        listDiv.innerHTML = '<div class="list-view-no-events">No approved events scheduled.</div>';
       } else {
         listDiv.innerHTML = allEvents.map(item => {
-          const dateStr = `${monthNames[item.date.getMonth()]} ${item.date.getDate()}, ${item.date.getFullYear()}`;
+          const date = new Date(item.start);
+          const dateStr = `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
           return `
             <div class="event-item">
               <div class="event-item-date">${dateStr}</div>
-              <div class="event-item-title">${item.event}</div>
+              <div class="event-item-title">${escapeHtml(item.title)}</div>
+              <div class="event-item-time">${escapeHtml(formatEventDateTime(item.start, { hour: 'numeric', minute: '2-digit' }))} - ${escapeHtml(formatEventDateTime(item.end, { hour: 'numeric', minute: '2-digit' }))}</div>
             </div>
           `;
         }).join('');
       }
     }
 
-    function setView(view) {
+    function setView(view, button) {
       currentView = view;
 
-      // Update button active states
       document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+      if (button) {
+        button.classList.add('active');
+      }
 
-      // Hide all views
       document.getElementById('calendarGrid').classList.add('hidden');
       document.getElementById('dayView').classList.add('hidden');
       document.getElementById('listView').classList.add('hidden');
 
-      // Show selected view
       if (view === 'month') {
         document.getElementById('calendarGrid').classList.remove('hidden');
       } else if (view === 'day') {
@@ -1252,11 +1234,11 @@
       }
     }
 
-    // Initialize calendar on page load
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadApprovedSchedule();
       generateCalendar();
       updateTime();
-      setInterval(updateTime, 60000); // Update time every minute
+      setInterval(updateTime, 60000);
     });
   </script>
 
